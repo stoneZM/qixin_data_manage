@@ -1,0 +1,72 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/cloud.css">
+{/block}
+{block name="body"}
+    <section class="content-header">
+      <h1>扩展自动升级<small> 完成，同步版本号和Token</small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> 控制台</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix col-lg-6 col-md-12">
+        <h4 style="padding-top: 0;margin-top: 0">当前升级的扩展</h4>
+        <ul class="module-list">
+            <li class="clearfix" style="margin-bottom: 0">
+                <div class="cover-w">
+                    <div class="cover-icon">
+                        <i class="icon-{$goodsInfo.icon}"></i>
+                    </div>
+                </div>
+                <div class="content-w">
+                    <div class="title">
+                        <a href="{:url('Admin/Module/edit', array('name' => $goodsInfo['name']))}">{$goodsInfo.alias} <span class="text-muted">{$goodsInfo.name}</span></a>
+                        <div class="pull-right"><span class="label label-info">{$goodsInfo.version_info.title}</span>
+                            {empty name="goodsInfo.update_list"}
+                            {else/}
+                                <a style="text-decoration: none"><span class=" label label-success ">最新版{$goodsInfo.update_list.0.title}</span></a>
+                            {/empty}
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-muted text-ellipsis">{$goodsInfo.summary}</p>
+                    </div>
+                    <div>开发者：<a style="color: #666">{$goodsInfo.developer}</a></div>
+                    <div class="clearfix bottom-btns">
+                        <div class="pull-left">
+                            <a class="btn btn-default"
+                               href="{:url('admin/Module/edit', array('name' => $goodsInfo['name']))}">编辑</a>
+                        </div>
+                        <div class="pull-right">
+                            {empty name="goodsInfo.token"}
+                                <span class="label label-circle label-danger">本地模块</span>
+                            {else/}
+                                <a target="_blank" href="{:appstoreU('goods/index/goodsdetail',array('token'=>$goodsInfo['token']))}" class="btn btn-info">去云市场查看</a>
+                            {/empty}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p><strong class="text-success">1.下载更新包，获取更新文件列表  -》 2.本地文件对比 -》 3.代码升级 -》 4.数据库升级 -》升级完成</strong></p>
+        <h4>恭喜，升级成功，目前版本为 {$goodsInfo.version_info.title}</h4>
+        <p>如果发现升级之后出现问题，请找回备份文件，同时还原备份的数据库。</p>
+        <p>
+            {$path}/backup
+        </p>
+        <div class="row">
+            <div class="col-xs-7">
+                <a id="compare_btn" class="btn btn-success btn-block" href="{:url('updateGoods',array('token'=>$token))}">返回自动升级首页</a>
+            </div>
+        </div>
+    </div>
+    </div>
+    </section> 
+{/block}
+{block name="script"}
+{/block}

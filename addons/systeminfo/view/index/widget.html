@@ -1,0 +1,29 @@
+<div class="col-lg-{$addons_config.width}">
+	<div class="box box-solid clearfix">
+		<header class="box-header clearfix">
+			<div class="box-title">{:lang('system_info')}</div>
+		</header>
+		<div class="box-body clearfix">
+			<table class="table">
+				<tr>
+					<th>{:lang('system_version')}</th>
+					<td>{:lang('core')}：v {$Think.QINFOCORE_VERSION} {:lang('platform')}：v {$Think.QINFOCMS_VERSION}（{:lang(get_license()['version_type'])}）</td>
+				</tr>
+				<tr>
+					<th>{:lang('os')}</th>
+					<td>{$Think.const.PHP_OS}</td>
+				</tr>
+				<tr>
+					<th>{:lang('context_use')}</th>
+					<td>{$_SERVER['SERVER_SOFTWARE']}</td>
+				</tr>
+				<tr>
+					<th>{:lang('copyright')}</th>
+					<td>
+						{:config('systemconfig.site_corporate_name') ?: config('site_corporate_name')}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,60 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<div class="table-responsive clearfix">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th><input class="checkbox check-all" type="checkbox"></th>
+						<th>{:lang('message_type')}</th>
+                        <th>{:lang('message_content')}</th>
+                        <th>{:lang('send_time')}</th>
+                        <th>{:lang('fans_head')}</th>
+                        <th>{:lang('fans_name')}</th>
+						<th>{:lang('operation')}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{volist name="list" id="item"}
+					<tr>
+						<td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                        <td>{$item['msgtype']}</td>
+                        <td>{$item['contnet']}</td>
+                        <td>{$item['create_time']}</td>
+                        <td>{$item['openid_head']}</td>
+                        <td>{$item['openid_nickname']}</td>
+						<td>
+                        	<a href="{:url('save_to_material?msgid='.$item['msgid'])}" class="ajax-get">{:lang('save_as_material')}</a>
+                        	<a href="{:url('reply_message?msgid='.$item['msgid'])}" class="">{:lang('reply_message')}</a>
+						</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+			{$page}
+		</div>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+
+{/block}

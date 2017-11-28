@@ -1,0 +1,67 @@
+{extend name="common@public/base"/}
+{block name="body"}
+    <section class="content-header">
+      <h1>模块打包向导<small></small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix">
+    	<div class="with-padding">
+            <p>欢迎使用本工具。本工具将会通过引导来快速生成一个模块安装引导脚本。</p>
+            <form action="{:url('module1')}" method="post">
+                <div class="clearfix">
+                    <div class="col-xs-2">
+                        <h4>选择您要打包的模块</h4>
+                        <div>
+                            <select name="module" size="15" class="form-control">
+                                {volist name="modules" id="vo"}
+                                    <option id="m_{$vo.name}" value="{$vo.name}">{$vo.alias}：{$vo.name}</option>
+                                {/volist}
+                            </select>
+    
+                            <script>
+                                $('#m_{$modules.0.name}').attr('selected', 'selected');
+                            </script>
+                        </div>
+                        
+                    </div>
+                    <div class="col-xs-4">
+                    	<h4>选择模块菜单类型</h4>
+                        <blockquote style="font-size:14px">
+                            <select name="menutype" class="form-control">
+                                
+                                    <option  value="0">顶级菜单</option>
+                                    <option  value="1">继承菜单</option>
+                           
+                            </select>
+                        </blockquote>
+                        <h4>打包流程</h4>
+                        <blockquote style="font-size:14px">
+                            <ol>
+                                <li>第一步.导出后台菜单</li>
+                                <li>第二步.导出权限节点</li>
+                                <li>第三步.导出用户行为</li>
+                                <li>第四步.导出相关数据表</li>
+                            </ol>
+                        </blockquote>
+                        <p>特别申明：打包前强烈建议备份数据库，以免造成不必要的损失</p>
+                    </div>
+                </div>
+                <p></p>
+                <div class="clearfix">
+                    <div class="col-xs-6">
+                        <button class="btn btn-default btn-success btn-block" type="submit">我同意，开始打包向导</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    </section> 
+{/block}

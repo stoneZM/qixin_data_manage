@@ -1,0 +1,77 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="{:url('index')}" >{:lang('pay_config')}</a></li>
+    <li class=""><a href="{:url('record')}" >{:lang('pay_record')}</a></li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left"> 
+                 </div>
+                </div>
+                <div class="box-body">
+                	<div class="alert alert-info tip">使用微信支付前你需要配置支付授权目录：</div>
+                    <form method="post" id="form" class="form form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">公众号APPID</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="" name="appid" value="{$mpsetting.appid}" >
+                            <div class="help-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">公众号APPSECRET</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="" name="appsecret" value="{$mpsetting.appsecret}" >
+                            <div class="help-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">微信商户号</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="" name="mchid" value="{$mpsetting.mchid}" >
+                            <div class="help-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">微信支付秘钥</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="" name="paysignkey" value="{$mpsetting.paysignkey}" >
+                            <div class="help-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">           
+                            <button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">{:lang('submit')}</button>        
+                            <button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+
+{/block}

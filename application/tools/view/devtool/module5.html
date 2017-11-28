@@ -1,0 +1,98 @@
+{extend name="common@public/base"/}
+{block name="body"}
+    <section class="content-header">
+      <h1>最后一步.完成导出<small>（恭喜，所有步骤已经成功完成。）</small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix">
+        <div class="with-padding">
+            <div class="alert alert-success">恭喜，所有步骤已经成功完成！您可以选择操作。</div>
+            <div class="clearfix">
+                <div class="alert alert-info col-xs-6">
+                	当前打包模块，<strong>{$module.alias}-{:session('module')}</strong>
+                </div>
+            </div>
+            <form id="form_main" action="{:url('module5')}" method="post">
+                <div class="clearfix">
+                    <div class="lead">json引导文件内容</div>
+                    <div>以下为自动生成的引导文件内容</div>
+                    {neq name="guide" value=""}
+                        <textarea name="guide" class="form-control" style="height: 200px">{:json_encode($guide)}</textarea>
+                    {else/}
+                        <div class="alert alert-success col-xs-6">未检测到任何的和模块相关的数据表，如果确定不需要数据表，可直接跳过本步骤</div>
+                    {/neq}
+    
+                </div>
+                <div class="clearfix">
+                    <div class="lead">install.sql脚本</div>
+                    <div>以下为自动生成的install.sql内容</div>
+                    {neq name="install" value=""}
+                         <textarea name="install" class="form-control" style="height: 200px">{$install}</textarea>
+                    {else/}
+                        <div class="alert alert-success col-xs-6">'由于没有相关表，所以install.sql文件为空</div>
+                    {/neq}
+                </div>
+                <div class="clearfix">
+                    <div class="lead">cleanData.sql脚本</div>
+                    <div>以下为自动生成的cleanData.sql内容</div>
+                    {neq name="cleanData" value=""}
+                        <textarea name="install" class="form-control" style="height: 200px">{$cleanData}</textarea>
+                    {else/}
+                        <div class="alert alert-success col-xs-6">由于没有相关表，所以cleanData.sql文件为空</div>
+                    {/neq}
+                </div>
+                <div class="with-padding">
+                    <label class="text-danger">自动替换模块下的对应文件，如果模块目录无写权限将不会自动备份。如果具备权限则会生成.bk文件作为备份。</label>
+                </div>
+                <div class="with-padding">
+                    <a class="btn  btn-default" href="{:url('module4')}">上一步</a>
+                    {neq name="havent_created" value=""}
+                        {php}$str='disabled="disabled"';{/php}
+                    {/neq}
+                    <a href="{:url('module')}" class="btn btn-warning" >重新打包</a>
+                    <a href="javascript:" class="btn btn-danger replace_btn" style="width: 200px"> 替换安装文件</a> 
+                    <a href="{:url('download')}" target="_blank" id="next_step" style="width: 300px" title="{$title}" {$str}  class="btn  btn-info">下载压缩包</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    </section> 
+{/block}
+{block name="script"}
+<script>
+$(function() {
+	//全选的实现
+	$('input[type="checkbox"].auth_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	});
+	
+	$(".replace_btn").click(function(){
+			
+		layer.confirm("确认要执行该操作吗？", {
+			btn: ['确定', '取消'],
+			title: '提示',
+			icon: 3
+		}, function () {
+			$.post('/tools/devtool/replace','',function(data){	
+				if (data.code == 1) {
+					updateAlert(data.msg, 'success');
+				
+				} else {
+					updateAlert(data.msg, 'error');
+				}
+			})	
+		}, function (index) {
+			layer.close(index);
+		});
+	});
+})                 
+</script>
+{/block}

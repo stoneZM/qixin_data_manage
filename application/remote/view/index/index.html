@@ -1,0 +1,630 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content clearfix ">
+    <div class="box box-solid ">
+
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+
+                <li class="{$tab3_active}"><a href="{:url('/remote/index/index/type/3')}" class="group_btn"    >{:lang('remote_device')}</a></li>
+                <li class="{$tab1_active}"><a href="{:url('/remote/index/index/type/1')}" class="group_btn"   >{:lang('data_distribute_task')}</a></li>
+                <li class="{$tab2_active}"><a href="{:url('/remote/index/index/type/2')}" class="group_btn" >{:lang('remote_data')}</a></li>
+
+
+                <li class="pull-left header">
+                    <a class="badge bg-light-blue"  data_role="add_device" data-toggle="modal" data-target="#add_task"  ><i class="fa fa-plus-circle fa-lg"></i> {:lang('add_storage_task')}</a>
+                </li>
+                <li class="pull-left header">
+                        <a href="{:url('/remote/index/device_add')}" class="badge bg-light-blue"> <i class="fa fa-plus-circle fa-lg"></i> &nbsp; 新增设备</a>
+                </li>
+
+                <li class="pull-left header">
+
+                    <a class="badge bg-light-blue" data_role="add_auth" data-toggle="modal" data-target="#add_auth">
+                        {if count($auth_info)>0}
+                              <i class="fa  fa-edit  fa-lg"></i> &nbsp; 修改授权
+                        {else/}
+                          <i class="fa fa-plus-circle fa-lg"></i> &nbsp; 分发授权
+                        {/if}
+                    </a>
+
+                </li>
+
+                {if count($auth_info)>0}
+                    <li class="pull-right header">
+                        <small style="font-size: 0.6em;color: #585555">授权账号:{$auth_info['user_name']}</small>
+                    </li>
+                {/if}
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane {$tab1_active}" id="tab_1-1">
+                            <div class="box-body clearfix">
+                                <div class="table-responsive clearfix">
+                                    <table class="table table-hover ">
+                                        <thead>
+                                        <tr>
+                                            <th><input class="checkbox check-all" type="checkbox"></th>
+                                            <th>{:lang('id')}</th>
+                                            <th >{:lang('source_ip')}</th>
+                                            <th>{:lang('target_ip')}</th>
+                                            <th>{:lang('state')}</th>
+                                            <th>{:lang('是否实时')}</th>
+                                            <th>{:lang('creation_time')}</th>
+                                            <th>{:lang('operation')}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {volist name="list" id="item"}
+                                        <tr >
+                                            <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                                            <td>{$item['id']|default=0}</td>
+                                            <td >{$item['from']}</td>
+                                            <td>{$item['to']}</td>
+
+                                            <td>
+                                                {if condition="$item['status'] eq 0"}
+                                                <span class="label bg-gray">{:lang('not_begin')}</span>
+                                                {elseif condition="$item['status'] eq 1"}
+                                                <span class="label bg-yellow">{:lang('have_in_hand')}</span>
+                                                {elseif condition="$item['status'] eq 2"}
+                                                <span class="label bg-green">{:lang('completed')}</span>
+                                                {elseif condition="$item['status'] eq 3"}
+                                                <span class="label bg-red">终止</span>
+                                                {else}
+                                                <span class="label bg-red">{:lang('fail')}</span>
+                                                {/if}
+
+                                            </td>
+
+                                            <td >
+                                                {if $item['is_realtime']==1 }
+                                                <span  class="label bg-green text-center">{:lang('true')}</span>
+                                                {else/}
+                                                <span class="label bg-gray text-center">{:lang('false')}</span>
+                                                {/if}
+                                            </td>
+
+                                            <td>{$item['create_time']}</td>
+
+                                            <td>
+
+                                                {if $item['status'] === 0 && $item['is_realtime']!=1 }
+                                                  <a href="{:url('start_task?id='.$item['id'].'&status=1')}" class="confirm ajax-get btn btn-default btn-xs">{:lang('startup')}</a>
+                                                {/if}
+
+                                                <a href="{:url('del?id='.$item['id'])}" class="confirm ajax-get btn btn-default btn-xs">{:lang('delete')}</a>
+                                            </td>
+                                        </tr>
+                                        {/volist}
+                                        </tbody>
+                                    </table>
+                                    {$page}
+                                </div>
+                            </div>
+                    </div>
+
+
+                <div class="tab-pane {$tab2_active}" id="tab_1-2">
+                    <div class="box-body clearfix">
+                        <div class="table-responsive clearfix">
+                            {if $have_remote_list eq -1}
+                              <h3 style="text-align: center">暂无数据</h3>
+                            {else/}
+                            <table class="table table-hover ">
+                                <thead>
+                                <tr>
+                                    <th>{:lang('source_ip')}</th>
+                                    <th >{:lang('source_data_ip')}</th>
+                                    <th >{:lang('creation_time')}</th>
+                                    <th>{:lang('operation')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="remote_list" id="item"}
+                                <tr >
+                                    <td >{$item['server_ip']}</td>
+                                    <td >{$item['ip']}</td>
+                                    <td >{$item['create_time']}</td>
+                                    <td>
+                                        <a href="{:url('detail?uuid='.$item['unique_id'])}" class="btn btn-default btn-xs" >{:lang('manage')}</a>&nbsp;&nbsp;
+                                        <a href="{:url('del_data?uuid='.$item['unique_id'])}" class="btn btn-default btn-xs confirm ajax-get" >{:lang('delete')}</a>&nbsp;&nbsp;
+                                        <a  class="distribute_data btn btn-default btn-xs" unique-id="{$item['unique_id']}" data_role="distribute_data" data-toggle="modal" data-target="#distribute_data" >{:lang('distribute_data')}</a>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            {$page}
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane {$tab3_active}" id="tab_1-3">
+                <div class="box-body clearfix">
+                    <div class="table-responsive">
+                        <table class="table user-list table-hover">
+                            <thead>
+                            <tr>
+                                <!--<th><span>{:lang('uuid')}</span></th>-->
+                                <th><span>{:lang('ip')}</span></th>
+                                <th><span>用户名/密码</span></th>
+                                <th>{:lang('creation_time')}</th>
+                                <th>{:lang('state')}</th>
+                                <th>{:lang('type')}</th>
+                                <th>{:lang('operation')}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="device_list" id="item"}
+                            <tr>
+                                <!--<td><span class="user-subhead">{$item['unique_id']}</span></td>-->
+                                <td><span >{$item['ip']}
+                                        {if !empty($item['alias'])}
+                                            ({$item['alias']})
+                                        {/if}
+                                    </span>
+                                </td>
+                                <td><span >
+
+                                        {$item['user_name']}/
+                                        {$item['passwd']}
+
+                                </span></td>
+                                <td><span >{$item['create_time']}</span></td>
+                                <td><span >{if $item['status'] == 1}
+                                    <span class="label label-success">{:lang('enable')}</span>
+                                    {else/}
+                                    <span class="label label-danger">{:lang('disable')}</span>
+                                    {/if}</span>
+                                </td>
+                                <td>
+                                    {if $item['type'] == 1}
+                                    <span class="label label-success">接收设备</span>
+                                   {/if}
+                                    {if $item['type'] == 0}
+                                    <span class="label label-danger">远端设备</span>
+                                    {/if}
+                                </td>
+                                <td>
+                                    <a href="{:url('/remote/index/device_edit',array('uuid'=>$item['unique_id']))}" class="table-link btn btn-default btn-xs" title="">{:lang('edit')}</a>
+                                    <a href="{:url('/remote/index/device_del',array('uuid'=>$item['unique_id']))}" class="btn btn-default btn-xs table-link ajax-get confirm" title="">{:lang('delete')}</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        {$page}
+                    </div>
+                 </div>
+                </div>
+
+             </div>
+            </div>
+        </div>
+</section>
+
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add_task"  id="add_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('add_storage_task')}<strong></strong></h4>
+            </div>
+
+
+
+            <div class="modal-body">
+
+                <form class="form form-horizontal recover_add_task" role="form" method="post" action="{:url('add_task')}">
+
+                    <input type="hidden" name="device_id" id="device_id" >
+
+                    <div id='conf_step1' name='conf_step1' style="display:block">
+                        <div class="box-header no-padding">步骤 1/2:{:lang('choose_source_and_task')}</div>
+
+
+                        <div class="box-body">
+
+                            <div class="form-group" style="margin-bottom: 0px;">
+                                <label class="col-sm-2 ">{:lang('task_type')}</label>
+                                <div class="col-sm-10">
+                                    <div class="">
+                                        <div class="checkbox-inline no-padding"><input class="task_type gl_checkbox" type="radio" name='task_type' value="0"checked>{:lang('not_realtime')}</div>
+                                        <div class="checkbox-inline no-padding"><input class="task_type gl_checkbox" type="radio" name='task_type' value="1" >{:lang('is_realtime')}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="current_source_device_list" style="display: none">
+                                <select id='current_source_device' name='current_source_device' class="form-control source_device" style="width:100%;margin-top:20px; display:block">
+
+                                </select>
+                            </div>
+
+                            <div class="source_device_list">
+                                <select id='source_device' name='source_device' class="form-control source_device" style="width:100%;margin-top:20px; display:block">
+                                    <option value="0">选择源设备</option>
+                                    {volist name="source_list" id="vo"}
+                                    <option value="{$vo['ip']}" device-id="{$vo['id']}" task-count="{$vo['task_count']}">{$vo['ip']}--( {:lang('task_count')} : {$vo['task_count']} )</option>
+                                    {/volist}
+                                </select>
+                            </div>
+
+                            <div class="source_hdd" style="margin-top:10px">
+
+                            </div>
+
+
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button class="have-choose-task btn btn-default" type="button" style="" onclick="conf_nextto(1,2,'conf_step');">{:lang('next')}</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id='conf_step2' name='conf_step2'  style="display:none">
+                        <div class="box-header no-padding">步骤 2/2：请选择数据接收设备</div>
+                        <div class="box-body">
+
+                            {empty	name="device"}
+                            <h4 align="center">{:lang('no_device_available')}</h4>
+                            {else/}
+                                <div class="form-group" style="margin-top:20px; display:block">
+                                    <label class="col-lg-1 control-label"></label>
+                                    <div class="col-lg-9">
+                                        {volist name="device" id="vo"}
+                                        <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" class="device_config" name="target_device[]" value="{$vo.ip}"> {$vo.ip}</label>{/volist}
+                                    </div>
+                                </div>
+                            {/empty}
+
+
+                            <div class="form-group choose-target-device">
+                            </div>
+                            <div class="form-group choose-target-storage">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-default" onClick="conf_nextto(2,1,'conf_step');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-success ajax-post " target-form="recover_add_task">{:lang('submit')}</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="distribute_data"  id="distribute_data">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('r_distribute_data')}<strong></strong></h4>
+            </div>
+
+
+            <div class="modal-body">
+
+                <form class="form form-horizontal r_add_task" role="form" method="post" action="{:url('r_add_task')}">
+
+                    <input type="hidden" name="unique_id" id="unique_id" >
+
+                    <div id='conf_step_1' name='conf_step1' style="display:block">
+                        <div class="box-header no-padding">步骤 1/2:{:lang('choose_task')}</div>
+
+
+                        <div class="box-body">
+
+
+                            <div class="current_source_device_list" >
+                                <select id='device_task' name='device_task_id' class="form-control source_device" style="width:100%;margin-top:20px; display:block">
+
+                                </select>
+                            </div>
+
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button class="btn btn-default" type="button" style="" onclick="conf_nextto(1,2,'conf_step_');">{:lang('next')}</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id='conf_step_2' name='conf_step2'  style="display:none">
+                        <div class="box-header no-padding">步骤 2/2：请选择远程机器</div>
+                        <div class="box-body">
+
+                            {empty	name="device"}
+                            <h4 align="center">{:lang('no_device_available')}</h4>
+                            {else/}
+                            <div class="form-group" style="margin-top:20px; display:block">
+                                <label class="col-lg-1 control-label"></label>
+                                <div class="col-lg-9">
+                                    {volist name="device" id="vo"}
+                                    <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" class="device_config" name="target_device[]" value="{$vo.ip}"> {$vo.ip}</label>{/volist}
+                                </div>
+                            </div>
+                            {/empty}
+
+                            <div class="form-group choose-target-device">
+                            </div>
+                            <div class="form-group choose-target-storage">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-default" onClick="conf_nextto(2,1,'conf_step_');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-success ajax-post " target-form="r_add_task">{:lang('submit')}</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add_auth"  id="add_auth">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('r_distribute_data')}<strong></strong></h4>
+            </div>
+
+
+            <div class="modal-body">
+
+                <form class="form form-horizontal add-auth" role="form" method="post" action="{:url('add_auth')}">
+
+                    <input type="hidden" name="id" value="{$auth_info['id']}" id="">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">用户名:</label>
+                        <div class="col-lg-4">
+                            <input placeholder="" type="text" name="user_name" class="form-control " value="{$auth_info['user_name']}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">密码:</label>
+                        <div class="col-lg-4">
+                            <input placeholder="" type="text" name="passwd" class="form-control " value="{$auth_info['passwd']}"/>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer" style=" padding:10px 0 0 0">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                        &nbsp;
+                        <button type="submit" class="btn btn-success ajax-post" target-form="add-auth">{:lang('submit')}</button>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+
+    $('.device_config').iCheck({
+        labelHover: false,
+        cursor: true,
+        checkboxClass: 'icheckbox_minimal-orange',
+    });
+        /*增加设备*/
+        $(document).on('click', '[data_role="add_device"]', function (e) {
+            e.preventDefault();
+
+//            $("#add_task").modal('show');
+        });
+
+        $('#source_device').change(function(){
+
+            var _this = $(this);
+            var selectOption = _this.find("option:selected");
+            var deviceId = selectOption.attr('device-id');
+            var taskCount = selectOption.attr('task-count');
+            console.log(taskCount);
+            if (!taskCount||taskCount==0){
+                layer.msg('无任务可选',{time:1000,icon:5});
+                return;
+            }else{
+
+                $.ajax({
+                    url: "/remote/index/get_device_task",
+                    type:'get',
+                    data:{'id':deviceId},
+                    async:true,
+                    success:function(json){
+
+                        if(json.code != 1){   // 获取任务失败
+                            layer.msg('无任务可选',{time:1000});
+                        }else{
+                            var data = json.data;
+                            var htmlStr = '<div class="">';
+                            var task ='';
+                            htmlStr += '<div class="myOwnDdl">';
+                            htmlStr += '<span>请选择该设备中的任务</span>';
+                            htmlStr += '<select  class="form-control  source-task" name="task_id" style="width:100%;margin-top:20px; display:block">';
+                            for(var i=0;i<data.length;i++){
+                                 task = data[i];
+                                 htmlStr += "<option value="+task.id+" index="+i+">"+task.create_time+"</option>";
+                            }
+                            htmlStr += "</div></div></select>";
+
+                            $('.source_hdd').html(htmlStr);
+                        }
+
+                    }
+                });
+            }
+        })
+
+
+       // 判断是否是实时的
+        $(".task_type").on('ifClicked',function(e){
+
+            e.preventDefault();
+            var _this = $(this);
+            var taskType = _this.val();
+            if(taskType==1){
+
+                if(_this.attr('have-choosed')!="1"){
+                    _this.attr('have-choosed',"1");
+                    getHaveCurrentTaskDevice();
+                }
+                $(".source_device_list").hide();
+                $(".current_source_device_list").show();
+                $(".source_hdd").hide();
+
+            }else{
+
+                $(".source_device_list").show();
+                $(".current_source_device_list").hide();
+                $(".source_hdd").show();
+
+            }
+
+        });
+
+
+    function getHaveCurrentTaskDevice(){
+
+            $.ajax({
+               url:'/remote/index/get_device',
+               type:'get',
+               async:true,
+               success:function(resJson){
+                   if(resJson.code!=1){
+                        layer.msg(resJson.msg,{icon:2,time:2000});
+                       return;
+                   }
+                   var deviceList = resJson.data;
+                   var selectHtml = '<option value="0">选择源设备</option>';
+                   var device = '';
+                   for(var i=0;i<deviceList.length;i++){
+                       device = deviceList[i];
+                       selectHtml += '<option  value='+device.ip+" device-id="+device.id+">"+device.ip+'</option>';
+                   }
+                   $("#current_source_device").html(selectHtml);
+               }
+            });
+
+        }
+
+
+        /**
+         *  下一步操作
+         */
+    function conf_nextto(s, t, idPre) {
+
+            if (s == 1) {
+                document.getElementById('partition[]');
+            }
+            if (s) {
+                targetid = idPre + s;
+                console.log(targetid);
+                if (document.getElementById) {
+                    target = document.getElementById(targetid);
+                    if (target.style.display == "block") {
+                        target.style.display = "none";
+                    } else {
+                        target.style.display = "block";
+                    }
+                }
+            }
+            if (t) {
+                targetid = idPre + t;
+                if (document.getElementById) {
+                    target = document.getElementById(targetid);
+                    if (target.style.display == "block") {
+                        target.style.display = "none";
+                    } else {
+                        target.style.display = "block";
+                    }
+                }
+            }
+        }
+
+
+    $(".group_btn").click(function(event){
+
+        var index = $(this).attr('id');
+        var className = '#tab_1-'+index;
+        $(".tab-pane").hide();
+        $(className).show();
+
+    });
+
+
+//  二次分发任务
+    $(".distribute_data").click(function (e) {
+        e.preventDefault();
+        var uniqueId = $(this).attr('unique-id');
+        $.ajax({
+            url:"/remote/index/get_remote_task",
+            data:{'unique_id':uniqueId},
+            type:"post",
+            async:true,
+            success: function (resJson) {
+               if(resJson.code==0){
+                   layer.msg('无可选任务',{icon:2,time:2000});
+                   return;
+               }else{
+
+                   var html = '';
+                   var taskIds = resJson.data;
+                   var id = 0;
+                   for(var i=0 ;i<taskIds.length;i++){
+                       id = taskIds[i];
+                       html += "<option value='"+id+"'> 任务 "+id+"</option>";
+                   }
+                   $("#unique_id").val(uniqueId);
+                   $("#device_task").html(html);
+//                   $("#distribute_data").modal('show');
+
+               }
+            }
+        })
+
+    })
+
+
+</script>
+{/block}

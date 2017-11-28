@@ -1,0 +1,76 @@
+{extend name="mobile@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+
+<div class="page">
+    <header class="bar bar-nav">
+    <a class="icon icon-left pull-left" href="{:create_mobile_url('index')}"></a>
+    <h1 class="title">捐赠列表</h1>
+    </header>
+    <div class="content native-scroll">
+        <div class="list-block media-list">
+          <ul>
+            {volist name="lists" id="vo"}
+            
+            <li class="item-content">
+                <div class="item-media"><img src="{if condition="$vo['is_anonymous'] eq 1"}__IMG__/noname.jpg{else /}{$vo.fans.headimgurl}{/if}" width="60"></div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">{$vo.money}元</div>
+                    <div class="item-after">{$vo.create_time|date='y-m-d H:i:s',###}</div>
+                  </div>
+                  <div class="item-subtitle">{if condition="$vo['is_anonymous'] eq 1"}匿名{else /}{$vo.fans.nickname}{/if}</div>
+                  
+                  
+                 {if condition="$vo['content']"}<div class="item-text">{$vo.content}</div>{/if}
+                </div>
+
+            </li>
+            
+            
+             {/volist}
+          </ul>
+        </div>
+        <div class="content-block">
+        <a href="javascript:;" class="button button-big button-fill button-primary" id="donate">我要捐赠</a>
+        </div>
+  </div>
+</div>
+{/block}
+{block name="script"} 
+
+<script>
+  //打开自动初始化页面的功能
+  //建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+	$.config = {
+		autoInit: true,
+		router:false
+	}
+	$(function() {
+		$(document).on('click', '#donate', function() {
+			var url = "{:create_mobile_url('index')}";
+			window.location.href = url;
+		})
+	});
+	
+	wx.ready(function () {
+		sharedata = {
+			title: "{$config['share_title']}",
+			desc: "{$config['share_desc']}",
+			link: "{php $this->createMobileUrl('donate_list'); }",
+			imgUrl: "{$config['share_pic']}",
+			success: function(){
+				
+			},
+			cancel: function(){
+				
+			}
+		};
+		wx.onMenuShareAppMessage(sharedata);
+		wx.onMenuShareTimeline(sharedata);
+	});
+	
+	
+</script> 
+{/block}

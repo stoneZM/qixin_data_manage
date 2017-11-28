@@ -1,0 +1,89 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body">
+    <div class="form form-horizontal">
+    	<div class="form-group">
+            <label class="col-lg-2 control-label">Url 地址：</label>
+            <div class="col-lg-5">   
+                <input type="text" class="form-control" placeholder="请填写链接，包含 http 等协议前缀，支持 URL Scheme" name="url" id="qrcode-input">  
+                <span class="help-block"></span>
+            </div>
+        </div>
+    	<div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary generate">&nbsp;&nbsp;生成&nbsp;&nbsp;</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                 <div id="qrcode"></div>
+                <p class="mt-10 c-red" id="qrcode-url"></p>
+            </div>
+        </div>
+    </div>
+    <div id="markdown" class="mt-20"></div>
+</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/qrcode/qrcode.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/showdown/1.4.2/showdown.min.js"></script>
+<script>
+    $(function () {
+        var url = 'https://www.baidu.com/';
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: url,
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        $("#qrcode-url").html(url);
+
+        $(".generate").click(function () {
+            url = $("#qrcode-input").val();
+            if (!url || !/^[\w]*:\/\//i.test(url)) {
+                layer.alert('请输入正确的链接，支持 URL Scheme');
+                return ;
+            }
+            qrcode.makeCode(url);
+            $("#qrcode-url").html(url);
+        });
+
+        var converter = new showdown.Converter(),
+                text      = $("#markdown_tpl").html();
+        $("#markdown").html(converter.makeHtml(text));
+    })
+</script>
+{literal}
+<script type="text/plain" id="markdown_tpl">
+---
+方法
+```
+<div id="qrcode"></div>
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	text: "https://www.baidu.com/",
+	width: 128,
+	height: 128,
+	colorDark : "#000000",
+	colorLight : "#ffffff",
+	correctLevel : QRCode.CorrectLevel.H
+});
+```
+详细使用请参考 path/to/tpadmin/public/static/lib/qrcode/README.md
+</script>
+{/literal}
+{/block}

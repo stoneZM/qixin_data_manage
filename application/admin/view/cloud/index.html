@@ -1,0 +1,55 @@
+{extend name="common@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+    <section class="content-header">
+      <h1>{$meta_title}<small></small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix" style="margin-bottom:0">
+    <div class="box-body">
+    <iframe id="qinfomarket" src="{:cloud_url()}/goods/index.html" name="main" width="100%" height="100%" frameborder="0" scrolling="yes" style="overflow-x: scroll;"></iframe>
+    <form id="install_form" action="{:url('Admin/Cloud/install')}" method="post">
+        <input id="install_token" type="hidden" name="token">
+        <input id="install_cookie" type="hidden" name="cookie">
+    </form>
+    <div class="clearfix"></div>
+    </div>
+    </div>
+    </section> 
+{/block}
+{block name="script"}
+<script>
+window.addEventListener('message', function (event, domain) {
+	if (event.data.type == 'getWebSiteInfo') {
+		document.getElementById("qinfomarket").contentWindow.postMessage({
+			'type': 'returnWebSiteInfo',
+			'domain': window.location.host,
+			'title': '齐信',
+			'sn': '{$sn}',
+		}, '*');
+	}
+	if (event.data.type == 'install') {
+		$('#install_token').val(event.data.token);
+		$('#install_cookie').val(event.data.cookie);
+		$('#install_form').submit();
+	}
+})
+function myiframe_h(){
+	$("#qinfomarket").height($(".content-wrapper").height()-100);	
+}
+$(function () {
+	myiframe_h();
+	
+	$(window).resize(function () {
+		myiframe_h();
+	}).resize();
+})
+</script>
+{/block}

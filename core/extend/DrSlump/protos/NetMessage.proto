@@ -1,0 +1,3528 @@
+package net_message;
+
+
+message Packet_Header
+{
+	required string sName  = 1 [default=""];
+	required uint32 nFrom  = 2 [default=0];
+	
+}
+
+
+/////////////////
+
+message W2C_Dir_Info   //1001
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sDir  = 5 [default=""];
+	required string   sReserve  = 6 [default=""];
+	
+}
+
+
+message S2C_Dir_Info   //2001
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sDir  = 4 [default=""];
+	required string   sReserve  = 5 [default=""];
+	
+}
+
+
+message Agent_File
+{
+ 	required uint32 nAttributes  = 1 [default=0];
+	required uint32 nHigh  = 2 [default=0];
+	required uint32 nLow  = 3 [default=0];
+	required uint32 nType  = 4 [default=0];
+	required string   sLastWriteTime  = 5 [default=""];
+	required string   sFileName  = 6 [default=""];
+}
+message C2S_Dir_Info   //3001
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	repeated Agent_File mlist  = 3;
+	
+}
+
+message S2W_Dir_Info   //4001
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	repeated Agent_File mlist  = 3;
+	
+}
+
+////////////////////////////
+
+message W2S_Reload_Info   //1002. no use
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sDir  = 5 [default=""];
+	required string   sReserve  = 6 [default=""];
+	
+}
+
+
+message S2C_Reload_Info   //2030.
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sDir  = 5 [default=""];
+	required string   sReserve  = 6 [default=""];
+	
+}
+
+
+message C2S_Reload_Info   //3030.
+{
+	required Packet_Header header  = 1;
+ 	required uint32 nClientType  = 2 [default=0];
+	required uint32 nClientSetupType  = 3 [default=0];
+	required uint32 nSystemType  = 4 [default=0];
+	required string sUserId  = 5 [default=""];
+	required string sMac  = 6 [default=""];
+	required string sIp  = 7 [default=""];
+	required string sHostName  = 8 [default=""];
+	required string sSystemVersion  = 9 [default=""];
+	required string sClientVersion  = 10 [default=""];
+	required string sDBName  = 11 [default=""];
+	required string sSetupTime  = 12 [default=""];
+	required string sClientUser  = 13 [default=""];
+	required string sWorkGroup  = 14 [default=""];
+	required string sRemark  = 15 [default=""];
+
+}
+
+////////////////////////////////////////////
+
+message W2S_DB_Info   //1003.
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nDbType  = 3 [default=0];
+	required uint32 nLoginType  = 4 [default=0];
+	required uint32  nIfSave  = 5 [default=0];
+	required uint32 nPort  = 6 [default=0];
+	required string   sServer  = 7 [default=""];
+	required string   sUserName  = 8 [default=""];
+	required string   sPwd  = 9 [default=""];
+	required string   sUserId  = 10 [default=""];
+	required string   sRemark  = 11 [default=""];
+}
+
+
+message S2C_DB_Info   //2003.
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nDbType  = 3 [default=0];
+	required uint32 nLoginType  = 4 [default=0];
+	required uint32  nIfSave  = 5 [default=0];
+	required uint32 nPort  = 6 [default=0];
+	required string   sServer  = 7 [default=""];
+	required string   sUserName  = 8 [default=""];
+	required string   sPwd  = 9 [default=""];
+	required string   sRemark  = 10 [default=""];
+}
+
+message Db_Attibute_Info   //.
+{
+	
+	required uint32 nAttributes  = 1 [default=0];
+	required uint32 nHigh  = 2 [default=0];
+	required uint32 nLow  = 3 [default=0];
+	required uint32 nFileSign  = 4 [default=0];
+	required string   sLastWriteTime  = 5 [default=""];
+	required string   sFileName  = 6 [default=""];
+	
+}
+
+message C2W_DB_Info   //4004.
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	repeated Db_Attibute_Info  mlist  = 3;
+	
+}
+
+
+
+
+/////////////////
+
+
+message W2C_Db_Dir_Info   //1004
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sDir  = 5 [default=""];
+	required string   sReserve  = 6 [default=""];
+	
+} //沿用4004
+
+
+message S2C_Db_Dir_Info   //2004
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sDir  = 4 [default=""];
+	required string   sReserve  = 5 [default=""];
+	
+} //沿用4004
+
+message C2S_Db_Dir_Info   //3004
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	repeated Db_Attibute_Info  mlist  = 3;
+	
+} //沿用4004
+
+
+
+///////////////////
+
+message W2S_Create_Task   //1005
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""]; //或者组。
+	required uint32   nTaskId  = 5 [default=0];
+	required string   sDescrible  = 6 [default=""];
+	
+} 
+
+
+message W2S_Update_Strategy   //1006
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32   nStrategyId  = 3 [default=0];
+	
+} 
+
+message S2C_Create_Task   //2005
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];  //delete 
+	required uint32  nTaskId   = 5 [default=0];
+} 
+
+message C2S_Get_Task   //3034
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	//required uint32  nTaskId   = 3 [default=0];
+} 
+
+
+message S2C_Plan_Task   //2034
+{
+	required Packet_Header header  = 1;
+	required uint32  nTaskId1   = 2 [default=0];
+	required uint32  nTaskId2   = 3 [default=0];
+	required uint32  nPlan1  = 4 [default=0];
+	required uint32  nPlan2  = 5 [default=0];
+	required uint32  nPlanType  = 6 [default=0];
+	required uint32  nPlanState  = 7 [default=0];
+	required uint32  nPlanBackState  = 8 [default=0];
+	required uint32  nPlanMode  = 9 [default=0];
+	required string    sRunTime  = 10 [default=""];
+	required string    sRunDate  = 11 [default=""];
+	required string  sWeekInc = 12 [default=""];  //后期必须改掉。
+	required string  sMonthInc = 13 [default=""];  //后期必须改掉。
+	required string   sLastModifyDate  = 14 [default=""];
+  required uint32  nIsStopDate  = 15 [default=0];
+  
+  required string  sStopTime = 16 [default=""];
+  required string  sStopDate = 17 [default=""];
+  required uint32  nIntervaValue  = 18 [default=0];
+  required uint32  nIntervaType  = 19 [default=0];  //与上一个，两个合并，
+  required uint32  nTriggerMode =20 [default=0];
+	required uint32  nIdleMinutes  = 21 [default=0];
+	required string   sFinishTime  = 22 [default=""];
+	required uint32  nBackValue =23 [default=0];
+	required uint32 nTaskBackMode  = 24 [default=0];
+	required uint32  nFullBackMode  = 25 [default=0];
+	required uint32 nIncBackKeep  = 26 [default=0];
+	required string  sFullWeek  = 27 [default=""];
+	required string  sFullMonth  = 28 [default=""];
+  required string   sTaskName  = 29 [default=""];
+	required string   sRemark  = 30 [default=""];
+	repeated string   sReservers = 31;
+} 
+
+//////////////////
+message W2S_Update_Config   //1007
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+message Client_Config
+{
+  required uint32  nType  = 1 [default=0];
+	required uint32  nEnableRegister  = 2 [default=0];
+	required uint32  nIsShare  = 3 [default=0];
+	required uint32  nIsExitAndUnInstall  = 4 [default=0];
+	required uint32  nIsDelBack  = 5 [default=0];
+	required uint32  nIsMergeBack  = 6 [default=0];
+	required uint32  nIsHide  = 7 [default=0];
+	required uint32  nIsStartFloat  = 8 [default=0];
+	required uint32  nIsAddSysMenu  = 9 [default=0];
+	required uint32  nIsAddStartMenu  = 10 [default=0];
+	required uint32  nIsSound  = 11 [default=0];
+	required uint32  nShortCut = 12 [default=0];
+	required uint32  nShowTray = 13 [default=0];
+	required uint32  nIsPwdSecurity  = 14 [default=0];
+	required uint32  nStartMode = 15 [default=0];
+	required uint32 nPort  = 16 [default=0];
+	required uint32 nFilePort  = 17 [default=0];
+	required string sServerNetIp = 18 [default=""];
+	required string sServerLanIp = 19 [default=""];
+	required string sSharePwd = 20 [default=""];
+	required string sRemark = 21 [default=""];
+	repeated string sReserves = 22;
+}
+
+message S2C_Update_Config   //2033
+{
+	required Packet_Header header  = 1;
+	required Client_Config info = 2;
+} 
+
+
+///////////////////
+message W2S_Update_Version   //1008
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+
+message S2C_Update_Version   //2008
+{
+	required Packet_Header header  = 1;
+
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+
+} 
+
+/////////////////////
+message W2S_Update_Privilege  //1009
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+/////////////////////
+
+
+message W2S_Del_Client  //1010
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+} 
+
+
+message S2C_Del_Client  //2010
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+///////////////////////
+
+message W2S_Del_Group  //1011
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32 nGroupId  = 4 [default=0];
+} 
+
+message S2C_Del_Group  //2011  代码是 4011
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+message C2S_Del_Group  //3034
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sGroupId  = 4 [default=""];
+} 
+
+
+
+
+
+///////////////////
+
+message W2S_Back_Up  //1012
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sDeviedId  = 5 [default=""];
+	required uint32   nTaskId  = 6 [default=0];
+	required uint32   nBackMod  = 7 [default=0];
+} 
+
+message Storage_info
+{
+required uint32 nType  = 1 [default=0];
+required uint32 nBackMode  = 2 [default=0];
+required uint32 nFileIndex  = 3 [default=0];
+required uint32 nPort  = 4 [default=0];
+required uint32 nIncNum = 5 [default=0];
+required uint32 nLeftHigh  = 6 [default=0];
+required uint32 nLeftLow  = 7 [default=0];
+required uint32 nSourType = 8 [default=0];
+required uint32 nLimitSpace = 9 [default=0];
+required string   sKey  = 10 [default=""];
+required string   sNetIp  = 11 [default=""];
+required string   sLanIp  = 12 [default=""];
+repeated string   sReserve  = 13 ;
+
+}
+message S2C_Back_Up  //2035
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32 nTaskId1  = 4 [default=0];
+	required uint32 nTaskId2  = 5 [default=0];
+	required uint32 nPlanId1  = 6 [default=0];
+	required uint32 nPlanId2  = 7 [default=0];
+	optional Storage_info  info  = 8;
+} 
+
+
+message C2S_Plan_Back_Up  //3035
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nTaskId1  = 3 [default=0];
+	required uint32 nTaskId2  = 4 [default=0];
+	required uint32 nPlanId1  = 5 [default=0];
+	required uint32 nPlanId2  = 6 [default=0];
+	required string sReserve = 7 [default=""];
+	
+} 
+
+
+message C2S_Back_Up  //3036
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32   nTaskId1  = 4 [default=0];
+	required uint32   nTaskId2  = 5 [default=0];
+	required uint32   nPlanId1  = 6 [default=0];
+	required uint32   nPlanId2  = 7 [default=0];
+	optional string  result  = 8 [default=""];
+} 
+
+
+message C2S_Back_Up_End  //3037
+{
+	required Packet_Header header  = 1;
+	required uint32   nTaskId1  = 2 [default=0];
+	required uint32   nTaskId2  = 3 [default=0];
+	required uint32   nPlanId1  = 4 [default=0];
+	required uint32   nPlanId2  = 5 [default=0];
+	
+	required uint32   nCostTime  = 6 [default=0];
+	
+	required uint32   nRemarkFlag  = 7 [default=0];
+	required uint32   nBackupType  = 8 [default=0];
+	required uint32   nBackMode  = 9 [default=0];
+	
+	required uint32   nResult  = 10 [default=0];
+	required uint32   nTargetType  = 11 [default=0];
+	required uint32   nHigh  = 12 [default=0];
+	required uint32   nLow  = 13 [default=0];
+	required uint32   nFileHigh  = 14 [default=0];
+	required uint32   nFileLow  = 15 [default=0];
+	required uint32   nFailFileHigh  = 16 [default=0];
+	required uint32   nFailFileLow  = 17 [default=0];
+	
+	required string   sBackPath = 18 [default=""];
+	repeated string   sReserves  = 19 ;
+	
+	optional string  sRemark  = 20 [default=""];
+} 
+
+message C2S_Back_Up_Start  //3038
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32   nTaskId1  = 3 [default=0];
+	required uint32   nTaskId2  = 4 [default=0];
+	required uint32   nPlanId1  = 5 [default=0];
+	required uint32   nPlanId2  = 6 [default=0];
+	required string   sData = 7 [default=""];
+}
+
+
+message C2S_Back_Error  //32003
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	repeated uint32  nReserve  = 3;
+	required string  sDescription  = 4 [default=""];
+	required string  sMessage  = 5 [default=""];
+	required string  sDesUserId  = 6 [default=""];
+} 
+
+
+message S2W_Back_Up  //4036
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string  sTaskId  = 3 [default=""];
+} 
+
+
+/////////////////////////////
+
+
+message W2S_Stop_Back  //1013
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required uint32   nTaskId  = 5 [default=0];
+} 
+
+
+message S2C_Stop_Back  //2013
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32   nTaskId  = 4 [default=0];
+} 
+
+//////////////////////
+
+
+message W2S_Restore  //1014
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sPath  = 5 [default=""];
+	required string   sRecordId  = 6 [default=""];
+} 
+
+
+message S2C_Restore  //2014
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sRecordId  = 4 [default=""];
+	required string   sConment  = 5 [default=""];
+} 
+
+
+message C2S_Restore  //3043
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	repeated uint32   task_list  = 4 ;
+	repeated uint32   plan_list  = 5 ;
+	optional string  result  = 6 [default=""];
+} 
+
+
+message C2S_Restore_Error  //32004
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32  nReserve  = 3 [default=0];
+	required string  sDescription  = 4 [default=""];
+	required string  sMessage  = 5 [default=""];
+	required string  sDestId  = 6 [default=""];
+} 
+
+
+message S2W_Restore  //4043
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string  sTaskId  = 3 [default=""];
+} 
+
+/////////////////////////////////////
+
+message W2S_Message  //1016
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+	required string   sMessage  = 5 [default=""];
+} 
+
+
+message S2C_Message  //2016
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sMessage  = 4 [default=""];
+} 
+
+///////////////
+
+message W2S_Update_Storage_config  //1017
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+	required string   sPath  = 5 [default=""];
+} 
+
+
+message S2Storage_Update_Storage_config  //5017
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+	required string   sPath  = 5 [default=""];
+} 
+
+
+message Storage2S_Update_Mount_Partition_State //6017,6018
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+	required uint32 nChildType = 4 [default=0];
+	required uint32 nMountId = 5 [default=0];
+	required uint32 nResult  = 6 [default=0];
+	required string sRemark = 7 [default=""];
+} 
+
+////////////////////
+
+
+message W2S_Stop_Storage  //1018
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+} 
+
+
+message S2Storage_Stop_Storage  //5018
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+} 
+
+///////////////////////////////////////
+
+
+message W2S_Reboot_Storage  //1019
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+} 
+
+
+message S2Storage_Reboot_Storage  //5019
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sStorageId  = 4 [default=""];
+} 
+
+//////////////////////////////
+
+message W2S_Backup_Process  //1020
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message S2C_Backup_Process  //2020
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message C2S_Backup_Process  //3020
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nProgress  = 3 [default=0];
+	required uint32 nBackupedFileNum  = 4 [default=0];
+	required uint32 nSpeed  = 5 [default=0];
+	
+	required uint32 nUsedTime  = 6 [default=0];
+	required uint32 nBackedHigh  = 7 [default=0];
+	required uint32 nBackedLow  = 8 [default=0];
+	required uint32 nSkipFileNum  = 9 [default=0];
+	
+	repeated uint32 task_list  = 10 ;
+	required string   sData  = 11 [default=""];
+	
+} 
+
+////////////////////
+message W2S_Restore_Process  //1021
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message S2C_Restore_Process  //2021
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+message C2S_Restore_Process  //3021
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nProgress  = 3 [default=0];
+	required uint32 nBackupedFileNum  = 4 [default=0];
+	required uint32 nSpeed  = 5 [default=0];
+	
+	required uint32 nUsedTime  = 6 [default=0];
+	required uint32 nBackedHigh  = 7 [default=0];
+	required uint32 nBackedLow  = 8 [default=0];
+	required uint32 nSkipFileNum  = 9 [default=0];
+	
+	repeated uint32 task_list  = 10 ;
+	required string   sData  = 11 [default=""];
+	
+} 
+
+//////////////////////
+
+message W2S_Backup_Statistics  //1022
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message S2C_Backup_Statistics  //2022
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message C2S_Backup_Statistics  //3022
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	
+	repeated uint32 task_list  = 3 ;
+	required uint32 nMode  = 4 [default=0];
+	required uint32 nTargetType  = 5 [default=0];
+	
+	required uint32 nFileHigh  = 6 [default=0];
+	required uint32 nFileLow  = 7 [default=0];
+	
+	required uint32 nBackHigh  = 8 [default=0];
+	required uint32 nBackLow  = 9 [default=0];
+	
+
+	required string   sPath  = 10 [default=""];
+	required string   sRemark  = 11 [default=""];
+	
+} 
+
+////////////////////////////
+
+message W2S_Del_terminal  //1023
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+} 
+
+message S2C_Del_terminal  //2023
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	//required string   sUserId  = 4 [default=""];
+} 
+/////////////
+
+
+message W2S_Get_terminal_System_Disk_Info  //1024
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId  = 4 [default=""];
+} 
+
+
+message S2C_Get_terminal_System_Disk_Info  //2024
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	
+} 
+
+message C2S_Get_terminal_System_Disk_Info  //3024
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required string sDriveLetter  = 3 [default=""];
+	
+	required uint32 nUsedHigh  = 4 [default=0];
+	required uint32 nUsedLow  = 5 [default=0];
+	
+	required uint32 nTotalHigh  = 6 [default=0];
+	required uint32 nTotalLow  = 7 [default=0];
+	
+	required string sFileSystem  = 8 [default=""];
+	required string sSystemVersion  = 9 [default=""];
+	optional string sData  = 10 [default=""];
+}
+
+
+message S2W_Get_terminal_System_Disk_Info  //4024
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nDriveLetter  = 3 [default=0];
+	
+	required uint32 nUsedHigh  = 4 [default=0];
+	required uint32 nUsedLow  = 5 [default=0];
+	
+	required uint32 nTotalHigh  = 6 [default=0];
+	required uint32 nTotalLow  = 7 [default=0];
+	
+	required string sFileSystem  = 8 [default=""];
+	required string sSystemVersion  = 9 [default=""];
+	optional string sData  = 10 [default=""];
+}
+
+//////////////////////////////////////// 
+
+
+message W2S_Restore_Statistics  //1025
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message S2C_Restore_Statistics  //2025
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message C2S_Restore_Statistics  //3025,4025
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	
+	repeated uint32 task_list  = 3 ;
+	required uint32 nMode  = 4 [default=0];
+	required uint32 nTargetType  = 5 [default=0];
+	
+	required uint32 nFileHigh  = 6 [default=0];
+	required uint32 nFileLow  = 7 [default=0];
+	
+	required uint32 nBackHigh  = 8 [default=0];
+	required uint32 nBackLow  = 9 [default=0];
+	
+
+	required string   sPath  = 10 [default=""];
+	required string   sRemark  = 11 [default=""];
+
+	
+} 
+
+/////////////
+message W2S_Stop_Restore  //1026
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sTaskId  = 4 [default=""];
+} 
+
+
+message S2C_Stop_Restore  //2026
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required string   sTaskId  = 3 [default=""];
+} 
+////////////////////////////
+
+
+message W2S_Del_Task  //1046
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32   nTaskId  = 4 [default=0];
+} 
+
+
+message S2C_Del_Task  //2046
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32   nTaskId  = 4 [default=0];
+} 
+
+/////////////////////////
+
+
+message W2S_Change_Group  //1048
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string   sUserId = 4 [default=""];
+	required uint32   nNewGroupId  = 5 [default=0];
+	required uint32   nOldGroupId  = 6 [default=0];
+} 
+
+
+message S2C_Change_Group  //2048
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32   nTaskId  = 4 [default=0];
+} 
+
+////////////////////////
+
+message W2S_Get_License  //1049
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+message License_Info
+{
+	
+	
+	required uint32 nClientNum  = 1 [default=0];
+	required uint32 nServerNum  = 2 [default=0];
+	required uint32 nLicenseDays  = 3 [default=0];
+	
+	required uint32  nForever  = 4 [default=0];
+	required uint32  nTrialVer  = 5 [default=0];
+	
+	
+	repeated uint32 model_num_list  = 6;
+	required string sSetupTime  = 7 [default=""];
+	required string sRegisterTime  = 8 [default=""];
+	
+	required string sClientModel  = 9 [default=""];
+	required string sServerModel  = 10 [default=""];
+	required string sUserInfo  = 11 [default=""];
+	//required string sData  = 12 [default=""];
+}
+
+message S2W_Get_License //4049 
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required License_Info  info = 3;
+
+	
+} 
+
+////////////////////////
+
+
+message W2S_Register  //1050
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sPath  = 4 [default=""];
+} 
+
+
+message S2W_Register //4050
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required License_Info  info = 3;
+	
+} 
+
+////////////////////////////////////
+message W2S_Secret_Login  //1053
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required string sUserName  = 5 [default=""];
+	required string sPwd  = 6 [default=""];
+} 
+
+message S2C_Secret_Login  //2053
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserName  = 4 [default=""];
+	required string sPwd  = 5 [default=""];
+} 
+
+
+message C2S_Secret_Login  //3053
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	optional string sResult  = 4 [default=""];
+
+} 
+
+
+message S2W_Secret_Login  //4053
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	optional string sResult  = 3 [default=""];
+
+} 
+/////////////////////////////
+
+
+message W2S_Create_Folder  //1056
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required string sPath  = 5 [default=""];
+	required string sPwd  = 6 [default=""];
+} 
+
+
+message S2C_Create_Folder  //2056
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sPath  = 4 [default=""];
+}
+
+
+message S2W_Create_Folder  //4056
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	optional string sResult  = 3 [default=""];
+}  
+
+/////////////////////////////////
+
+
+message W2S_Update_Clone  //1057
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required string sCloneId  = 5 [default=""];   //没用
+} 
+
+
+message S2C_Update_Clone  //2057,28004
+{
+	required Packet_Header header  = 1;
+	required uint32 nRunState  = 2 [default=0];
+	required uint32 nIsSyn  = 3 [default=0];
+	required uint32 nSynType  = 4 [default=0];
+	
+	
+	required uint32 nSynInterval  = 5 [default=0];
+	required uint32 nIsSnapshot  = 6 [default=0];
+	required uint32 nIsIncreOldSnap  = 7 [default=0];
+	required uint32 nSnapType  = 8 [default=0];
+	required uint32 nSnapInterval  = 9 [default=0];
+	
+	required uint32 nIsFullBack  = 10 [default=0];
+	required uint32 nFullBackType  = 11 [default=0];
+	required uint32 nFullBackNum  = 12 [default=0];
+	required uint32 nIsKeepSnap  = 13 [default=0];
+	required uint32 nKeepSnapType  = 14 [default=0];
+	
+	required uint32 nKeepSnapNum  = 15 [default=0];
+	required uint32 nTargetType  = 16 [default=0];
+	
+	
+	required string sPath  = 17 [default=""];
+	required string sPartition  = 18 [default=""];
+	required string sDbName  = 19 [default=""];
+} 
+
+///////////////////////////////////
+
+message W2S_Reset_Client_SystemId  //1061
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+} 
+
+
+message S2C_Reset_Client_SystemId  //2061,28005
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+//message C2D_Reset_Client_SystemId  //28005
+//{
+//  required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//} 
+
+
+message D2C_Reset_Client_SystemId  //27005
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string  szSystemID  = 3 [default=""];
+	required string szOldSystemID  = 4 [default=""];
+} 
+
+////////////////////////////
+
+message W2S_Clone_State  //1062
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+} 
+
+message S2C_Clone_State  //2062,28006
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+//message C2D_Clone_State  //28006
+//{
+//	required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//} 
+
+//message D2C_Clone_Work_State  //27006
+//{
+//	required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//
+//	required uint32 nState  = 3 [default=0];
+//	required uint32 nSystemType  = 4 [default=0];
+//	required uint32 nDriveState  = 5 [default=0];
+//	required uint32 nPowerState  = 6 [default=0];
+//	required uint32 nSystemWorkState  = 7 [default=0];
+//	required uint32 nEngineWorkState  = 8 [default=0];
+//	
+//	
+//	required uint32 nSpeed  = 9 [default=0];
+//	required uint32 nUsedTime  = 10 [default=0];
+//	required uint32 nHigh  = 11 [default=0];
+//	required uint32 nLow  = 12 [default=0];
+//	
+//	required uint32 nIsUpdateDb = 13 [default=0];
+//	required uint32 nProgress = 14 [default=0];
+//	required uint32 nMirrorPartition = 15 [default=0];
+//	required string sFileSystemDescription  = 16 [default=""];
+//	required string sSystemWorkDescription  = 17 [default=""];
+//	required string sUuid  = 18 [default=""];
+//} 
+
+message C2S_Clone_Work_State  //3062
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	
+	required uint32 nState  = 3 [default=0];
+	required uint32 nSystemType  = 4 [default=0];
+	required uint32 nDriveState  = 5 [default=0];
+	required uint32 nPowerState  = 6 [default=0];
+	required uint32 nSystemWorkState  = 7 [default=0];
+	required uint32 nEngineWorkState  = 8 [default=0];
+	
+	
+	required uint32 nSpeed  = 9 [default=0];
+	required uint32 nUsedTime  = 10 [default=0];
+	required uint32 nHigh  = 11 [default=0];
+	required uint32 nLow  = 12 [default=0];
+	
+	required uint32 nIsUpdateDb = 13 [default=0];
+	required uint32 nProgress = 14 [default=0];
+	required uint32 nMirrorPartition = 15 [default=0];
+	required string sFileSystemDescription  = 16 [default=""];
+	required string sSystemWorkDescription  = 17 [default=""];
+	required string sUuid  = 18 [default=""];
+} 
+
+
+message S2W_Clone_State  //4062
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	
+	required uint32 nState  = 3 [default=0];
+	required uint32 nSystemType  = 4 [default=0];
+	required uint32 nDriveState  = 5 [default=0];
+	required uint32 nPowerState  = 6 [default=0];
+	required uint32 nSystemWorkState  = 7 [default=0];
+	required uint32 nEngineWorkState  = 8 [default=0];
+	
+	
+	required uint32 nSpeed  = 9 [default=0];
+	required uint32 nUsedTime  = 10 [default=0];
+	required uint32 nHigh  = 11 [default=0];
+	required uint32 nLow  = 12 [default=0];
+	
+	required uint32 nIsUpdateDb = 13 [default=0];
+	required uint32 nProgress = 14 [default=0];
+	required uint32 nMirrorPartition = 15 [default=0];
+	required string sFileSystemDescription  = 16 [default=""];
+	required string sSystemWorkDescription  = 17 [default=""];
+	required string sUuid  = 18 [default=""];
+} 
+
+///////////////////////
+
+message W2S_Clone  //1064
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nOperator  = 5 [default=0];
+} 
+
+message S2C_Clone  //2064,28008
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	
+} 
+
+//message C2D_Clone  //28008
+//{
+//	required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//	
+//} 
+
+
+
+
+
+message S2W_Clone_Result  //4061,4064,4065
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint32 nState  = 3 [default=0];
+	
+} 
+/////////////////////////////
+message W2S_Snap_Syn  //1065
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nOperType  = 5 [default=0];
+} 
+message S2C_Snap_Syn  //2065
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+message S2W_Snap_Syn  //4065
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nOperator  = 5 [default=0];
+} 
+
+//message C2D_Snap_Syn  //28009
+//{
+//	required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//} 
+
+
+//////////////////////////////
+
+
+message W2S_Remote_Mount  //1068
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nMountId  = 5 [default=0];
+} 
+message S2C_Remote_Mount  //2068
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	
+	required uint32 nDeviceId  = 4 [default=0];
+	required uint32 nMountId  = 5 [default=0];
+	required uint32 nState  = 6 [default=0];
+	required uint64 nPartStartPos  = 7 [default=0];
+	required uint64 nPartSize  = 8 [default=0];
+	required uint32 nStoragePort  = 9 [default=0];
+	
+	required string sVmdkPath  = 10 [default=""];
+	required string sKey  = 11 [default=""];
+	required string sLanIp  = 12 [default=""];
+	required string sNetIp  = 13 [default=""];
+	required string sPartLabel  = 14 [default=""];
+	required string sPartLetter  = 15 [default=""];
+	required string sPartLinuxLoadPos  = 16 [default=""];
+	repeated string sReserves = 17 ;
+	
+} 
+message S2W_Remote_Mount_Error  //33001
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sError  = 3 [default=""];
+	
+} 
+
+message C2S_Remote_Stop_Mount  //3068 与 3069 合并。
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nChildType  = 3 [default=0]; //赋值为回应码 4068 or 4069
+	required uint64  nWebId  = 4 [default=0];
+	required uint32 nMountId  = 5 [default=0];
+	required string sError  = 6 [default=""];
+	
+} 
+
+message S2W_Remote_Mount  //4068,4069
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sError  = 3 [default=""];
+	
+} 
+
+//////////////////////////////////
+
+
+message W2S_Stop_Remote_Mount  //1069
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nMountId  = 5 [default=0];
+} 
+
+
+message S2C_Stop_Remote_Mount  //2069
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32 nMountId  = 4 [default=0];
+	required string sPartitionLetter = 5 [default=""];
+} 
+
+
+
+
+//message C2S_Stop_Remote_Mount  //3069
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nType  = 2 [default=0];
+//	required uint64  nWebId  = 3 [default=0];
+//	required uint32 nMountId  = 4 [default=0];
+//	required string sError  = 5 [default=""];
+//} 
+
+message S2W_Stop_Remote_Mount  //4069
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sError  = 3 [default=""];
+} 
+
+
+///////////////////////////////////
+
+message W2S_Remote_Mount_State  //1070
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nStrategyId  = 5 [default=0];
+} 
+
+
+
+
+message S2C_Remote_Mount_State2070
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32 nMountId = 4 [default=0];
+} 
+
+
+
+
+
+
+message S2W_Remote_Mount_State  //4065
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+message C2S_Remote_Mount_State  //3070
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required uint32 nMountId = 4 [default=0];
+	required string sRemark = 5 [default=""];
+} 
+
+message S2W_Remote_Mount_State_Result  //4070
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sResult  = 3 [default=""];
+} 
+//////////////////////////////
+
+
+message W2S_Clone_Save  //1072
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+} 
+
+
+message S2Storge_Clone_Save  //5016
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nDiskCloneId  = 3 [default=0];
+	required string sDiskClonePath  = 4 [default=""];
+} 
+
+
+message Storge2S_Delete_Uuid_Dir  //6016
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nDiskCloneId  = 3 [default=0];
+	required string sDiskClonePath  = 4 [default=""];
+} 
+
+////////////////////
+
+message W2S_Snap_Merge  //1073
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nStartId  = 5 [default=0];
+	required uint32 nEndId  = 6 [default=0];
+} 
+
+
+message S2C_Snap_Merge  //2073,28016
+{
+	required Packet_Header header  = 1;
+	required uint32 nDiskIndex  = 2 [default=0];
+	required uint32 nIsMerge  = 3 [default=0];
+	required uint32 nWhoMerge  = 4 [default=0];
+	required string sVmdkBegin  = 5 [default=""];
+	required string sVmdkEnd  = 6 [default=""];
+	required string sReason  = 7 [default=""];
+} 
+
+
+message S2W_Snap_Merge  //4073
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sError  = 3 [default=""];
+} 
+
+
+
+//message C2D_Snap_Merge  //28016
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nDiskIndex  = 2 [default=0];
+//	required uint32 nIsMerge  = 3 [default=0];
+//	required uint32 nWhoMerge  = 4 [default=0];
+//	required string sVmdkBegin  = 5 [default=""];
+//	required string sVmdkEnd  = 6 [default=""];
+//	required string sReason  = 7 [default=""];
+//} 
+
+
+////////////////////////////
+
+message W2S_Disk_checkout  //1075
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sUserId  = 4 [default=""];
+	required uint32 nDiskIndex  = 5 [default=0];
+} 
+
+
+message S2C_Disk_checkout  //2075,28018
+{
+	required Packet_Header header  = 1;
+	required uint32 nDiskIndex  = 2 [default=0];
+	required uint32 nCheckType  = 3 [default=0];
+} 
+
+message S2W_Disk_checkout  //4075
+{
+	required Packet_Header header  = 1;
+	required uint32 nDiskIndex  = 2 [default=0];
+	required uint32 nCheckType  = 3 [default=0];
+	required string sResult  = 4 [default=""];
+} 
+
+
+//message C2D_Disk_checkout  //28018
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nDiskIndex  = 2 [default=0];
+//	required uint32 nCheckType  = 3 [default=0];
+//} 
+
+
+
+
+message C2S_Disk_checkout  //3075,27018
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string   sPath  = 3 [default=""];
+} 
+/////////////////////////////////////
+
+//message W2S_Modify_Clone  //
+//{
+//	required Packet_Header header  = 1;
+//	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//	required string sUserId  = 4 [default=""];
+//	required string sCloneId  = 5 [default=""];
+//} 
+
+
+message S2C_Modify_Clone  //2077,28020
+{
+	required Packet_Header header  = 1;
+	required uint32 nLimitTime  = 2 [default=0];
+	required uint32 nSaveType  = 3 [default=0];
+	required uint32 nBackSpeed  = 4 [default=0];
+	required uint32 nCheckDiskState  = 5 [default=0];
+	required uint32 nLimitSpeed  = 6 [default=0];
+	
+	required string sHoldPartition  = 7 [default=""];
+	required string sLimitedBackTime  = 8 [default=""];
+	required string sSnapTimeRange  = 9 [default=""];
+	repeated string sReserves  = 10 ;
+} 
+
+
+//message C2D_Modify_Clone  //28020
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nLimitTime  = 2 [default=0];
+//	required uint32 nSaveType  = 3 [default=0];
+//	required uint32 nBackSpeed  = 4 [default=0];
+//	required uint32 nCheckDiskState  = 5 [default=0];
+//	required uint32 nLimitSpeed  = 6 [default=0];
+//	
+//	required string sHoldPartition  = 7 [default=""];
+//	required string sLimitedBackTime  = 8 [default=""];
+//	required string sSnapTimeRange  = 9 [default=""];
+//	repeated string sReserves  = 10 ;
+//} 
+
+/////////////////////////////////////
+
+message W2S_Get_Local_Ip  //1078
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+} 
+
+
+
+message NetCardInfo
+{
+  required uint32 nCardType  = 1 [default=0];
+  required uint32 nIpType  = 2 [default=0];
+  
+  required string sCardUuid  = 3 [default=""];
+  required string sMac  = 4 [default=""];
+  required string sIp  = 5 [default=""];
+  required string sMask  = 6 [default=""];
+  required string sGateWay  = 7 [default=""];
+  required string sDns1  = 8 [default=""];
+  required string sDns2  = 9 [default=""];
+  required string sCardDesc  = 10 [default=""];
+  
+}
+message S2W_Get_Local_Ip_Error  //34078
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string   sError  = 3 [default=""];
+} 
+
+
+message S2W_Get_Local_Ip  //4078
+{
+	required Packet_Header header  = 1;
+	repeated NetCardInfo card_list  = 2;
+} 
+
+///////////////////////
+
+
+message W2S_Modify_Local_Ip  //1079
+{
+	required Packet_Header header  = 1;
+	
+	repeated NetCardInfo card_list  = 2;
+  
+} 
+
+
+message S2W_Modify_Local_Ip  //4079
+{
+	required Packet_Header header  = 1;
+	
+	required uint32 nType  = 2 [default=0];
+	required string   sError  = 3 [default=""];
+  
+} 
+
+///////////////////////////////////////
+
+message W2S_Restart_NetCard  //1080
+{
+	required Packet_Header header  = 1;
+	
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+  
+} 
+
+
+message S2W_Restart_NetCard  //4080
+{
+	required Packet_Header header  = 1;
+	
+	required uint32 nType  = 2 [default=0];
+	required string   sError  = 3 [default=""];
+  
+} 
+
+////////////////////
+message W2S_Update_Clinet_Log_Path  //1081
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required string sUserId  = 3 [default=""];
+	required string sPath = 4 [default=""];
+  
+} 
+
+
+message S2C_Update_Clinet_Log_Path  //2081
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0]; 
+	required string sPath = 4 [default=""];
+} 
+
+
+/////////////////////////////////
+
+
+message W2S_Storage_Create_Mount  //1082  //
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required string sUserId  = 3 [default=""];
+	required uint32 nMountId = 4 [default=0];
+  
+} 
+
+
+message S2W_Storage_Create_Mount  //4082，
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0]; 
+	required string sRemark = 4 [default=""];
+  
+} 
+
+
+message S2Storage_Storage_Create_Mount  //5017
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0]; 
+	required uint32 nMountId = 4 [default=0];
+	required uint64 nStartPos = 5 [default=0];
+	required uint64 nSize = 6 [default=0];
+	required string sPath = 7 [default=""];
+	required string sLabel = 8 [default=""];
+  
+} 
+
+////////////////////////
+
+
+message W2S_Storage_Delete_Mount  //1083  //
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required string sUserId  = 3 [default=""];
+	required uint32 nMountId = 4 [default=0];
+  
+} 
+
+
+message S2W_Storage_Delete_Mount  //4083
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0]; 
+	required string sRemark = 3 [default=""];
+  
+} 
+
+
+message S2Storage_Storage_Delete_Mount  //5018
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0]; 
+	required uint32 nMountId = 4 [default=0];
+	required string sPath = 5 [default=""];
+  
+} 
+
+///////////////////////
+message C2S_Client_Close  //0
+{
+	required Packet_Header header  = 1;
+} 
+
+
+message C2S_Client_Device_Info  //3002
+{
+	required Packet_Header header  = 1;
+	required uint32 nClientType = 2 [default=0];
+	required uint32 nSetupType = 3 [default=0];
+	required uint32 nSystemType = 4 [default=0];
+	required string sUserId = 5 [default=""];
+	required string sMac = 6 [default=""];
+	required string sIp = 7 [default=""];
+	required string sHostName = 8 [default=""];
+	required string sSysVersion = 9 [default=""];
+	required string sClientVersion = 10 [default=""];
+	required string sDbName = 11 [default=""];
+	required string sSetupTime = 12 [default=""];
+	required string sClientUser = 13 [default=""];
+	required string sWorkGroup = 14 [default=""];
+	required string sRemark = 15 [default=""];
+	repeated string sReservers = 16 ;
+} 
+
+message S2C_Client_Device_Info_Result  //2002
+{
+    required Packet_Header header  = 1;    
+    required uint32 nType = 2 [default=0];
+    required uint64  nWebId = 3 [default=0];
+}
+
+//////////////////////////////
+
+message Disk_Info
+{
+  required uint32 nTemperature = 1 [default=0]; 
+  required uint32 nMaxTemperature = 2 [default=0]; 
+  required uint32 nAverageTemperature = 3 [default=0]; 
+  required uint32 nHealthRate = 4 [default=0]; 
+  required uint32 nDiskUsed = 5 [default=0]; 
+  required string sSn = 6 [default=""]; 
+  required string sModeNum = 7 [default=""]; 
+  required string sReserve = 8 [default=""]; 
+  
+}
+message C2S_Client_State  //3032
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint32 nState = 3 [default=0];
+	repeated Disk_Info mlist = 4;
+	
+} 
+
+
+message S2C_Client_State  //2032
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+} 
+
+////////////////////
+message C2S_Client_Config  //3033
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];	
+} 
+
+/////////////////
+
+message Db_Info
+{
+ required uint32  nDbType   = 1 [default=0];
+ required uint32  nLoginType   = 2 [default=0];
+ required uint32  nPort   = 3 [default=0];
+ 
+ required string  sHost   = 4 [default=""];
+ required string  sUser   = 5 [default=""];
+ required string  sPwd   = 6 [default=""];
+ required string  sRemark   = 7 [default=""];
+ required string  sReserve   = 8 [default=""];
+}
+
+
+//message Source_Info
+//{
+// required uint32  nSourId   = 1 [default=0];
+// required uint32  nTaskId   = 2 [default=0];
+// 
+// required string  sSourServer   = 3 [default=""];
+// required uint32  nSourType   = 4 [default=0];
+// 
+// required string sUser = 5 [default=""];
+// required string sPwd = 6 [default=""];
+// 
+// required uint32 nPort = 7 [default=0];
+//  required uint32 nLoginType = 8 [default=0];
+//  
+//  required string sRemark = 9 [default=""];
+//  
+//  repeated string sReserves = 10 ;
+//}
+
+
+message Source_Path_Info
+{
+ required uint32  nCheck   = 1 [default=0];
+ required uint32  nType   = 2 [default=0];
+ required string  sPath = 3 [default=""];
+ required string  sRemark = 4 [default=""];
+}
+message S2C_Task_Info  //2038
+{
+	required Packet_Header header  = 1;
+	required uint32  nTaskId1   = 2 [default=0];
+	required uint32  nTaskId2   = 3 [default=0];
+  required string  sCreateTime = 4 [default=""];
+  required string  sModifyTime = 5 [default=""];
+  required string  sEndTime = 6 [default=""];
+  required uint32  nClientId = 7 [default=0];
+  
+  required uint32  nLastBackValue = 8 [default=0];
+  required uint32  nBackState = 9 [default=0];
+  required uint32  nTaskMode = 10 [default=0];
+  
+  required uint32  nBackType = 11 [default=0];
+  required uint32  nTargetType = 12 [default=0];
+  
+  required uint32  nBackMode = 13 [default=0];
+  required uint32  nIsPwd = 14 [default=0];
+  required uint32  nEncryptType = 15 [default=0];
+  required uint32  nKeyBit = 16 [default=0];
+  required uint32  nIsHighSppd = 17 [default=0];
+  required uint32  nIsMirrorCompletely = 18 [default=0];
+  required uint32  nMediaMode = 19 [default=0];
+  required uint32  nIsCompress = 20 [default=0];
+  required uint32  nIsVolumeShadowCopy = 21 [default=0];
+  required uint32  nIsVerify = 22 [default=0];
+  required uint32  nIsEncrypt = 23 [default=0];
+  required uint32  nIsDelReduplicate= 24 [default=0];
+  
+  required uint32  nIsBreakContinue = 25 [default=0];
+  required uint32  nInclude = 26 [default=0];
+  required uint32  nIncludeSize = 27 [default=0];
+  required uint32  nIsIdentify = 28 [default=0];
+  required uint32  nIsReport = 29 [default=0];
+  required uint32  nFileLimitMode = 30 [default=0];
+  required uint32  nIsScanMode = 31 [default=0];
+  required uint32  nKeepBackup = 32 [default=0];
+  required uint32  nBackNum = 33 [default=0];
+  required uint32  nDayNum = 34 [default=0];
+  required uint32  nLimitNetSpeed = 35 [default=0];
+  
+  
+  required uint32  nLimitCpu = 36 [default=0];
+  required uint32  nMaxNetKB = 37 [default=0];
+  required uint32  nCpu = 38 [default=0];
+  required uint32  nTryConnect = 39 [default=0];
+  required uint32  nInterSec = 40 [default=0];
+  required uint32  nTryNum = 41 [default=0];
+  required uint32  nIsBackBefore = 42 [default=0];
+  required uint32  nIsBackAfter = 43 [default=0];
+  
+  
+  required uint32  nAfterBackRunType = 44 [default=0];
+  required uint32  nAlwayRunAfterBack = 45 [default=0];
+  required uint32  nCheckConsis = 46 [default=0];
+  required uint32  nCheckParity = 47 [default=0];
+  required uint32  nIsCreateDbCopy = 48 [default=0];
+  required uint32  nDbCompress = 49 [default=0];
+  required uint32  nDelLog = 50 [default=0];
+  required uint32  nNoBackBadLog = 51 [default=0];
+  required uint32  nIsOfflineBackup = 52 [default=0];
+  required uint32  nDataSourType = 53 [default=0];
+  required uint32  nSourNode = 54 [default=0];
+  
+  required string  sTaskName = 55 [default=""];
+  required string  sTargetPath = 56 [default=""];
+  required string  sTaskRemark = 57 [default=""];
+  required string  sPwd = 58 [default=""];
+  required string  sIncludeFileType = 59 [default=""];
+  required string  sExcludeFileType = 60 [default=""];
+  required string  sExcludeFolder = 61 [default=""];
+  required string  sRunPathAfterBack = 62 [default=""];
+  required string  sRunPathBefore = 63 [default=""];
+  required string  sDbSavePath = 64 [default=""];
+  required string  sConfig = 65 [default=""];
+  
+  repeated string  sReserves = 66 ;
+  
+  required Db_Info dbInfo = 67;
+  required Source_Path_Info path = 68;
+
+  
+} 
+
+///////////////////////
+message C2S_Delete_Back  //3045
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];	
+	required string sPath = 3 [default=""];
+}
+
+
+message C2S_Disk_State  //3047
+{
+	required Packet_Header header  = 1;	
+	required Disk_Info info = 2;
+	
+}
+
+
+message C2S_Restore_End  //3044
+{
+	required Packet_Header header  = 1;
+	required uint32  nTaskId1   = 2 [default=0];
+	required uint32  nTaskId2   = 3 [default=0];
+	required uint32  nPlan1  = 4 [default=0];
+	required uint32  nPlan2  = 5 [default=0];
+	required uint32  nUsedTime = 6 [default=0];
+	required uint32  nRemarkFlag = 7 [default=0];
+	required uint32  nBackType = 8 [default=0];
+	required uint32  nBackMode = 9 [default=0];
+	required uint32  nBackResult = 10 [default=0];
+	required uint32  nTargetType = 11 [default=0];
+	
+	required uint32  nBackHigh = 12 [default=0];
+	required uint32  nBackLow = 13 [default=0];
+	required uint32  nFileHigh = 14 [default=0];
+	required uint32  nFileLow = 15 [default=0];
+	required uint32  nFailedFileHigh = 16 [default=0];
+	required uint32  nFailedFileLow = 17 [default=0];
+	
+	required string  sBackPath = 18 [default=""];
+	
+	repeated string  sReserves = 19 ;
+	required string  sRemark = 20 [default=""];
+	
+}
+
+
+message C2S_BackOrRestore_Result  //3051
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];	
+	optional uint32 nTime = 3 [default=0];	
+	required uint32  nTaskId1   = 4 [default=0];
+	required uint32  nTaskId2   = 5 [default=0];
+	required string  sRemark = 6 [default=""];
+}
+
+
+
+message C2S_Check_Version  //3052
+{
+required Packet_Header header  = 1;
+required uint32 nType = 2 [default=0];	
+required string sVersion = 3 [default=""];
+
+}
+
+
+message S2C_Update_All_Version   //2052
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nNum = 3 [default=0];
+	required string sVersion = 4 [default=""];
+
+} 
+
+
+message C2S_Register   //3054
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nIsBind = 3 [default=0];
+	
+	required uint32 nClientSubId = 4 [default=0];
+	
+	required string sUser = 5 [default=""];
+	required string sPwd = 6 [default=""];
+	required string sMail = 7 [default=""];
+	required string sRemark = 8 [default=""];
+	required string sReserver1 = 9 [default=""];
+	required string sReserver2 = 10 [default=""];
+	
+
+} 
+
+message S2C_Register  //2054
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nClientSubId  = 3 [default=0];
+}
+
+
+message C2S_BackOrRestore_State  //3055
+{
+	required Packet_Header header  = 1;
+	repeated uint64 listBack = 2;	   //后续要改，目前是把两个task拼成一个uint64
+	repeated uint32 listRestore = 3;	  
+	
+}
+
+
+message C2S_Share_Path  //3056 处理中没有用到消息体。
+{
+	required Packet_Header header  = 1;
+	
+}
+
+
+message C2S_DiskClone_Config  //3057,27012  处理中没有用到消息体。
+{
+	required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required string sSystemId = 3 [default=""];
+	
+}
+
+message C2S_DiskClone_State  //3058,27002  
+{
+	required Packet_Header header  = 1;
+	required string sSystemId = 2 [default=""];
+	required uint32 nState = 3 [default=0];
+	required uint32 nSysType = 4 [default=0];
+	required uint32 nDriveState = 5 [default=0];
+	required uint32 nPowerState = 6 [default=0];
+	required uint32 nSysWorkState = 7 [default=0];
+	required uint32 nEngineState = 8 [default=0];
+	required string sFileSysDes = 9 [default=""];
+	required string sSysWorkDes = 10 [default=""];
+	required string sPath = 11 [default=""];
+}
+
+
+message Partition_Info
+{
+ required uint32 nPartitionIndex = 1 [default=0];
+	
+	required uint32 nIsExising = 2 [default=0];
+	required uint32 nIsNeedBack = 3 [default=0];
+	required uint32 nState = 4 [default=0];
+	required uint32 nStartSector1 = 5 [default=0];
+	required uint32 nStartSector2 = 6 [default=0];
+	
+	required uint32 nTotalSector1 = 7 [default=0];
+	required uint32 nTotalSector2 = 8 [default=0];
+	
+	required string sName = 9 [default=""];
+	required string sLabel = 10 [default=""];
+	required string sLetter = 11 [default=""];
+	required string sFileSysName = 12 [default=""];
+	required string sReserve1 = 13 [default=""];
+	required string sReserve2 = 14 [default=""];
+}
+message C2S_Partition_State  //3059
+{
+	required Packet_Header header  = 1;
+	required uint32 nDiskIndex = 2 [default=0];
+	
+	required uint32 nIsExising = 3 [default=0];
+	required uint32 nType = 4 [default=0];
+	required uint32 nDiskSize1 = 5 [default=0];
+	required uint32 nDiskSize2 = 6 [default=0];
+	required string sSystemId = 7 [default=""];
+	required string sSn = 8 [default=""];
+	required string sDiskName = 9 [default=""];
+	required string sDiskUuid = 10 [default=""];
+	
+	repeated Partition_Info mlist = 11;
+
+}
+
+
+
+
+message DB_State
+{
+ required uint32 nIndex = 1 [default=0];
+ required uint32 nIsNeedBack = 2 [default=0];
+ required uint32 nVss = 3 [default=0];
+ required uint32 nState = 4 [default=0];
+ required string sName = 5 [default=""];
+}
+message C2S_DB_Info  //3060,27010
+{
+	required Packet_Header header  = 1;
+	required string sSystemId = 2 [default=""];
+	repeated DB_State mlist = 3;
+
+}
+
+//message C2S_Reset_Client_SystemId  //3061,27005  处理中没有用到消息体。
+//{
+// required Packet_Header header  = 1;
+//}
+
+
+message D2S_Get_Storage_Info  //3063,27007
+{
+ required Packet_Header header  = 1;
+ required string sStorageSymbol =2 [default=""];
+}
+
+
+message Storage_Addr_Info
+{
+required uint32 nType  = 1 [default=0];
+required uint32 nBackMode  = 2 [default=0];
+required uint32 nFileIndex  = 3 [default=0];
+required uint32 nPort  = 4 [default=0];
+required uint32 nIncNum  = 5 [default=0];
+required uint32 nHigh  = 6 [default=0];
+required uint32 nLow  = 7 [default=0];
+required uint32 nSourType  = 8 [default=0];
+required uint32 nLimitSpace  = 9 [default=0];
+
+required string sKey = 10 [default=""];
+required string sNetIp = 11 [default=""];
+required string sLanIp = 12 [default=""];
+required string sReserve1 = 13 [default=""];
+required string sReserve2 = 14 [default=""];
+required string sReserve3 = 15 [default=""];
+
+}
+message S2D_Get_Storage_Info  //2063,28007
+{
+ required Packet_Header header  = 1;
+ required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required Storage_Addr_Info info = 4;
+}
+
+
+//message C2D_Get_Storage_Info  //28007
+//{
+// required Packet_Header header  = 1;
+// required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//	required Storage_Addr_Info info = 4;
+//}
+
+
+
+message C2S_Disk_Clone_Info  //3066,27011
+{
+ required Packet_Header header  = 1;
+	required uint32 nType  = 2 [default=0];
+	required uint32 nFlag  = 3 [default=0];
+	required string sLog = 4 [default=""];
+}
+
+message Vmdk_Info
+{
+  required uint32 nType  = 1 [default=0];
+	required uint32 nIsHaveOs  = 2 [default=0];
+	required uint32 nDiskIndex  = 3 [default=0];
+	required uint32 nSize1  = 4 [default=0];
+	required uint32 nSize2  = 5 [default=0];
+	required string sSystemId = 6 [default=""];
+	required string sPath = 7 [default=""];
+	required string sParentVmdkPath = 8 [default=""];
+	required string sBackPartition = 9 [default=""];
+	required string sData = 10 [default=""];
+}
+message C2S_Update_Vmdk_Info  //3067,27014
+{
+  required Packet_Header header  = 1;
+	required Vmdk_Info info  = 2;
+
+}
+
+
+message C2S_Insert_Vmdk_Info  //3071,27015
+{
+  required Packet_Header header  = 1;
+	required Vmdk_Info info  = 2;
+
+}
+
+message S2C_Update_Vmdk_Info  //2067,28014
+{
+  required Packet_Header header  = 1;
+ 	required uint64  nWebId  = 2 [default=0];
+	required uint32 nType  = 3 [default=0];
+	required string sVmdk = 4 [default=""];
+}
+
+
+//message C2D_Update_Vmdk_Info  //28014
+//{
+//  required Packet_Header header  = 1;
+// 	required uint64  nWebId  = 2 [default=0];
+//	required uint32 nType  = 3 [default=0];
+//	required string sVmdk = 4 [default=""];
+//}
+
+
+message C2S_Merge_Snap  //3073,27016
+{
+ required Packet_Header header  = 1;
+	required uint32 nDiskIndex  = 2 [default=0];
+	required uint32 nIsMerge  = 3 [default=0];
+	required uint32 nWhoMerge  = 4 [default=0];
+	required string sVmdkBegin  = 5 [default=""];
+	required string sVmdkEnd  = 6 [default=""];
+	required string sReason  = 7 [default=""];
+}
+
+
+message C2S_Merge_Snap_Result  //3074,27017
+{
+ required Packet_Header header  = 1;
+	required uint32 nResult  = 2 [default=0];
+	required string sVmdkBegin  = 3 [default=""];
+	required string sVmdkEnd  = 4 [default=""];
+	required string sReason  = 5 [default=""];
+}
+message S2C_Merge_Snap_Result  //2074
+{
+ required Packet_Header header  = 1;
+ required uint32 nType  = 2 [default=0];
+	required uint64  nWebId = 3 [default=0];
+	required uint32 nResult  = 4 [default=0];
+	required string sVmdkBegin  = 5 [default=""];
+	required string sVmdkEnd  = 6 [default=""];
+}
+
+
+//message C2D_Merge_Snap_Result  //28017
+//{
+// required Packet_Header header  = 1;
+// required uint32 nType  = 2 [default=0];
+//	required uint64  nWebId = 3 [default=0];
+//	required uint32 nResult  = 4 [default=0];
+//	required string sVmdkBegin  = 5 [default=""];
+//	required string sVmdkEnd  = 6 [default=""];
+//}
+
+
+message C2S_Back_Limit_Time  //3076 消息体没用到
+{
+ required Packet_Header header  = 1;
+}
+
+message S2C_Back_Limit_Time  //2076,28019 
+{
+ required Packet_Header header  = 1;
+ required uint32 nType  = 2 [default=0];
+	required uint64  nWebId = 3 [default=0];
+	required string sTime = 4 [default=""];
+}
+
+
+//message C2D_Back_Limit_Time  //28019 
+//{
+// required Packet_Header header  = 1;
+// required uint32 nType  = 2 [default=0];
+//	required uint64  nWebId = 3 [default=0];
+//	required string sTime = 4 [default=""];
+//}
+
+
+message D2S_Get_Clone_Ext_Task  //3077,27020
+{
+ required Packet_Header header  = 1;
+ required string sSystemId = 2 [default=""];
+}
+
+
+message HardDisk_Info
+{
+	required uint32 nDiskIndex = 1 [default=0];
+	required uint32 nIsExising = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+	required uint32 nDiskSize1 = 4 [default=0];
+	required uint32 nDiskSize2 = 5 [default=0];
+	required string sSystemId = 6 [default=""];
+	required string sSn = 7 [default=""];
+	required string sDiskName = 8 [default=""];
+	required string sDiskUuid = 9 [default=""];
+}
+message C2S_HardDisk_Info  //3078,27021            
+{
+ 	required Packet_Header header  = 1;
+  required HardDisk_Info disk_info = 2;
+	repeated Partition_Info mlist = 3;
+}
+
+
+message C2S_Update_Log  //3081
+{
+ 	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint64  nWebId = 3 [default=0];
+	required string sData = 4 [default=""];
+
+}
+
+message S2W_Update_Log  //4081
+{
+ 	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required string sData = 4 [default=""];
+
+}
+
+
+///////////////////////////
+
+message Storage2S_Connect //6001
+{
+ required Packet_Header header  = 1;
+ required string sDeviceId = 2 [default=""];
+}
+message Storage2S_Storage_Close  //1
+{
+	required Packet_Header header  = 1;
+} 
+
+message Storage2S_Get_Config  //6002
+{
+	required Packet_Header header  = 1;
+} 
+
+
+message Storage2S_Run_state  //6003
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint32 nError = 3 [default=0];
+	optional string sDes = 4 [default=""];
+} 
+
+message Storage_Node_Info
+{
+ required string sSymbol = 1 [default=""]; //
+ required uint32 nHigh =2 [default=0];
+ required uint32 nLow = 3 [default=0];
+ optional string sPath = 4 [default=""];
+}
+message S2Storage_Get_Config_Info //5002
+{
+	required Packet_Header header  = 1;
+	required uint32 nCmdPort = 2 [default=0];
+	required uint32 nDataPort = 3 [default=0];
+	required uint32 nManagerPort = 4 [default=0];
+	required uint32 nClientPort = 5 [default=0];
+	required uint32 nMaxManagerNum = 6 [default=0];
+	required uint32 nMaxLoginNum = 7 [default=0];
+	required uint32 nMaxTransmitNum = 8 [default=0];
+	//required uint32 nNodeNum = 9 [default=0];
+	required string sName = 10 [default=""];
+	required string sKey = 11 [default=""];
+	required string sRemark = 12 [default=""];
+	required string sLanIp = 13 [default=""];
+	required string sNetIp = 14 [default=""];
+	required string sSetupTime = 15 [default=""];
+	repeated Storage_Node_Info listNode = 16;
+}
+
+message S2Storage_Get_Config_Error //5003
+{
+ 	required Packet_Header header  = 1;
+ 	required uint32 nType = 2 [default=0]; 	
+}
+
+
+message Storage_Config
+{
+  required uint32 nCmdPort = 1 [default=0];
+	required uint32 nDataPort = 2 [default=0];
+	required uint32 nManagerPort = 3 [default=0];
+	required uint32 nClientPort = 4 [default=0];
+	required uint32 nMaxManagerNum = 5 [default=0];
+	required uint32 nMaxLoginNum = 6 [default=0];
+	required uint32 nMaxTransmitNum = 7 [default=0];
+	required uint32 nNodeNum = 8 [default=0];
+	required string sName = 9 [default=""];
+	required string sKey = 10 [default=""];
+	required string sRemark = 11 [default=""];
+	
+	required string sLanIp = 12 [default=""];
+	required string sNetIp = 13 [default=""];
+	required string sSetupTime = 14 [default=""];
+	required string sData = 15 [default=""];
+}
+message Storage2S_Config_Info  //6004,6010
+{
+	required Packet_Header header  = 1;
+	required Storage_Config info = 2;
+	
+} 
+
+
+message S2Storage_Config_Info  //5005
+{
+	required Packet_Header header  = 1;
+	required Storage_Config info = 2;
+	
+} 
+
+
+message S2Storage_Config_Info_Result  //5004
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+} 
+
+
+message Storage2S_Check_Version  //6011
+{
+	required Packet_Header header  = 1;
+	required string sVersion = 2 [default=""];
+	
+} 
+
+
+message S2Storage_Check_Version  //5011
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint32 nPort = 3 [default=0];
+	repeated string sVersion = 4;
+	
+} 
+
+
+message Storage2S_Space_Info  //6013
+{
+	required Packet_Header header  = 1;
+	repeated string listSpaceInfo = 2;
+} 
+
+
+message Storage2S_Packet  //6014
+{
+	required Packet_Header header  = 1;
+} 
+
+
+message S2Storage_Packet  //5014
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+} 
+
+message Storage2S_Sync_State  //6015
+{
+	required Packet_Header header  = 1;
+	required uint32 nRecordId = 2 [default=0];
+	required uint32 nState = 3 [default=0];
+} 
+
+////////////////////////// recovery //////
+
+message R2S_Login_Check  //25002
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required string sUser = 3 [default=""];
+	required string sPwd = 4 [default=""];
+	required string sReserve = 5 [default=""];
+} 
+
+
+message S2R_Login_Check  //26002
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+	//optional string sMessage = 4 [default=""];
+
+} 
+
+
+/////////////////////
+message R2S_Query_Storage  //25006
+{
+	required Packet_Header header  = 1;
+	required string sRootSymbol = 2 [default=""];
+	
+} 
+
+
+message S2R_Query_Storage  //26006
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId = 2 [default=0];
+	required uint32 nType = 3 [default=0];
+	required Storage_Addr_Info info = 4;
+} 
+
+////////////////////
+
+message R2S_Query_DiskClone_Device  //25007
+{
+	required Packet_Header header  = 1;
+	required string sUserName = 2 [default=""];
+	
+} 
+
+
+message DiskClone_Device_Info
+{
+required uint32 nGroupId = 1 [default=0];
+required uint32 nClientType = 2 [default=0];
+required uint32 nState = 3 [default=0];
+required uint32 nDelMark = 4 [default=0];
+required uint32 nOsType = 5 [default=0];
+
+required string sUniqueId = 6 [default=""];
+required string sName = 7 [default=""];
+required string sIp = 8 [default=""];
+required string sMac = 9 [default=""];
+required string sGroupName = 10 [default=""];
+required string sOsVersion = 11 [default=""];
+required string sData = 12 [default=""];
+
+}
+
+message S2R_Query_DiskClone_Device  //26007
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	repeated DiskClone_Device_Info info = 4;
+} 
+
+
+//////////////////////////
+message R2S_Query_Uuid  //25008
+{
+	required Packet_Header header  = 1;
+	required string sUuid= 2 [default=""];
+	
+} 
+
+
+message Uuid_Info
+{
+ required string sUuid = 1 [default=""];
+ required string sCreateTime = 2 [default=""];
+}
+message S2R_Query_Uuid  //26008
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	repeated Uuid_Info mlist = 3;
+} 
+
+//////////////////////
+message R2S_Query_Disk  //25009
+{
+	required Packet_Header header  = 1;
+	required string sUuid= 2 [default=""];
+	
+} 
+
+message S2R_Query_Disk //26009
+{
+ 	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	repeated HardDisk_Info mlist = 3; 
+}
+
+
+/////////////////////
+
+message R2S_Query_Vmdk  //25010
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint32 nDiskIndex = 3 [default=0];
+	required string sUuid = 4 [default=""];
+	
+} 
+
+message Query_Vmdk_Info
+{
+ required uint32 nType = 1 [default=0];
+ required uint32 nHaveOs = 2 [default=0];
+ required uint32 nIndex = 3 [default=0];
+ required string sCreateTime = 4 [default=""];
+ required string sFilePath = 5 [default=""];
+ //required string sData = 6 [default=""];
+}
+message S2R_Query_Vmdk //26010
+{
+ 	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	repeated Query_Vmdk_Info mlist = 3; 
+}
+
+
+////////////////////
+
+message R2S_Query_Partition  //25011
+{
+	required Packet_Header header  = 1;
+	required uint32 nIndex = 2 [default=0];
+	
+} 
+
+
+message S2R_Query_Partition //26011
+{
+ 	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	repeated Partition_Info mlist = 3; 
+}
+
+
+////////////////////Storage Server  ////////////
+
+message M2Storage_Restart_Storage  //24003
+{
+ required Packet_Header header  = 1;
+}
+
+
+message M2Storage_Partition_Size  //24004
+{
+ required Packet_Header header  = 1;
+ required string sLetter = 2 [default=""];
+}
+
+
+message M2Storage_Sync_State  //24005
+{
+ required Packet_Header header  = 1;
+}
+
+
+message M2Storage_Thread_Parameter  //24006
+{
+ required Packet_Header header  = 1;
+}
+
+
+
+message S2Storage_Update_Packet  //5012
+{
+required Packet_Header header  = 1;
+}
+
+////////////////
+
+
+message S2Storage_Create_File  //22002
+{
+ required Packet_Header header  = 1;
+ required uint32 nType = 2 [default=0];
+ required uint64  nWebId = 3 [default=0];
+ required string sPath = 4 [default=""];
+}
+
+
+message C2Storage_Upload_File_End  //22004
+{
+ required Packet_Header header  = 1;
+}
+
+message S2C_Down_File  //22005
+{
+ required Packet_Header header  = 1;
+ required uint32 nAttri = 2 [default=0];
+ required string sWriteTime = 3 [default=""];
+ 
+ required uint32 nHigh = 4 [default=0];
+ required uint32 nLow = 5 [default=0];
+ required string sPath = 6 [default=""];
+}
+
+message C2S_Down_File  //21005
+{
+ required Packet_Header header  = 1;
+ required uint64  nWebId = 2 [default=0];
+ required uint32 nType = 3 [default=0];
+ required string sPath = 4 [default=""];
+}
+
+
+message Storage2S_Down_File_Data //22003 消息码和文档对不上。
+{
+   required Packet_Header header  = 1;
+}
+
+message S2Storage_Down_File_Data  //22006
+{
+ required Packet_Header header  = 1;
+ required bytes data  = 2;
+}
+
+message S2Storage_Down_File_End  //22008
+{
+ required Packet_Header header  = 1;
+}
+
+///////////////////////////////////
+
+message D2C_Start_Up  //27001
+{
+ required Packet_Header header  = 1;
+ required string sSystemId = 2 [default=""];
+}
+
+
+//message D2C_DisClone_State  //27002
+//{
+//  required Packet_Header header  = 1;
+//  required string sSystemId = 2 [default=""];
+//	required uint32 nState  = 3 [default=0];
+//	required uint32 nSystemType  = 4 [default=0];
+//	required uint32 nDriveState  = 5 [default=0];
+//	required uint32 nPowerState  = 6 [default=0];
+//	required uint32 nSystemWorkState  = 7 [default=0];
+//	required uint32 nEngineWorkState  = 8 [default=0];
+//	required string sFileSystemDescription  = 9 [default=""];
+//	required string sSystemWorkDescription  = 10 [default=""];
+//	required string sPath  = 11 [default=""];
+//}
+
+
+//message D2C_Partition_State  //27003
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nDiskIndex = 2 [default=0];
+//	
+//	required uint32 nIsExising = 3 [default=0];
+//	required uint32 nType = 4 [default=0];
+//	required uint32 nDiskSize1 = 5 [default=0];
+//	required uint32 nDiskSize2 = 6 [default=0];
+//	required string sSystemId = 7 [default=""];
+//	required string sSn = 8 [default=""];
+//	required string sDiskName = 9 [default=""];
+//	required string sDiskUuid = 10 [default=""];
+//	
+//	repeated Partition_Info mlist = 11;
+//
+//}
+
+
+//message D2C_Get_Storage_Info  //27007
+//{
+// required Packet_Header header  = 1;
+// required string sStorageSymbol =2 [default=""];
+//}
+
+
+//message D2C_DB_Info  //27010
+//{
+//	required Packet_Header header  = 1;
+//	required string sSystemId = 2 [default=""];
+//	repeated DB_State mlist = 3;
+//
+//}
+
+
+//message D2C_Disk_Clone_Info  //27011
+//{
+// required Packet_Header header  = 1;
+//	required uint32 nType  = 2 [default=0];
+//	required uint32 nFlag  = 3 [default=0];
+//	required string sLog = 4 [default=""];
+//}
+
+
+
+//message D2C_DiskClone_Config  //27012  处理中没有用到消息体。
+//{
+//	required Packet_Header header  = 1;
+//		required uint32 nType  = 2 [default=0];
+//  required string sSystemId = 3 [default=""];
+//	
+//}
+
+
+
+//message D2C_Update_Vmdk_Info  //27014
+//{
+//  required Packet_Header header  = 1;
+//	required Vmdk_Info info  = 2;
+//
+//}
+
+
+//message D2C_Insert_Vmdk_Info  //27015
+//{
+//  required Packet_Header header  = 1;
+//	required Vmdk_Info info  = 2;
+//
+//}
+
+//message D2C_Merge_Snap  //27016
+//{
+// required Packet_Header header  = 1;
+//	required uint32 nDiskIndex  = 2 [default=0];
+//	required uint32 nIsMerge  = 3 [default=0];
+//	required uint32 nWhoMerge  = 4 [default=0];
+//	required string sVmdkBegin  = 5 [default=""];
+//	required string sVmdkEnd  = 6 [default=""];
+//	required string sReason  = 7 [default=""];
+//}
+
+
+//message D2C_Merge_Snap_Result  //27017
+//{
+// required Packet_Header header  = 1;
+//	required uint32 nResult  = 2 [default=0];
+//	required string sVmdkBegin  = 3 [default=""];
+//	required string sVmdkEnd  = 4 [default=""];
+//	required string sReason  = 5 [default=""];
+//}
+
+
+//message D2C_Disk_checkout  //27018
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nType  = 2 [default=0];
+//	required string   sPath  = 3 [default=""];
+//} 
+
+
+//message D2C_Back_Limit_Time  //27019 消息体没用到
+//{
+// required Packet_Header header  = 1;
+//}
+
+
+//message D2C_Get_Clone_Ext_Task  //27020
+//{
+// required Packet_Header header  = 1;
+ //required string sSystemId = 2 [default=""];
+//}
+
+
+//message D2C_HardDisk_Info  //27021            
+//{
+// 	required Packet_Header header  = 1;
+//  required HardDisk_Info disk_info = 2;
+//	repeated Partition_Info mlist = 3;
+//}
+
+
+//message C2D_Update_Clone  //28004
+//{
+//	required Packet_Header header  = 1;
+//	required uint32 nRunState  = 2 [default=0];
+//	required uint32 nIsSyn  = 3 [default=0];
+//	required uint32 nSynType  = 4 [default=0];
+//	
+//	
+//	required uint32 nSynInterval  = 5 [default=0];
+//	required uint32 nIsSnapshot  = 6 [default=0];
+//	required uint32 nIsIncreOldSnap  = 7 [default=0];
+//	required uint32 nSnapType  = 8 [default=0];
+//	required uint32 nSnapInterval  = 9 [default=0];
+//	
+//	required uint32 nIsFullBack  = 10 [default=0];
+//	required uint32 nFullBackType  = 11 [default=0];
+//	required uint32 nFullBackNum  = 12 [default=0];
+//	required uint32 nIsKeepSnap  = 13 [default=0];
+//	required uint32 nKeepSnapType  = 14 [default=0];
+//	
+//	required uint32 nKeepSnapNum  = 15 [default=0];
+//	required uint32 nTargetType  = 16 [default=0];
+//	
+//	
+//	required string sPath  = 17 [default=""];
+//	required string sPartition  = 18 [default=""];
+//	required string sDbName  = 19 [default=""];
+//} 
+
+
+
+message C2D_DiskClone_Stop //28012
+{
+ required Packet_Header header  = 1;
+}
+
+
+message C2D_ReConnect //28013
+{
+ required Packet_Header header  = 1;
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////
+message U2C_Start_Up //21001
+{
+ required Packet_Header header  = 1;
+}
+
+
+message C2U_Start_Up //20001
+{
+ required Packet_Header header  = 1;
+ required uint32 nType = 2 [default=0];
+}
+
+message File_Info
+{
+ required uint32 nAttributes = 1 [default=0];
+ required string sLastWriteTime = 2 [default=""];
+ required uint32 nHigh = 3 [default=0];
+ required uint32 nLow = 4 [default=0];
+ required string sPath = 5 [default=""];
+}
+message U2C_Exit_All //21002
+{
+ required Packet_Header header  = 1;
+ required File_Info info = 2;
+
+}
+
+
+message C2U_Exit_All //20002
+{
+ required Packet_Header header  = 1;
+ required uint32 nType = 2 [default=0];
+}
+
+
+
+message U2Storage_Upload_File_Data //21003
+{
+required Packet_Header header  = 1;
+required bytes data = 2;
+}
+
+
+message U2Storage_Upload_File_Data_End //21004
+{
+required Packet_Header header  = 1;
+}
+
+
+message U2S_Show_Dir //21009
+{
+required Packet_Header header  = 1;
+required string sPath = 2 [default=""];
+}
+
+
+//////////////////////////
+
+message C2U_Config_Info //18002
+{
+required Packet_Header header  = 1;
+required Client_Config info = 2;
+}
+
+message S2C_Server_Close //12014
+{
+required Packet_Header header  = 1;
+}
+
+message Common_Setup //3000
+{
+required Packet_Header header  = 1;
+required string sUserId = 2 [default=""];
+}
+
+
+/////////////////////////////////
+message D2C_Normal_State  //27013 
+{
+	required Packet_Header header  = 1;
+}
+
+
+message W2I_Modify_Storage_Info  //7008
+{
+required Packet_Header header  = 1;
+required uint32 nCmdPort = 2 [default=0];
+required uint32 nDataPort = 3 [default=0];
+required uint32 nManagerPort = 4 [default=0];
+required uint32 nClientPort = 5 [default=0];
+required uint32 nMaxNum = 6 [default=0];
+required uint32 nMaxLoginNum = 7 [default=0];
+required uint32 nMaxTransimitNum = 8 [default=0];
+required uint32 nPathNodeNum = 9 [default=0];
+
+required string sName = 10 [default=""];
+required string sKey = 11 [default=""];
+required string sRemark = 12 [default=""];
+required string sLanIp = 13 [default=""];
+required string sNetIp = 14 [default=""];
+required string sSetupTime = 15 [default=""];
+optional string sData = 16 [default=""];
+
+
+}
+
+message W2I_GetWebStartInfo //7000 得知web获取消息，然后填数据不知道发给谁
+{
+	required Packet_Header header  = 1;
+	required uint32 nType = 2 [default=0];
+	required uint64  nWebId = 3 [default=0];
+	required string sKeyword = 4 [default=""];
+	
+}
+
+message W2I_GetSystemInfo //7001
+{
+	required Packet_Header header  = 1;
+} 
+
+message I2W_GetSystemInfo //8001 web发送消息给存储器获取系统信息，然后存储器获取信息打包转发给消息服务器 8001
+{
+	required Packet_Header header  = 1;
+	required uint64  nWebId = 2 [default=0];
+	required uint32 nNetUsedRate = 3 [default=0];
+	required uint32 nCpuUsedRate = 4 [default=0];
+	required uint32 nMemoryUsedRate = 5 [default=0];
+	required uint32 nMaxTransmitSpeed = 6 [default=0];
+	required uint32 nMintDataTransmitSpeed = 7 [default=0];
+	required uint32 nUsedMemoryByMB = 8 [default=0];
+	required uint32 nLeftMemoryByMB = 9 [default=0];
+	required uint32 nTransmitUserNumber = 10 [default=0];
+	required uint32 nMaxTransmitUserNumber = 11 [default=0];
+	
+		
+}
+ 
+ message W2I_GetSorageSpace //7002
+{
+	required Packet_Header header  = 1;
+	required string sPath = 2 [default=""];
+} 
+message I2W_GetSorageSpace //8002
+{
+	required Packet_Header header  = 1;
+	required uint32 nState = 2 [default=0];
+	required uint32 nUsedSizeHigh = 3 [default=0];
+	required uint32 nUsedSizeLow = 4 [default=0];
+	required uint32 nLeftSizeHigh = 5 [default=0];
+	required uint32 nLeftSizeLow = 6 [default=0];
+
+	
+}
+
+message W2I_GetDiskPartInfo //7003
+{
+		required Packet_Header header  = 1;
+}
+
+message Storage_Path
+{
+ required uint32 nState = 1 [default=0];
+ required uint32 nUsedHigh = 2 [default=0];
+ required uint32 nUsedLow = 3 [default=0];
+ required uint32 nLeftHigh = 4 [default=0];
+ required uint32 nLeftLow = 5 [default=0];
+}
+message W2I_Get_Storage_Path //7004
+{
+		required Packet_Header header  = 1;
+		required string sPath = 2 [default=""];
+}
+
+message I2W_Get_Storage_Path //8004
+{
+		required Packet_Header header  = 1;
+		required Storage_Path info = 2;
+}
+ 
+ 
+ 
+message W2I_Get_Storage_Header //7005
+{
+		required Packet_Header header  = 1;
+}
+
+
+message I2W_Get_Storage_Header //8005
+{
+		required Packet_Header header  = 1;
+		required uint32 nType = 2 [default=0];
+		required uint32 nIsEncrypt = 3 [default=0];
+		required uint32 nIsBackSucc = 4 [default=0];
+		required string sMailType = 5 [default=""];
+		required uint32 nEncryptType = 6 [default=0];
+		required string sKeyWord = 7 [default=""];
+		required string sRemark = 8 [default=""];
+	
+}
+
+
+message W2I_Get_Storage_Mac //7007
+{
+required Packet_Header header  = 1;
+}
+
+message I2W_Get_Storage_Mac //8007
+{
+required Packet_Header header  = 1;
+required string sMac = 2 [default=""];
+}
+
+message I2W_GetDiskPartInfo //8003
+{
+	required Packet_Header header  = 1;
+	required bytes sState = 2;
+	required bytes sSysType = 3;
+	required string sPath = 4 [default=""];
+	required bytes sDiskPath = 5;
+	
+}
+message I2W_Modify_Storage_Info  //8008
+{
+required Packet_Header header  = 1;
+required uint32 nType =2 [default=0];
+}
+
+//////////////////////////////////////
+message W2I_Restart_Storage //7009
+{
+required Packet_Header header  = 1;
+}
+
+message I2W_Restart_Storage //8009
+{
+required Packet_Header header  = 1;
+required uint32 nType = 2 [default=0];
+}
+
+/////////////////////////////////
+message W2I_Stop_Syn  //7013
+{
+required Packet_Header header  = 1;
+required string sSrcPath = 2 [default=""];
+required string sPath = 3 [default=""];
+required string sIp = 4 [default=""];
+}
+
+message I2W_Stop_Syn  //8013
+{
+required Packet_Header header  = 1;
+required uint32 nAttribute = 2 [default=0];
+required uint32 nFileHigh = 3 [default=0];
+required uint32 nFileLow = 4 [default=0];
+required uint32 nFileSign = 5 [default=0];
+required string sLastWriteTime = 6 [default=""];
+required string sFileName = 7 [default=""];
+}
+
+////////////////////////
+
+message W2I_Down_Image  //7014
+{
+required Packet_Header header  = 1;
+required string sBasePath = 2 [default=""];
+required string sPath = 3 [default=""];
+}
+
+///////////////////////////
+
+message W2I_Start_Vmware  //7015
+{
+required Packet_Header header  = 1;
+required string sVmxFilePath = 2 [default=""];
+required uint32 nParentVmdkId= 3 [default=0];
+
+}
+
+message I2W_Start_Vmware  //8015
+{
+required Packet_Header header  = 1;
+required uint32 nResult = 2 [default=0];
+required uint32 nParentVmdkId= 3 [default=0];
+optional string sError = 4 [default=""];
+}
+
+/////////////////////////////////////
+
+
+message W2I_Stop_Vmware  //7016
+{
+required Packet_Header header  = 1;
+required string sVmxFilePath = 2 [default=""];
+
+}
+
+message I2W_Stop_Vmware  //8016
+{
+required Packet_Header header  = 1;
+required uint32 nResult = 2 [default=0];
+optional string sError = 3 [default=""];
+}
+
+//////////////////////
+message W2I_Delete_Temp_Vmdk  //7017
+{
+required Packet_Header header  = 1;
+required string sVmxFilePath = 2 [default=""];
+required uint32 nParentVmdkId= 3 [default=0];
+required string sSnapArray = 4 [default=""];
+
+}
+
+message I2W_Delete_Temp_Vmdk  //8017
+{
+required Packet_Header header  = 1;
+required uint32 nParentVmdkId= 2 [default=0];
+required uint32 nResult = 3 [default=0];
+optional string sError = 4 [default=""];
+}
+
+/////////////////////////////////////
+
+message W2I_Configure_Vmx  //7018
+{
+required Packet_Header header  = 1;
+required uint32 nType = 2 [default=0];
+required uint32 nDiskNum = 3 [default=0];
+required uint32 nVmwareType = 4 [default=0];
+required uint32 nIsUsb = 5 [default=0];
+required uint32 nSystemType = 6 [default=0];
+required uint32 nVncPort = 7 [default=0];
+required uint32 nCoreNum = 8  [default=0];
+required uint32 nMemorySize = 9 [default=0];
+required uint32 nParentVmdkId = 10 [default=0];
+required string sParentPath = 11 [default=""];
+required string sTempPath = 12 [default=""];
+required string sTempVmxPath = 13 [default=""];
+required string sVmwareName = 14 [default=""];
+required string sNetCardType = 15 [default=""];
+required string sNetCard0Vmnet = 16 [default=""];
+required string sNetCard1Vmnet = 17 [default=""];
+required string sDataPoint = 18 [default=""];
+required string sCardMac = 19 [default=""];
+}
+
+message I2W_Configure_Vmx  //8018
+{
+required Packet_Header header  = 1;
+required uint32 nParentVmdkId= 2 [default=0];
+required uint32 nResult = 3 [default=0];
+optional string sVmdkFath = 4 [default=""];
+}
+
+//////////////////////////////////////////
+
+message W2I_Query_Vmware_Status  //7019
+{
+required Packet_Header header  = 1;
+required string sVmxPath = 2 [default=""];
+}
+
+message I2W_Query_Vmware_Status  //8019
+{
+required Packet_Header header  = 1;
+required uint32 nIsVmwareOn = 2 [default=0];
+required string sMessage = 3 [default=""];
+}
+
+////////////////////////////////////
+message W2I_Delete_Uuid  //7020
+{
+required Packet_Header header  = 1;
+required string sUuidPath = 2 [default=""];
+}
+
+message I2W_Delete_Uuid  //8020
+{
+required Packet_Header header  = 1;
+required uint32 nResult = 2 [default=0];
+required string sMessage = 3 [default=""];
+}
+
+//////////////////////////////
+message W2I_Configure_Vmx_Ex  //7021
+{
+required Packet_Header header  = 1;
+required uint32 nType = 2 [default=0];
+required uint32 nVmwareType = 3 [default=0];
+required uint32 nIsUsb = 4 [default=0];
+
+
+required uint32 nCoreNum = 5  [default=0];
+required uint32 nMemorySize = 6 [default=0];
+
+required uint32 nNetCardModifyMode = 7 [default=0];
+required uint32 nNetCardPhysicalType = 8 [default=0];
+
+required uint32 nMacSetType = 9 [default=0];
+required uint32 nConnectionType = 10 [default=0];
+required uint32 nDiskType = 11 [default=0];
+
+required string sVmxPath = 12 [default=""];
+required string sAddVmdkPath = 13 [default=""];
+required string sDeleteVmdkPath = 14 [default=""];
+required string sMac = 15 [default=""];
+}
+
+////////////////////////////////////
+
+message W2I_Get_All_Nic_Info  //7022
+{
+required Packet_Header header  = 1;
+}
+
+message Nic_Info
+{
+ required uint32 nNicType = 1 [default=0];
+ required uint32 nIpType = 2 [default=0];
+ required string sUuid = 3 [default=""];
+ required string sMac = 4 [default=""];
+ required string sIp = 5 [default=""];
+ required string sSubMask = 6 [default=""];
+ required string sGataWay = 7 [default=""];
+ required string sBridgeName = 8 [default=""];
+ required string sName = 9 [default=""];
+ 
+}
+message I2W_Get_All_Nic_Info  //8022
+{
+required Packet_Header header  = 1;
+repeated Nic_Info  nic_list = 2;
+}
+
+////////////////////////////////////
+
+
+message W2I_Add_Vmnet_Bridge  //7023
+{
+required Packet_Header header  = 1;
+required string sName = 2 [default=""];
+required string sUuid = 3 [default=""];
+}
+
+message I2W_Add_Vmnet_Bridge  //8025
+{
+required Packet_Header header  = 1;
+required uint32 nResult = 2 [default=0];
+}
+///////////////////////
+
+message W2I_Delete_Vmnet_Bridge  //7025
+{
+required Packet_Header header  = 1;
+required string sName = 2 [default=""];
+required string sUuid = 3 [default=""];
+}
+
+////////////////////////////////////
+
+message W2I_Start_Syn_Data  //
+{
+required Packet_Header header  = 1;
+required uint32 nEncrypted = 2 [default=0];
+required uint32 nCompressed = 3 [default=0];
+
+required uint32 nPort = 4 [default=0];
+required string sLanIp = 5 [default=""];
+required string sNetIp = 6 [default=""];
+required bytes  sDaysSyn = 7;
+required string sStartTime = 8 [default=""];
+required string sEndTime = 9 [default=""];
+required uint32 nSynType = 10 [default=0];
+required uint32 nSynValue = 11 [default=0];
+required string sLocalPath = 12 [default=""];
+required string sRemotePath = 13 [default=""];
+}
+
+message I2W_Start_Syn_Data  //
+{
+required Packet_Header header  = 1;
+required uint32 nResult = 2 [default=0];
+}
+
+
+//////////////////////////////////////////////
+message Storage2I_User_Num //23002
+{
+required Packet_Header header  = 1;
+required uint32 nNum = 2;
+}

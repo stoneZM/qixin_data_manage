@@ -1,0 +1,52 @@
+
+.info-box-text{margin: 5px 8px;font-size: 13px;}
+.timeline:before{left:9px}
+.timeline>li>.timeline-item{ margin-left:20px; margin-right:0px}
+.timeline>li>.fa, .timeline>li>.glyphicon, .timeline>li>.ion{ width:20px; height:20px; line-height:20px; font-size:12px; left:0}
+.list-group-item{
+    background-color: transparent;
+    color: #0a001f;
+}
+.disk-info-box{
+    text-align: center;
+    margin-top: 5px;
+    background-color: transparent;
+    border: 1px dotted #F0F0F0;
+    border-radius: 3px;
+}
+.disk-title-info{
+    text-align: center;
+    height: 100px;
+    width: 150px;
+    padding-top: 20px;
+    float: left;
+}
+.disk-no-info,.disk-info-detail{
+    height: 88px;
+    width: 180px;
+    float: left;
+    background-color: rgba(255,255,255,0.3);
+    margin: 6px
+}
+.disk-no-info{
+    text-align: center;
+    padding:30px 0 0;
+}
+.disk-info-detail{
+    padding:10px 0 0 5px;
+    text-align: left;
+}
+.list-group-item.left{
+    border-right: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+.list-group-item.right{
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+.text-green-color{
+    color: #00fb91;
+    font-weight: bold;
+}
+

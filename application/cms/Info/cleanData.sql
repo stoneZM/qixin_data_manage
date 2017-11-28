@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS `qinfo_ad`;
+DROP TABLE IF EXISTS `qinfo_ad_place`;
+DROP TABLE IF EXISTS `qinfo_attribute`;
+DROP TABLE IF EXISTS `qinfo_category`;
+DROP TABLE IF EXISTS `qinfo_channel`;
+DROP TABLE IF EXISTS `qinfo_document`;
+DROP TABLE IF EXISTS `qinfo_document_article`;
+DROP TABLE IF EXISTS `qinfo_document_photo`;
+DROP TABLE IF EXISTS `qinfo_link`;
+DROP TABLE IF EXISTS `qinfo_model`;
+DROP TABLE IF EXISTS `qinfo_page`;

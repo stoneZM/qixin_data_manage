@@ -1,0 +1,123 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body">
+    <form class="form form-horizontal" id="form" method="post" action="{:\\think\\Url::build($Request.action)}">
+        <div class="form-group">
+            <label class="col-lg-2 control-label"></label>
+            <div class="col-lg-5">     
+                <span class="help-block">请先配置自己的邮件配置</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-lg-2 control-label">收件地址：</label>
+            <div class="col-lg-5">     
+                <input type="text" class="form-control" placeholder="你的邮箱地址，请勿填写别人的" name="receiver" datatype="*" nullmsg="请填写收件地址">  
+                <span class="help-block"></span>
+            </div>
+        </div>
+        
+		<div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary ">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default "  onclick="javascript:history.back(-1);return false;">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+    <div id="markdown" class="mt-20"></div>
+</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/showdown/1.4.2/showdown.min.js"></script>
+<script>
+    $(function () {
+        $("#form").Validform({
+            tiptype:3,
+            ajaxPost:true,
+            showAllError:true,
+            callback:function(ret){
+                ajax_progress(ret,function () {
+                    $("[name='receiver']").val('');
+                });
+            }
+        });
+
+        var converter = new showdown.Converter(),
+                text      = $("#markdown_tpl").html();
+        $("#markdown").html(converter.makeHtml(text));
+    })
+</script>
+{literal}
+<script type="text/plain" id="markdown_tpl">
+---
+方法
+```
+\Mail::instance()->mail($receive, $content, $subject = 'No Subject');
+```
+html 代码：
+```
+<form class="form form-horizontal" id="form" method="post" action="{:\\think\\Url::build($Request.action)}">
+        <div class="form-group">
+            <label class="col-lg-2 control-label">收件地址：</label>
+            <div class="col-lg-5">     
+                <input type="text" class="form-control" placeholder="你的邮箱地址，请勿填写别人的" name="receiver" datatype="*" nullmsg="请填写收件地址">  
+                <span class="help-block"></span>
+            </div>
+        </div>
+        
+		<div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary ">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default "  onclick="javascript:history.back(-1);return false;">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+```
+javascript 代码：
+```
+$("#form").Validform({
+    tiptype:2,
+    ajaxPost:true,
+    showAllError:true,
+    callback:function(ret){
+        ajax_progress(ret,function () {
+            $("[name='receiver']").val('');
+        });
+    }
+});
+```
+php 代码：
+```
+$receive = $this->request->post("receiver");
+$result = $this->validate(
+    ['receiver' => $receive],
+    ['receiver|收件人' => 'require|email']
+);
+if ($result !== true) {
+    return ajax_return_adv_error($result);
+}
+$html = "<p>这是一封来自tpadmin的测试邮件，请勿回复</p><p><br></p><p>该邮件由访问发送，本站不承担任何责任，如有骚扰请屏蔽此邮件地址</p>";
+$result = \Mail::instance()->mail($receive, $html, "测试邮件");
+if ($result !== true) {
+    return ajax_return_adv_error(\Mail::instance()->getError());
+} else {
+    return ajax_return_adv("邮件发送成功，请注意查收");
+}
+```
+</script>
+{/literal}
+{/block}

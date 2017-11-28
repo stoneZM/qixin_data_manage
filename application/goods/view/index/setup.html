@@ -1,0 +1,115 @@
+{extend name="public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/oscloud.css">
+<link href="__STATIC__/ext/foucs/foucs.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="body"}
+<div id="main-container" class="container">
+  <div class="row" style="padding-top: 20px;margin-top: 30px">
+    <div class="container templet">
+      <section>
+        <div class="clearfix"></div>
+        
+        <!-- 插件列表部分-->
+        <div class="row margin-top-15">
+          <div class="with-padding clearfix " style="min-height: 800px">
+            <div class="col-xs-5">
+              <div class="common-block  ">
+                <header>商品信息</header>
+                <section>
+                  <h2>商品：《 <a href="{:url('goods/index/goodsdetail',array('id'=>$goods_detail['id']))}">{$goods_detail.title}</a> 》</h2>
+                  <p>版本：{$app_version.title}</p>
+                  <p>版本更新内容：
+                  {volist name="app_version.log" id="v"}
+                    <li>{$v}</li>
+                  {/volist}
+                  </p>
+                  {if $goods_detail.is_com}
+                  <p class="lead"> 此版本为付费版本。</p>
+                  {else/}
+                  <p class="lead"> 此版本免费，您可直接下载。
+                  <p>当前版本的对应密钥为</p>
+                  <pre class="text-danger">{$app_version.token}</pre>
+                  <p>请拷贝密钥的内容后放置到网站路径</p>
+                  
+                  {if $goods_detail['entity'] == 2}
+                  <pre class="text-danger">/application/{$goods_detail['etitle']|strtolower}/Info/token.ini</pre>
+                  {else/}
+                  <pre class="text-danger">/addons/{$goods_detail['etitle']|strtolower}/token.ini</pre>
+                  {/if}
+                  
+                  <p>这样系统才能自动检测版本升级。</p>
+                  </p>
+                  <div> <a onClick="appstoreMessage.startSetup({$app_version['id']})" style="width: 200px" class="btn btn-primary">安装</a> <a target="_blank" class="btn btn-default" style="width: 100px" href="{:url('goods/index/download',array('id'=>$app_version['id']))}">下载</a> </div>
+                  {/if}
+                </section>
+              </div>
+            </div>
+            <div class="col-xs-7">
+              <div class="common-block">
+                <header>安装说明</header>
+                <section>
+                  <p>请在后台云市场打开，如果不在云市场，请手动下载源码包。</p>
+                  <p> <strong>插件安装：</strong>下载后解压到/Addons目录下，在后台-系统-插件列表-未安装的插件中安装。 </p>
+                  <p> <strong>模块安装：</strong>下载后解压到/Application目录下，在后台-系统-模块列表-未安装的模块中安装。 </p>
+                </section>
+              </div>
+              {if $app_version.explain}
+              <div class="common-block">
+                <hr style="margin: 0">
+                <header>使用说明：</header>
+                <section>
+                  {$app_version['explain']} 
+                </section>
+              </div>
+              {/if}
+            </div>
+          </div>
+          <div> </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{/block}
+{block name="script"} 
+<script src="__STATIC__/js/jquery.cookie.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/layer/2.4/layer.js"></script>
+
+<script>
+
+parent.postMessage({'type': 'getWebSiteInfo'}, '*');
+var sn = '';
+window.addEventListener('message', function (event, domain) {
+	sn =  event.data.sn;
+})
+
+
+var appstoreMessage = {
+    'parent': window.parent,
+    'getWebsiteInfo': function () {
+        parent.postMessage({'type': 'getWebSiteInfo'}, '*');
+    },
+    'startSetup': function ($id) {
+        if(top== self){
+			layer.msg('请在后台云市场进行安装。',{icon: 2, time: 2000});	
+            return;
+        }
+		if(!sn){
+			layer.msg('授权失败，请刷新重试。',{icon: 2, time: 2000});	
+		}
+        $.post("{:url('goods/index/getsetuptoken')}", {'version_id': $id,'sn': sn}, function (data) {
+            if (data.code) {
+				layer.msg('验证成功。即将跳转到本地云市场进行安装。',{icon: 1, time: 2000});	
+                setTimeout(function () {
+                    parent.postMessage({'type': 'install', 'token': data.data, 'cookie': $.cookie('PHPSESSID')}, '*');
+                }, 1500);
+            }
+            else {
+				layer.msg(data.msg,{icon: 2, time: 2000});	
+            }
+        });
+    }
+};
+</script>
+{/block}

@@ -1,0 +1,96 @@
+{extend name="common@public/base"/}
+{block name="body"}
+
+<section class="content-header">
+  <h1>{:isset($info['id'])?lang('edit'):lang('add')}{:lang('menu')}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<form method="post" class="form form-horizontal">
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('title')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="title" value="{$info.title|default=''}" style="width: 80%">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('icon')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="icon" value="{$info.icon|default=''}" style="width: 80%">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('sort')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="sort" value="{$info.sort|default=0}" style="width: 60%">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('link')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="url" value="{$info['url']|default=''}" style="width: 80%">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('previous_menu')}</label>
+				<div class="col-lg-10">
+					<select name="pid" class="form-control" style="width: 50%">
+						{volist name="Menus" id="menu"}
+						<option value="{$menu['id']}" {if $info['pid'] == $menu['id']}selected{/if}>{$menu.title_show}</option>
+						{/volist}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('grouping')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="group" value="{$info['group']|default=''}" style="width: 50%">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('hide')}</label>
+				<div class="col-lg-1">
+					<select name="hide" class="form-control">
+						<option value="0" >{:lang('no')}</option>
+						<option value="1" {if isset($info['hide']) && $info['hide']==1}selected{/if}>{:lang('yes')}
+					</option>
+				</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('develop_mode')}</label>
+				<div class="col-lg-1">
+					<select name="is_dev" class="form-control">
+						<option value="0" >{:lang('no')}</option>
+						<option value="1" {if isset($info['is_dev']) && $info['is_dev']==1}selected{/if}>{:lang('yes')}
+					</option>
+				</select>
+			</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('explain')}</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="tip" value="{$info.tip|default=''}" style="width: 60%;">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info['id']|default=''}">
+					<button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">{:lang('submit')}</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}

@@ -1,0 +1,79 @@
+{extend name="public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<div class="page-index">  
+<div class="page page-current">
+  <header class="bar bar-nav">
+    <h1 class="title">服务</h1>
+  </header>
+    <div class="bar bar-tab">
+        <a class="tab-item " href="{:url('index')}"> <span class="icon icon-home"></span> <span class="tab-label">首页</span></a>
+        <a class="tab-item " href="{:url('product')}"> <span class="icon iconfont icon-chanpin1"></span> <span class="tab-label">产品</span></a>
+        <a class="tab-item" href="{:url('plan')}"> <span class="icon iconfont icon-fangan"></span> <span class="tab-label">方案</span></a>
+        <a class="tab-item active" href="{:url('service')}"> <span class="icon iconfont icon-fuwu2"></span> <span class="tab-label">服务</span></a>
+    </div>
+    <div class="content">
+    <div class="page-index">
+    	<div class="row no-gutter home-bar">
+        	<div class="col-33"><a class="tab-item" href="{:url('feed')}"> <span class="icon iconfont icon-artboard13"></span><span class="tab-label">行业动态</span> </a></div>
+            <div class="col-33"><a class="tab-item" href="{:url('app')}"> <span class="icon iconfont icon-iconfontmokuaiguanli"></span><span class="tab-label">应用模块</span> </a></div>
+            <div class="col-33"><a class="tab-item" href="{:url('license')}"> <span class="icon iconfont icon-shouquanzhuanhuan"></span><span class="tab-label">授权查询</span> </a></div>
+            <div class="col-50"><a class="tab-item open-popup" data-popup=".popup-about"> <span class="icon iconfont icon-guanyuwomen"></span><span class="tab-label">关于我们</span> </a></div>
+            <div class="col-50"><a class="tab-item open-popup" data-popup=".popup-contact"> <span class="icon iconfont icon-lianxifangshi"></span><span class="tab-label">联系我们</span> </a></div>
+        
+        </div>
+    </div>
+    </div>
+</div>
+
+</div>
+<div class="popup popup-about">
+  <header class="bar bar-nav">
+    <a class="button button-link button-nav pull-right close-popup">
+      关闭
+    </a>
+    <h1 class="title">关于齐信</h1>
+  </header>
+  <div class="content">
+    <div class="content-inner">
+      <div class="content-block">
+        <p>齐信软件科技（上海）有限公司。齐信软件是国内领先的互联网综合服务类上市公司，为了引领IT技术的不断发展，整合了一支由世界500强跨国IT公司顶尖技术精英组成的强大团队，进行深刻的云化转型，以期在这场以云计算技术为主导的企业级IT服务的变革大潮中继续保持行业内的领先地位。</p>
+        <p>齐信软件主营业务：面向政企、互联网企业提供基于云计算技术的企业级信息化服务。</p>
+        <p>IT创新，行业先导：齐信软件是一家以提升中国信息产业自主创新水平为使命的高科技公司，到目前为止，已经取得了国内高新技术企业认证；先后通过了ISO14001国家环境管理体系认证、ISO9001国家质量管理体系认证、ISO20000国家信息技术服务管理体系认证及ISO27001国家信息安全管理体系认证等多个国际认证；同时获得了多个国内突破性创新的软件著作权证。</p>
+        <p><a class="button close-popup">确定</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="popup popup-contact">
+  <header class="bar bar-nav">
+    <a class="button button-link button-nav pull-right close-popup">
+      关闭
+    </a>
+    <h1 class="title">联系我们</h1>
+  </header>
+  <div class="content">
+    <div class="content-inner">
+      <div class="content-block">
+        <p>地址：上海市嘉定区沪宜公路1188号南翔智地A区8号楼</p>
+        <p>电话：021-60765025</p>
+        <p>邮箱：supporter@qinfo360.com</p>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{/block}
+{block name="script"} 
+<script>
+  //打开自动初始化页面的功能
+  //建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+  $.config = {
+    autoInit: true,
+	router:false
+  }
+</script> 
+{/block}

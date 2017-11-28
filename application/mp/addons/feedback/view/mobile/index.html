@@ -1,0 +1,134 @@
+{extend name="mobile@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+
+<div class="page">
+    <header class="bar bar-nav">
+    <a class="icon icon-left pull-left" href="/mobile"></a>
+    <h1 class="title">{$config['top_title']}</h1>
+    </header>
+    <div class="content native-scroll">
+    <div class="list-block">
+      <ul>
+      	<li class="align-top">
+          <div class="item-content">
+            <div class="item-inner">
+              
+              <div class="item-input">
+                <textarea name="content" id="content" rows="7" placeholder="请输入内容"></textarea>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!-- Text inputs -->
+        {if condition="$config['need_name'] eq '1'"}
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              
+              <div class="item-input">
+                <input type="text" placeholder="您的姓名" name="name" id="name" value="">
+              </div>
+            </div>
+          </div>
+        </li>
+		{/if}
+        {if condition="$config['need_contact'] eq '1'"}
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              
+              <div class="item-input">
+                <input type="text" placeholder="您的{if condition="$config['contact_type'] eq '1'"}QQ号{elseif condition="$config['contact_type'] eq '2'" /}微信号{elseif condition="$config['contact_type'] eq '3'" /}邮箱{else /}手机号{/if}" name="contact" id="contact" value="">
+                <input type="hidden" name="contact_type" id="contact_type" value="{$config['contact_type']}" />
+              </div>
+            </div>
+          </div>
+        </li>
+        
+        {/if}
+        
+      </ul>
+    </div>
+    <div class="content-block">
+       <a href="#" id="submit" class="button button-big button-fill button-primary">提交</a>
+    </div>
+  </div>
+</div>
+{/block}
+{block name="script"} 
+
+<script>
+  //打开自动初始化页面的功能
+  //建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+	$.config = {
+		autoInit: true,
+		router:false
+	}
+	$(function() {
+		$("#cbFinish").on("touchend", function (event) {
+			 //很多处理比如隐藏什么的
+			 event.preventDefault();
+		});
+		// 表单提交事件
+		$("#submit").click(function(){
+				var need_name = "{$config['need_name']}";
+				var need_contact = "{$config['need_contact']}";
+				var contact_type = "{$config['contact_type']}";
+				var content = $("#content");
+				
+				if (!content.val()) {
+					$.toast("请填写内容");
+					content.focus();
+					return false;
+				}
+		
+				if (need_name == '1') {
+					var name = $("#name");
+					if (!name.val()) {
+						$.toast("请填写您的姓名");
+						name.focus();
+						return false;
+					}
+				}
+		
+				if (need_contact == '1') {
+					var contact = $("#contact");
+					if (!contact.val()) {
+						
+						$.toast("请填写"+contact.attr('placeholder'));
+						contact.focus();
+						return false;
+					}
+				}
+				var data = {
+					content : content.val(),
+					name : name ? name.val() : '',
+					contact : contact ? contact.val() : '',
+					contact_type : contact_type
+				};
+				
+				$.ajax({
+					type: 'post',
+					url: "{:$config['url']}",
+					data: data,
+					dataType: 'json',
+					success: function(data) {
+						if (data.code == 1) {
+							$.toast(data.msg);
+							closeWindow();
+						} else {
+							$.toast(data.msg);
+						}
+					},
+					error: function(data) {
+						$.toast('提交数据错误，请重试');
+					}
+				});
+				return false;
+
+		});
+	});
+</script> 
+{/block}

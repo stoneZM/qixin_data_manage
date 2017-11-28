@@ -1,0 +1,82 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active" ><a href="#tab_1-1" data-toggle="tab" >{:lang('log')}</a></li>
+        <li class="" ><a href="#tab_1-2" data-toggle="tab" >{:lang('reporting')}</a></li>
+		
+    </ul>        
+    <div class="tab-content">
+    	<div class="tab-pane active" id="tab_1-1">
+            
+        <div class="box-body clearfix">
+        	<div class="nav-tabs-custom">
+            	<ul class="nav nav-tabs">
+                    {volist name="$modeltype" id="item"}
+                    <li {if condition="$key eq $type"}class="active"{/if}>
+                        <a href="{:url('admin/log/index',array('type'=>$key))}">{:lang($item)}</a>
+                    </li>
+                    {/volist}
+                </ul>
+            	<div class="tab-content">
+                	<div class="tab-pane active">
+                    	<div class="table-responsive">
+                            <table class="table user-list table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{:lang('model')}</th>
+                                        <th>{:lang('log')}</th>
+                                        <th>{:lang('creation_time')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {volist name="list" id="item"}
+                                    <tr>
+                                        <td>{:lang($item['model'])}</td>
+                                        <td>{if condition="$item['level'] eq 0"}
+                                        <span class="label bg-aqua">{:lang('routine')}</span>
+                                        {elseif condition="$item['level'] eq 1"} 
+                                        <span class="label bg-yellow">{:lang('warning')}</span>
+                                        {else/}
+                                        <span class="label bg-red">{:lang('serious')}</span>
+                                        {/if}
+                                        {if condition="$item['record_label'] neq ''"}
+                                        {$item['record_label']}
+                                        {/if}
+                                        {$item['remark']}</td>
+                                        <td>{$item['create_time']}</td>
+                                    </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                            {$page}
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+        </div>
+        <div class="tab-pane " id="tab_1-2">
+        </div>
+    </div>        
+</div>
+
+
+</section>
+{/block}
+{block name="script"}
+{/block}

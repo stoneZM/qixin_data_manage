@@ -1,0 +1,59 @@
+{extend name="common@public/base"/}
+{block name="body"}
+
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body">
+    	<form action="" target="_blank" method="post">
+            <button class="btn btn-success" type="submit">导出Excel</button>
+        </form>
+    	<div id="markdown" class="mt-20"></div>
+    
+    </div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/showdown/1.4.2/showdown.min.js"></script>
+<script>
+$(function () {
+	var converter = new showdown.Converter(),
+			text = $("#markdown_tpl").html();
+	$("#markdown").html(converter.makeHtml(text));
+})
+</script>
+<script type="text/plain" id="markdown_tpl">
+---
+方法：
+```
+/Excel::export($header,$body,$name = null);
+```
+助手函数：
+```
+export_excel($header,$body,$name = null);
+```
+html 代码：
+```
+<form action="" target="_blank" method="post">
+    <button class="btn btn-success" type="submit">导出Excel</button>
+</form>
+```
+php 代码：
+```
+$header = ['用户ID', '登录IP', '登录地点', '登录浏览器', '登录操作系统', '登录时间'];
+$data = Db::name("member")->field("uid", true)->order("uid asc")->limit(20)->select();
+if ($error = \Excel::export($header, $data, "示例Excel导出", '2007')) {
+    throw new Exception($error);
+}
+```
+</script>
+{/block}

@@ -1,0 +1,77 @@
+{extend name="common@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="pull-left">
+                <a href="{:url('manage/virtual_add')}" class="btn btn-primary pull-right"> <i class="fa fa-plus-circle fa-lg"></i> {:lang('virtual_add')}</a>
+            </div>
+        </header>
+        <div class="box-body clearfix">
+            <div class="table-responsive">
+                <table class="table user-list table-hover">
+                    <thead>
+                    <tr>
+                        <th><span>{:lang('虚拟机名称')}</span></th>
+                        <th><span>{:lang('CPU')}</span></th>
+                        <th><span>{:lang('最大内存')}</span></th>
+                        <th><span>{:lang('当前内存')}</span></th>
+                        <th><span>{:lang('硬盘')}</span></th>
+                        <th>{:lang('系统位数')}</th>
+                        <th>{:lang('state')}</th>
+                        <th>id/VNC端口</th>
+                        <th>{:lang('operation')}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="item"}
+                    <tr>
+                        <td><span class="user-subhead">{$item['name']}</span></td>
+                        <td><span >{$item['cpu']}</span></td>
+                        <td><span >{$item['mem']}</span></td>
+                        <td><span>{$item['curmem']}</span></td>
+                        <td><span >{$item['disk']}</span></td>
+                        <td><span >{$item['arch']}</span></td>
+                        <td><span >{$item['state']}</span></td>
+                        <td><span>{$item['id']}/{$item['vnc']}</span></td>
+                        <td>
+                            <span >{if $item['state']=='running'}
+                                   <a class="label label-default confirm ajax-get" href="{:url('manage/libvirt_destroy',array('uuid'=>$item['uuid']))}" class="table-link" title="">关机</a>
+                                    {else/}
+                                    <a class="label label-default confirm ajax-get" href="{:url('manage/libvirt_start',array('uuid'=>$item['uuid']))}" class="table-link" title="">开机</a>
+                                    {/if}</span>
+                            <!--<a href="{:url('manage/storage_manage',array('id'=>$item['id']))}" class="table-link" title="">{:lang('关机')}</a>-->
+
+                            <a  href="{:url('device/manage/libvirt_edit',array('uuid'=>$item['uuid']))}" class="table-link" title="">配置</a>
+                            {if $item['state']!='running'}
+                            <a class="label label-default confirm ajax-get" href="{:url('device/manage/libvirt_del',array('uuid'=>$item['uuid']))}" class="table-link" title="">删除</a>
+                            {/if}
+
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{/block}
+{block name="script"}
+<script>
+    $(function () {
+
+    });
+</script>
+{/block}

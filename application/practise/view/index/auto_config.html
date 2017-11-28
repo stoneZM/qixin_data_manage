@@ -1,0 +1,529 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/bootstrap-slider/bootstrap-slider.css">
+<link rel="stylesheet" href="__CSS__/style.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small>
+
+    </small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <!--body begin-->
+        <div class="box-body clearfix">
+            <!--tabs-custom begin-->
+
+            <header class="box-header clearfix">
+                <div class="btn-group" role="group" style="margin-left: -10px" >
+                    <a class="btn  btn-default go-back" style="display:inline" href="{:url('/practise/index/index')}" >{:lang('back')}</a>
+
+                    {if condition='$take_over.have_config eq 1'}
+                    <!--<a class="badge bg-light-blue" style="display:inline" href="javascript:" data_role="edit_takeover_conf" config-type="0" >{:lang('edit')}{:lang('take_over')}{:lang('config')}</a>-->
+                    {else/}
+                    <!--<a class="badge bg-light-blue" style="display:inline" href="javascript:" data_role="add_auto_conf" config-type="0" >{:lang('add_take_over')}</a>-->
+                    {/if}
+                    {if condition='$exercise.have_config eq 1'}
+                    <a class="btn  btn-default"  data_role="add_auto_conf" data-toggle="modal" data-target="#edit_exercise_conf"  data_role="edit_exercise_conf" config-type="1">{:lang('edit')}{:lang('config')}</a>
+                    {else/}
+                    <a class="btn  btn-default"  href="" data_role="add_auto_conf" data-toggle="modal" data-target="#add_auto_conf"  config-type="1">新增配置</a>
+                    {/if}
+                    {if count($vhost_info)>0 }
+                        <a href="{:url('/practise/index/export_excel',array('device_id'=>$device_id))}" class="btn  btn-default ">
+                            导出结果
+                        </a>
+                    {/if}
+                </div>
+            </header>
+
+            <!--content begin-->
+            {if condition='$take_over.have_config eq 1 || $exercise.have_config eq 1'}
+            <div class="box box-solid " style="position: relative; left: 0px; top: 0px;">
+                <div class="box-header ui-sortable-handle" >
+                    <i class="fa fa-gears"></i>
+                    <h3 class="box-title">配置信息
+                        {if $exercise['config']['status']}
+                        <span class="badge" style="background-color: #00a65a;">启用</span>
+                        {else/}
+                        <span class="badge" style="background-color: lightgrey;color: grey">禁用</span>
+                        {/if}
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn  btn-sm" data-widget="collapse"><i class="fa  fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body border-radius-none" style="display: block;">
+                    <!--演练begin-->
+                        <ul class="list-group col-md-6 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0;">
+                            <li class="list-group-item info-box-text" style="border-top-right-radius:0;">
+                                {:lang('device')}IP：{$exercise['config']['device_ip']}
+                                {if !empty($exercise['config']['device_name'])}
+                                ({$exercise['config']['device_name']})
+                                {/if}
+                            </li>
+                            <li class="list-group-item info-box-text">{:lang('compute_pool')}IP：{$exercise['config']['compute_ip']}</li>
+                            <li class="list-group-item " style="border-bottom-right-radius: 0"> {:lang('system')}{:lang('type')}: {$exercise["config"]["system_type_alias"]}</li>
+                        </ul>
+                        <ul class="list-group col-md-6 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0;border-left: 0">
+                            <li class="list-group-item info-box-text" style="border-top-left-radius:0;">
+                                {:lang('cpu')}:
+                                <b >
+                                {$exercise['config']['cpu']} 个
+                            </b>
+                            </li>
+                            <li class="list-group-item info-box-text">{:lang('memory')}：
+                                <b >{$exercise['config']['old_memory']|format_bytes}</b>
+                            </li>
+                            <li class="list-group-item info-box-text" style="border-bottom-left-radius: 0">{:lang('duration')}：{$exercise['config']['day_str']} &nbsp; <b >{$exercise['config']['accurate_time_alias']}</b>
+                        </ul>
+                    <!--演练end-->
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+                <!--日志信息 begin-->
+                <div class="row">
+                    <div class="col-lg-12 practise-result-div-box">
+                        <div class="">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title">审计结果</h3>
+                            </div>
+                            <div class="box-body">
+                                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                    <div class="row">
+                                        {if count($vhost_info) == 0 }
+                                            <div class="col-lg-12">
+                                                <h4 style="text-align: center">暂无数据</h4>
+                                            </div>
+                                        {else/}
+                                        <div class="col-sm-12">
+                                            <table id="" class="table  table-hover table-condensed " role="grid">
+                                                <thead>
+                                                <tr role="row">
+                                                    <th>
+                                                        {:lang('snap_time')}
+                                                    </th>
+                                                    <th style="text-align: center">
+                                                        {:lang('is_normal_or_not')}
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {volist name="vhost_info" id="vhost"}
+
+
+                                                <tr role="row" class="odd">
+                                                    <td class="sorting_1">
+                                                        {$vhost['snap_time']}
+                                                    </td>
+                                                    <td style="text-align: center">
+                                                        {if $vhost['is_normal'] == 0}
+                                                        <span class="glyphicon glyphicon-cog fa-spin" style="font-size: 1.1em" title="检测中..."></span>
+                                                        {/if}
+                                                        {if $vhost['is_normal']==1 }
+                                                        <span class="glyphicon glyphicon-ok status-1 " style="font-size: 1.1em" title="正常"></span>
+                                                        {/if}
+                                                       {if $vhost['is_normal']==2}
+                                                       <span class="glyphicon glyphicon-remove text-danger"  style="font-size: 1.1em" title="不正常"></span>
+                                                        {/if}
+                                                    </td>
+                                                </tr>
+
+                                                {/volist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                                {$page}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--日志信息end-->
+
+
+                {else/}
+                <div class="row">
+                    <div class="col-lg-12">
+                           <h4 style="text-align: center">暂无任何相关配置信息</h4>
+                    </div>
+                </div>
+                {/if}
+                <!--content end-->
+            </div>
+             <!--tab custom end-->
+        </div>
+        <!--body end-->
+
+</section>
+
+<!--自动化配置 新增 模态框-->
+<div class="modal fade" id="add_auto_conf"  tabindex="-1" role="dialog" aria-labelledby="add_auto_conf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="modal_hidden">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <form class="form form-horizontal instead_host" role="form" method="post" action="{:url('cdp/index/add_auto_config')}">
+                <input type="hidden" name='device_id' value="{$device_id}">
+                <input type="hidden" name="type" value="1" id="config-type">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('is_use')}</label>
+                        <div class="col-sm-10">
+                            <div class="">
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='status' value="1" checked>{:lang('use')}</div>
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='status' value="0" >{:lang('not_use')}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('compute_snap')}</label>
+                        <div class="col-sm-6">
+                            <select id='computing' name='compute_id' class="form-control select2" style="width:100%">
+                                <option value="{$best_id}">自动分配</option>
+                                {volist name="computing_list" id="vo_comp"}
+                                <option value="{$vo_comp['id']}" max_cpu="{$vo_comp['max_cpu']}" >{$vo_comp['name']}({$vo_comp['ip']}) </option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group exercise-hidden" style="margin-top:40px;" >
+                        <label class="col-sm-2 control-label">星期</label>
+                        <div class="col-sm-8 choose-day">
+                            <!--<input  name="day" type="text" value="1" class="slider form-control auto_day" data-slider-min="1" data-slider-max="7" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">-->
+                            <input  type="checkbox" name="week[]" value="1">  周一
+                            <input  type="checkbox" name="week[]" value="2">  周二
+                            <input  type="checkbox" name="week[]" value="3">  周三
+                            <input  type="checkbox" name="week[]" value="4">  周四
+                            <input  type="checkbox" name="week[]" value="5">  周五
+                            <input  type="checkbox" name="week[]" value="6">  周六
+                            <input  type="checkbox" name="week[]" value="7">  周日
+                        </div>
+                    </div>
+
+                    <div class="form-group exercise-hidden" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">时间</label>
+                        <div class="col-sm-8">
+                            <input  name="time" type="text" value="1" class="slider form-control auto_time" data-slider-min="0" data-slider-max="86400" data-slider-step="600" data-slider-value="0" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">CPU</label>
+                        <div class="col-sm-8">
+                            <input name="cpu_kernel" type="text" value="1" class="slider form-control skvhostcpuS1" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">{:lang('memory')}</label>
+                        <div class="col-sm-8">
+                            <input  name="memory" type="text" value="512" class="slider form-control skvhostmemoryS1" data-slider-min="512" data-slider-max="2048" data-slider-step="512" data-slider-value="16384" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:20px; display: none">
+                        <label class="col-sm-2 control-label">{:lang('username')}</label>
+                        <div class="col-sm-5">
+                            <input class="form-control"  type="text" name="username" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;display: none">
+                        <label class="col-sm-2 control-label">{:lang('password')}</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" name="password">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success ajax-post" target-form="instead_host">{:lang('submit')}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                </div>
+                <input hidden="hidden"  name='system_type'  value="{$client_system}" />
+            </form>
+        </div>
+    </div>
+</div>
+<!--model end-->
+
+<!--自动化 演练 模态框-->
+{if condition="$exercise[have_config] eq 1"}
+<div class="modal fade" id="edit_exercise_conf"  tabindex="-1" role="dialog" aria-labelledby="edit_exercise_conf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="modal_hidden">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>修改审计配置</h4>
+            </div>
+            <form class="form form-horizontal edit-exercise-config" role="form" method="post" action="{:url('cdp/index/edit_auto_config')}">
+                <input type="hidden" name="config_id" value="{$exercise['config']['id']}">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('is_use')}</label>
+                        <div class="col-sm-10">
+                            <div class="">
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='status' value="1" <?php if($exercise['config']['status']==1) echo 'checked';s ?>>{:lang('use')}</div>
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='status' value="0" <?php if($exercise['config']['status']!=1) echo 'checked';s ?>>{:lang('not_use')}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('compute_snap')}</label>
+                        <div class="col-sm-6">
+                            <select  class="form-control select2" name="compute_id" style="width:100%">
+                                {volist name="computing_list" id="vo_comp"}
+                                <?php if($vo_comp['id']==$exercise['config']['compute_id'])
+                                       { $str = 'selected="selected"';}else{
+                                         $str = '';
+                                       }
+                                ?>
+                                <option value="{$vo_comp['id']}" {$str} >{$vo_comp['name']}({$vo_comp['ip']})</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">星期</label>
+                        <div class="col-sm-8 choose-day">
+                            <input  type="checkbox" name="week[]" value="1" {$exercise['config']["day_alias"][1]} >  周一
+                            <input  type="checkbox" name="week[]" value="2" {$exercise['config']["day_alias"][2]} >  周二
+                            <input  type="checkbox" name="week[]" value="3" {$exercise['config']["day_alias"][3]} >  周三
+                            <input  type="checkbox" name="week[]" value="4" {$exercise['config']["day_alias"][4]} >  周四
+                            <input  type="checkbox" name="week[]" value="5" {$exercise['config']["day_alias"][5]} >  周五
+                            <input  type="checkbox" name="week[]" value="6" {$exercise['config']["day_alias"][6]} >  周六
+                            <input  type="checkbox" name="week[]" value="7" {$exercise['config']["day_alias"][7]} >  周日
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">时间</label>
+                        <div class="col-sm-8">
+                            <input id="edit_exercise_time" name="time" type="text" value="{$exercise['config']['accurate_time']}" class="slider form-control " data-slider-min="1" data-slider-max="86400" data-slider-step="600" data-slider-value="0" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">CPU</label>
+                        <div class="col-sm-8">
+                            <input id="edit_exercise_skvhostcpuS1" name="cpu_kernel" type="text" value="{$exercise['config']['cpu']}" class="slider form-control " data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">{:lang('memory')}</label>
+                        <div class="col-sm-8">
+                            <input  id='edit_exercise_skvhostmemoryS1' name="memory" type="text" value="{$exercise['config']['memory']}" class="slider form-control " data-slider-min="512" data-slider-max="2048" data-slider-step="512" data-slider-value="16384" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:20px;display: none">
+                        <label class="col-sm-2 control-label">{:lang('username')}</label>
+                        <div class="col-sm-5">
+                            <input class="form-control"  type="text" name="username" value="{$exercise['config']['username']}" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;display: none">
+                        <label class="col-sm-2 control-label">{:lang('password')}</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" value="{$exercise['config']['password']}" name="password">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success ajax-post" target-form="edit-exercise-config">{:lang('submit')}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                </div>
+                <input hidden="hidden"  name='system_type'  value="{$client_system}" />
+            </form>
+        </div>
+    </div>
+</div>
+{/if}
+<!--model end-->
+
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+
+    $("input[type='checkbox']").iCheck({
+        labelHover: false,
+        cursor: true,
+        checkboxClass: 'icheckbox_minimal-blue',
+    });
+
+
+
+    $(".auto_day").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return '星期' + switchDay(value);
+        }
+    });
+
+    $(".auto_time").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return  switchTime(value) ;
+        }
+    });
+
+    $(".skvhostcpuS1").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return 'CPU: ' + value +'个';
+        }
+    });
+
+    $(".skvhostmemoryS1").slider({
+        tooltip: 'always',
+        value: 1,
+        formatter: function(value) {
+            return '内存: ' + value +'MB';
+        }
+    });
+
+
+
+    $("#edit_takeover_day").slider({
+        tooltip: 'always',
+        value: parseInt("<?php echo $take_over['config']['day']?:1; ?>"),
+        formatter: function(value) {
+            return '星期' + switchDay(value);
+        }
+    });
+
+    $("#edit_takeover_time").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $take_over['config']['accurate_time']?:1; ?>"),
+        formatter: function(value) {
+            return  switchTime(value) ;
+        }
+    });
+
+    $("#edit_takeover_skvhostcpuS1").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $take_over['config']['cpu']?:1 ;?>"),
+        formatter: function(value) {
+            return 'CPU: ' + value +'个';
+        }
+    });
+
+    $("#edit_takeover_skvhostmemoryS1").slider({
+        tooltip: 'always',
+        value: parseInt("<?php echo $take_over['config']['memory']?:1 ;?>"),
+        formatter: function(value) {
+            return '内存: ' + value +'MB';
+        }
+    });
+    $("#edit_exercise_day").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $exercise['config']['day']; ?>"),
+    formatter: function(value) {
+        return '星期' + switchDay(value);
+    }
+    });
+
+    $("#edit_exercise_time").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $exercise['config']['accurate_time']?:1; ?>"),
+    formatter: function(value) {
+        return  switchTime(value) ;
+    }
+    });
+
+    $("#edit_exercise_skvhostcpuS1").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $exercise['config']['cpu']?:1; ?>"),
+    formatter: function(value) {
+        return 'CPU: ' + value +'个';
+    }
+    });
+
+    $("#edit_exercise_skvhostmemoryS1").slider({
+        tooltip: 'always',
+        value:parseInt("<?php echo $exercise['config']['memory']?:1 ?>") ,
+            formatter: function(value) {
+        return '内存: ' + value +'MB';
+    }
+    });
+
+
+    //生成主机名称
+    $('#host_name-refresh').click(function(){
+        var time = new Date().getTime();
+        var time = new Date(time);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        if (m<10) m = "0"+m;
+        var d = time.getDate();
+        if (d<10) d = "0"+d;
+        var h = time.getHours();
+        var mm = time.getMinutes();
+        var s = time.getSeconds();
+        var name = "Server-"+y+m+d+"-"+h+mm+s;
+        $('#skvhostnameS1').val(name);
+    });
+
+    $(".modal_hidden").click(function(e){
+        e.preventDefault();
+        $("#add_virtual").hide();
+    });
+
+    $("#host_name-refresh").trigger("click");
+
+
+    $(".select2").select2({
+        minimumResultsForSearch: -1
+    });
+
+    function switchDay(day){
+
+      var charDays = ['一','二','三','四','五','六','日'];
+        return charDays[day-1];
+    }
+    function switchTime(time){
+
+        var hour = parseInt(time/3600);
+        var min = parseInt((time-hour*3600)/60);
+        var i = parseInt(time%60);
+        if (hour<10){
+            hour = "0"+hour;
+        }
+        if(min<10){
+            min = "0" + min;
+        }
+        if(i<10){
+            i = "0" + i;
+        }
+        return hour+' 时 '+min+ " 分 ";
+    }
+    $('.go-back').click(function(){
+        history.back();
+    });
+
+</script>
+{/block}

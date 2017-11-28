@@ -1,0 +1,9 @@
+{
+    "require": {
+        "workerman/workerman-for-win": "^3.3",
+        "topthink/think-worker": "^1.0",
+        "phpoffice/phpexcel": "^1.8",
+        "qiniu/php-sdk": "^7.1",
+        "endroid/qrcode": "^1.9"
+    }
+}

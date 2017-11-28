@@ -1,0 +1,71 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+<style type="text/css">
+    .picture_list{ overflow:hidden; zoom:1}
+    .picture_list li{ float:left; margin:10px;}
+    .picture_item{ border:1px solid #ddd;}
+    .picture_item .main_img{padding:5px; width:200px; height:160px; overflow:hidden;}
+    .picture_item .main_img img{ height: auto;width: 100%}
+    .picture_action{ border-top:1px solid #ddd; overflow:hidden; zoom:1;}
+    .picture_action a{ width:50%; float:left; height:40px; line-height:40px; text-align:center; color:#888; background:#eee}
+    .picture_action a:hover{ background:#ddd;}
+    ul.img-list > img { width: 100px; height: 100px; float: left; margin: 5px }
+</style>
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    <li class=""><a href="{:url('material/text')}" >文本素材</a></li>
+    <li class="active"><a href="{:url('material/image')}" >图片素材</a></li>
+    <li class=""><a href="{:url('material/news')}" >图文素材</a></li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left">
+                    <a class="btn btn-primary" href="{:url('add',array('type'=>'image'))}" >添加图片素材</a>
+                 </div>
+                </div>
+                <div class="box-body">
+                        <div class="clearfix">
+                            <ul class="picture_list">
+                                 {volist name="list" id="vo"}
+                                 <li>
+                                    <div class="picture_item">
+                                        <div class="main_img">
+                                            <a href="{:get_wechat_img($vo.image,'path')}" target="_blank"><img src="{:get_wechat_img($vo.image,'path')}"></a>
+                                        </div>
+                                        <div class="picture_action">
+                                            <a href="{:url('edit',array('id'=>$vo['id']))}">编辑</a>
+                                            <a href="{:url('delete',array('id'=>$vo['id']))}" class="confirm ajax-get" confirm_msg ="删除此素材，可能会导致引用了该素材的内容不可用，是否确认要删除？">删除</a>	
+                                        </div>
+                                  
+                                    </div>
+                                </li>
+                                {/volist}
+                            </ul>
+                        </div>
+                        {$page}
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+{/block}

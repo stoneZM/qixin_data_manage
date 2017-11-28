@@ -1,0 +1,18 @@
+<textarea name="{$field}" id="{$field}" style="width: 100%; height:300px">{$value}</textarea>
+<!-- 样式文件 -->
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/wangeditor/css/wangEditor.css">
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/wangeditor/js/wangEditor.js"></script>
+<script type="text/javascript">
+var weditor_{$field} = new wangEditor('{$field}');
+// 上传图片
+weditor_{$field}.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+	if (item === 'insertcode' || item === 'fullscreen' || item === 'emotion') {
+		return null;
+	}
+	return item;
+});
+weditor_{$field}.config.uploadImgFileName = 'upfile'
+weditor_{$field}.config.uploadImgUrl = "{:url('admin/upload/weditor')}";
+weditor_{$field}.config.zindex = 4;
+weditor_{$field}.create();
+</script>

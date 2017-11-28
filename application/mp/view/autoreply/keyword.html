@@ -1,0 +1,73 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="{:url('autoreply/keyword')}" >关键词回复</a></li>
+    <li class=""><a href="{:url('autoreply/special')}" >特殊消息回复</a></li>
+    <li class=""><a href="{:url('autoreply/event')}" >事件回复</a></li>
+    <li class=""><a href="{:url('autoreply/unrecognize')}" >未识别回复</a></li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left">
+                    <a class="btn btn-primary" href="{:url('add',array('type'=>'text'))}" >添加文本回复</a>
+                    <a class="btn btn-info" href="{:url('add',array('type'=>'image'))}" >添加图片回复</a>
+                    <a class="btn btn-success" href="{:url('add',array('type'=>'news'))}" >添加图文回复</a>
+                 </div>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive clearfix">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><input class="checkbox check-all" type="checkbox"></th>
+                                    <th>{:lang('keyword')}</th>
+                                    <th>{:lang('reply_type')}</th>
+                                    <th>{:lang('reply_content')}</th>
+                                    <th>{:lang('operation')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volist name="list" id="item"}
+                                <tr>
+                                    <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                                    <td>{$item['keyword']}</td>
+                                    <td>{$item['reply_type']}</td>
+                                    <td>{$item['material_id']}</td>
+                                    <td>
+                                        <a href="{:url('edit?id='.$item['id'])}" class="">{:lang('edit')}</a>
+                                        <a href="{:url('delete?id='.$item['id'])}" class="confirm ajax-get">{:lang('delete')}</a>
+                                    </td>
+                                </tr>
+                                {/volist}
+                            </tbody>
+                        </table>
+                        {$page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+
+{/block}

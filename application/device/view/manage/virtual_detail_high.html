@@ -1,0 +1,343 @@
+<div class="clearfix" style="margin-bottom:5px"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="list-group " style="line-height:20px;margin-bottom:0; padding-right:0;">
+                        <li class="list-group-item info-box-text col-md-12"><strong>{:lang('basic')}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('virtual_name')}：<strong>{$virtual_data['name']}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('type')}：<strong>
+                            {if condition="$virtual_data['type'] eq 1"}
+                            {:lang('exercise')}
+                            {/if}
+                            {if $virtual_data['type']==0}
+                            {:lang('take_over')}
+                            {/if}
+                            {if $virtual_data['type']==3}
+                            {:lang('remote_exercise')}
+                            {/if}
+                        </strong></li>
+
+                        <li class="list-group-item info-box-text col-md-4">{:lang('device_id')}：<strong>{$virtual_data['device_id']}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('source_device_ip')}：<strong>{$virtual_data['source_device_ip']}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('source_device_name')}：<strong>{$virtual_data['source_device_name']}</strong></li>
+
+
+                        <li class="list-group-item info-box-text col-md-4">{:lang('cpu')}：<strong>{$virtual_data['cpu_kernel']}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('memory')}：<strong>{$virtual_data['memory']*1024|format_bytes}</strong></li>
+                        <li class="list-group-item info-box-text col-md-4">{:lang('net_count')}：<strong>{:count($net_data)}</strong></li>
+
+                        <li class="list-group-item info-box-text col-md-4">{:lang('remote_port')}：<strong>{$virtual_data['remote_port']}</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 配置演练（Modal） -->
+    <div class="modal" id="configModal_5" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" id="modal_hidden">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>{:lang('virtual_conf')}</h4>
+                </div>
+
+
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs" id="myTab" style="padding-left:15px">
+                        {if condition="$virtual_data.type eq 1"}
+                        <li class="active"><a href="#xtab0" data-toggle="tab">{:lang(host)}</a></li>
+                        <li><a href="#xtab9" data-toggle="tab">{:lang('harddisk')}</a></li>
+                        <li><a href="#xtab1" data-toggle="tab">{:lang('other_conf')}</a></li>
+                        <li><a href="#xtab2" data-toggle="tab">{:lang('network_card')}</a></li>
+                        {else/}
+                          <li class="active"><a href="#xtab1" data-toggle="tab">{:lang('other_conf')}</a></li>
+                        {/if}
+                    </ul>
+                    <div class="tab-content">
+                        {if condition="$virtual_data.type eq 1"}
+                        <div class="tab-pane active" id="xtab0">
+                            {else/}
+                            <div class="tab-pane " id="xtab0">
+                        {/if}
+                            <form class="form form-horizontal virtual_edit_type" role="form" method="post" action="{:url('device/manage/virtual_edit_type')}">
+                                <input type="hidden"  value="{$virtual_data['name']}" name="virtual_name">
+                                <input type='hidden' name='virtual_id' value="{$virtual_data['id']}">
+                                <input type="hidden" value="{$ip}" name="ip">
+
+                                <div class="row" style="width:50%; margin:20px auto">
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-4 control-label">{:lang('type')}:</label>
+                                        <div class="col-sm-8">
+                                            <select id='jght_type_01' name='virtual_type' class="form-control select-vir-type select2"/>
+                                            {if condition="$virtual_data.type eq 0"}
+                                            <option>{:lang('take_over')}</option>
+                                            {else/}
+                                            <option value=1 selected='selected'>{:lang('exercise')}</option>
+                                            <option value=0 >{:lang('take_over')}</option>
+                                            {/if}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="choose-bridge" style="width:50%; margin:20px auto;display: none" >
+                                    <div class="form-group form-horizontal" >
+                                        {if empty($bridge_info)}
+
+                                        <label class="col-sm-12 have-no-bridge" style="text-align: center">
+                                            <input type="hidden" name="bridge_name" value="br0" id="have-no-bridge">
+                                            <i class="fa fa-warning" style="color: red"></i>
+                                            无可用网桥,无法创建接管
+                                        </label>
+                                        {else/}
+                                        <div class="form-group form-horizontal">
+                                            <label class="col-sm-4 control-label">{:lang("variable_bridge")}:</label>
+                                            <div class="col-sm-8">
+                                                <select id='' name='bridge_name' class="form-control select2"/>
+                                                    {volist name="bridge_info" id="item"}
+                                                     <option value={$item['uuid']} selected='selected'>{$item['uuid']}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+
+                                <div class="auto_restart" style="display: none;">
+                                    <div class="form-group form-horizontal">
+
+                                        <label class="col-sm-12" style="text-align: center;color: red">
+                                            <i class="fa fa-warning">
+                                                此虚拟机正在运行,若更改桥接模式,虚拟机将会自动重启!
+                                            </i>
+
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-horizontal">
+                                    {if condition="$virtual_data.type eq 1"}
+                                    <div class="col-sm-offset-4 col-sm-8" style="margin-top:15px">
+                                        <button type="submit" action-type="edit-type" class="btn btn-primary submit-btn ajax-post virtual_edit_type_btn" target-form="virtual_edit_type">{:lang('submit')}</button>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </form>
+                        </div>
+
+                       {if condition="$virtual_data.type eq 1"}
+                        <div class="tab-pane"  id="xtab1">
+                        {else/}
+                            <div class="tab-pane active"  id="xtab1">
+                            {/if}
+                            <form class="form form-horizontal virtual_edit_form" role="form" method="post" action="{:url('device/manage/virtual_edit')}">
+                                <input type="hidden" value="{$ip}" name="ip">
+                                <input type="hidden" value="{$virtual_data['id']}" name="id">
+                                <div class="row" style="width:50%; margin:20px auto">
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-4 control-label">CPU:</label>
+                                        <div class="col-sm-8">
+                                            <input type="hidden" value="{$virtual_data['name']}" name="virtual_name">
+                                            <input type="hidden" name="old_cpu_count" value="{$virtual_data['cpu_kernel']}">
+                                            <select  id='jght_cpu_01'  class="form-control select2" name='cpu_count'  />
+                                            <?php
+                                           for($i=1;$i<$max_cpu;$i++) {
+                                               $selected_str = " ";
+                                            if($virtual_data['cpu_kernel'] == $i)
+                                                $selected_str = "selected='selected'";
+                                            echo "<option ".$selected_str." value=".$i.">$i</option>";
+                                            }
+                                            ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="width:50%; margin:20px auto">
+                                    <div class="form-group form-horizontal">
+                                        <label class="col-sm-4 control-label">{:lang('memory')}(M):</label>
+                                        <div class="col-sm-8">
+                                            <input  type="hidden" name="old_memory" value="{$virtual_data['memory']}">
+                                            <select  id='jght_mem_01'  name='memory' class="form-control select2" />
+                                            <?php
+                                        for($i=512;$i<=8192;$i=$i+512){
+                                            $selected_str = "";
+                                            if($virtual_data['memory']/1024==$i)
+                                            $selected_str = "selected='selected'";
+                                            echo "<option ".$selected_str." value=".$i.">$i</option>";
+                                            }
+                                            ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-offset-4 col-sm-8" style="margin-top:15px">
+
+                                        <button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="virtual_edit_form">{:lang('submit')}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane" id="xtab9">
+                            <form class="form form-horizontal virtual_edit_disk" role="form" method="post" action="{:url('device/manage/add_disk')}">
+                                <!--<h5 style="">1.磁盘组:</h5>-->
+                                <!--<div style=" margin:20px 0;">-->
+                                    <!--<div id='diskinfo'>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <h5>可添加容灾磁盘:</h5>
+                                <div style="overflow-y:auto; overflow-x:hidden;height:200px;">
+                                    <div class="panel-group" id="accordion">
+                                        <div class="panel1 panel-default">
+                                            <div class="panel-body1">
+                                                <?php foreach($snaps as $k1=>$vo1): ?>
+                                                <div class="panel2 panel-info">
+                                                    <div class="panel-heading2">
+                                                        <h5 class="panel-title2">
+                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapseThree3_{$k1}">
+                                                            <span style="font-weight:normal" class="badge bg-blue">日期：
+                                                                <span>{$vo1.date}</span>
+                                                            </span>
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapseThree3_{$k1}" class="collapse in</if>">
+                                                        <?php foreach($vo1['vmdk'] as $k2=>$vo2): ?>
+                                                        <div class="panel-body1">
+                                                            <div class="panel2 panel-info">
+                                                                <div class="panel-heading2">
+                                                                    <h5 class="panel-title2">
+                                                                        <div style=" padding-left:15px">
+                                                                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapseThree4_{$k1}_{$k2}" >&nbsp;磁盘{$k2}-{$vo1.date}</a>
+                                                                        </div>
+                                                                    </h5>
+                                                                </div>
+                                                                <div id="collapseThree4_{$k1}_{$k2}" class="collapse">
+                                                                    <?php foreach($vo2 as $k3=>$vo3): ?>
+                                                                    <div style="padding-left:20px">
+                                                                        <input type="checkbox" class="disk_checkbox" id="disk" name="disk[]"  value="{$vo3['id']}">&nbsp;
+                                                                        {if condition="$vo3['type'] eq 0"}
+                                                                        母盘
+                                                                        {else/}
+                                                                        快照
+                                                                        {/if}
+                                                                        -{$vo3['create_time']|date='Y-m-d H:i:s',###}
+                                                                    </div>
+                                                                    <?php endforeach;?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <?php endforeach;?>
+                                                    </div>
+                                                </div>
+                                                <?php endforeach;?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-offset-4 col-sm-8" style="margin-top:15px">
+                                        <button type="submit" class="btn btn-primary submit-btn ajax-post" action-type="add-disk" target-form="virtual_edit_disk">{:lang('add_disk')}</button>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane" id="xtab2">
+                            <form class="form form-horizontal virtual_edit_disk" role="form" method="post" action="{:url('device/manage/add_disk')}">
+                                <input type="hidden" value="{$virtual_data['name']}" name="virtual_name">
+                                <input type='hidden' name='virtual_id' value="{$virtual_data['id']}">
+                                <input type="hidden" value="{$ip}" name="ip">
+                                <div style="overflow-y:auto; overflow-x:hidden;height:200px;">
+                                    <div class="panel-group" id="accordion">
+                                        <div class="panel1 panel-default">
+                                            <div class="panel-body1">
+                                                {volist name="net_data" id="vo" key='k'}
+                                                <div style="padding-left:20px">
+                                                    <div class="row" style="margin-bottom:5px; padding-left:15px" id="data_net_index_0">
+                                                        <div class="col-sm-2 no-padding text-center" style="line-height:32px;border:1px #ccc solid;border-right:0">网卡{$k} </div>
+                                                        <div class="col-sm-3 no-padding">
+                                                            <!--<input name="netdata[{$k-1}][ip]" type="text" value="{$vo['ip']}" disabled class="form-control">-->
+                                                            <span class="form-control">{$vo['ip']} </span>
+                                                        </div>
+                                                        <div class="col-sm-4 no-padding">
+                                                            <!--<input name="netdata[$k-1][mac]" type="text" value="{$vo['mac']}" dataindex="1" data_role_mac="" disabled class="form-control  net_mac">-->
+                                                            <span class="form-control">{$vo['mac']}</span>
+                                                        </div>
+                                                        <div class="col-sm-2 no-padding">
+                                                            <span class="form-control">{$vo['type']}</span>
+                                                            <!--<input name="netdata[$k-1][type]" type="text" value="{$vo['type']}" disabled class="form-control ">-->
+                                                        <!--<select name="netdata[$k-1][type]" class="modelselect form-control net_mac_model">-->
+                                                            <!--<option value="{$vo['type']}">{$vo['type']}</option>-->
+                                                        <!--</select>-->
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-offset-4 col-sm-8" style="margin-top:15px">
+                                        <!--<button class="btn btn-primary">{:lang('submit')}</button>-->
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+        </div>
+
+
+<script>
+    var virtual_is_running = "<?php echo $is_running;?>";
+
+    $("#jght_type_01").change(function(e){
+      var selectedOp = $("#jght_type_01 option:selected");
+      if(selectedOp.val() == 1) {
+          $(".virtual_edit_type_btn").removeAttr('disabled');
+          $(".choose-bridge").hide();
+          $(".auto_restart").hide();
+          return false;
+      }else{
+
+          if(virtual_is_running=="1"){
+              $(".auto_restart").show();
+          }
+          $(".choose-bridge").show();
+      }
+      var flag = $('#have-no-bridge').val();
+      if(flag){
+          $(".virtual_edit_type_btn").attr('disabled',"true")
+      }
+
+    });
+
+    $(".virtual_edit_type_btn").click(function () {
+        var virType = $("#jght_type_01 option:selected").val();
+        if(virType==1){
+            layer.msg('未做修改',{icon:3,time:2000});
+        }else{
+            friendlyTip('正在编辑...','编辑失败',8000);
+        }
+    })
+
+
+</script>
+

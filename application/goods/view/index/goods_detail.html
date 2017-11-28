@@ -1,0 +1,117 @@
+{extend name="public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/oscloud.css">
+<link href="__STATIC__/ext/foucs/foucs.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="body"}
+<div id="main-container" class="container">
+  <div class="row" style="padding-top: 20px;margin-top: 30px">
+    <div class="clearfix">
+      <div class="col-xs-12">
+        <div class="common-block">
+          <div class="clearfix">
+            <div class="pull-left col-md-2 text-right" style=" padding-top:18px"> <img style="width:120px;height: 120px" src="{:get_thumb($goods_detail.cover_id,200,200)}"> </div>
+            <div class="pull-left col-md-10">
+              <article class="article">
+                <header>
+                  <h1 class="text-center">{$goods_detail['title']}{if $newest_version}——{$newest_version.title}{/if}</h1>
+                  <dl class="dl-inline" >
+                        <dd class="pull-left">
+                        <span >上架时间：{$goods_detail['create_time']|date='Y-m-d H:i:s',###}</span>
+                        </dd>
+                        <dd class="pull-right">
+                        	{if $newest_version}
+                        	<span class="label label-success">版本：{$newest_version.title}</span>
+                            {/if}
+                        </dd>
+                    </dl>
+
+                </header>
+              </article>
+            </div>
+          </div>
+          <section class="abstract"> <strong>兼容版本</strong>：<span class="label label-success" style="margin:5px"></span> </section>
+          
+         <div class="clearfix" style="position: relative; margin-top:20px">
+            <div style="width: 200px;position: absolute;right: 0;bottom: 0">
+                <div class="with-padding" style="font-size: 14px"> 类型：{if $goods_detail.is_com}商业{else/}免费{/if}</div>
+                {if $goods_detail['is_com'] == 0}
+                <div class="with-padding">
+                    <a class="btn-block btn-success btn btn-block btn-primary" href="{:url('goods/index/setup',array('id'=>$newest_version['id']))}"><i class="icon-cloud-download"></i> 安装</a>
+                </div>
+                {/if}
+            </div>
+        </div>
+          
+          
+          <article class="clearfix">
+            <section>
+              <ul id="myTab" class="nav nav-tabs">
+                <li class="active"> <a href="#tab1" data-toggle="tab">商品详情</a> </li>
+                <li class="dropdown"> <a href="#history" data-toggle="tab">更新历史</a> </li>
+              </ul>
+              <div class="tab-content" style="border: 1px solid #ddd;border-top: none;padding: 5px;margin-bottom: 10px;min-height: 400px">
+                <div class="tab-pane active" id="tab1">
+                  <div class="with-padding summary">
+                    <p> {$goods_detail['content']} </p>
+                  </div>
+                  <div> </div>
+                  <div class="with-padding"> </div>
+                </div>
+                <div class="tab-pane" id="history">
+                  <table class="mb10 col-md-12 table" style="text-align: left">
+                    <colgroup>
+                    <col width="200">
+                    <col width="200">
+                    <col width="220">
+                    <col width="220">
+                    </colgroup>
+                    <thead>
+                      <tr class="first_tr">
+                        <th>版本号</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    
+                    {volist name="app_version" id="item"}
+                    <tr>
+                      <td class="text-left version_title">{$item.title}</td>
+                      <td>{$item['create_time']|date='Y-m-d H:i:s',###}</td>
+                      <td class="text-left">{$item['update_time']|date='Y-m-d H:i:s',###}</td>
+                    </tr>
+                    {/volist}
+                  </table>
+                  <div style="position: relative" class="clearfix">
+                    <div id="pageContent"> {volist name="app_version" id="item"}
+                      <section>
+                        <header>
+                          <h3>v {$item.title} <small>{$item['update_time']|date='m-d H:i',###}</small></h3>
+                        </header>
+                        <article>
+                          <ul>
+                           {volist name="item.log" id="v"}
+                            <li>{$v}</li>
+                           {/volist}
+                          
+                          
+                          
+                          </ul>
+                        </article>
+                      </section>
+                      {/volist}
+                   </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{/block}
+{block name="script"} 
+{/block}

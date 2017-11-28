@@ -1,0 +1,503 @@
+<script src="__PUBLIC__/adminlte/plugins/echart/echarts-all-3.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/echart/china.js"></script>
+<div class="col-lg-{$addons_config.width}">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="box-title">{:lang('full_customer_distribution')}</div>
+        </header>
+        <div class="box-body clearfix">
+            <div id="sale_container" style="width:100%;height:400px"></div>	
+            
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-{$addons_config.width}">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="box-title">{:lang('full_channel_distribution')}</div>
+        </header>
+        <div class="box-body clearfix">
+            <div id="agent_container" style="width:100%;height:400px"></div>	
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+
+  var sale_option,agent_option = null;
+
+  var sale_chart = echarts.init(document.getElementById("sale_container"));
+  var agent_chart = echarts.init(document.getElementById("agent_container"));
+  
+  var myHosName = L('headquarters');
+  var geoCoordMap = {
+      'Anhui': [117.17, 31.52],
+      'Beijing': [116.24, 40.05],
+      'Chongqing': [106.54, 29.59],
+      'Fujian': [119.18, 26.05],
+      'Gansu': [103.90, 36.04],
+      'Guangdong': [113.14, 23.08],
+      'Guangxi': [108.19, 22.48],
+      'Guizhou': [106.42, 26.35],
+      'Hainan': [110.20, 20.02],
+      'Hebei': [114.30, 38.02],
+      'Henan': [113.40, 34.46],
+      'Heilongjiang': [128.36, 45.44],
+      'Hubei': [112.27, 31.15],
+      'Hunan': [111.59, 28.12],
+      'Jilin': [125.19, 43.54],
+      'Jiangsu': [119.80, 33.03],
+      'Jiangxi': [115.55, 28.40],
+      'Liaoning': [123.25, 41.48],
+      'Inner_Mongolia': [108.41, 40.48],
+      'Ningxia': [106.16, 38.27],
+      'Qinghai': [101.48, 36.38],
+      'Shandong': [118.00, 36.40],
+      'Shanxi': [112.33, 37.54],
+      'Shaanxi': [108.57, 34.17],
+      'Shanghai': [121.29, 31.14],
+      'Hainan': [108.77, 19.10],
+      'Sichuan': [104.04, 30.40],
+      'Tianjin': [117.12, 39.02],
+      'Tibet': [91.08, 29.39],
+      'Xinjiang': [87.36, 43.45],
+      'Yunnan': [102.42, 25.04],
+      'Zhejiang': [120.10, 29.16],
+      'Macao': [115.07, 21.33],
+      'Taiwan': [121.21, 23.53]
+  };
+
+  var SALEData = [
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Beijing',
+          value: 100
+      }],
+	  [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shanghai',
+          value: 100
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Guangdong',
+          value: 200
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Hunan',
+          value: 90
+      }],
+	  
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Liaoning',
+          value: 80
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Jiangsu',
+          value: 60
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Sichuan',
+          value: 200
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shaanxi',
+          value: 200
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Zhejiang',
+          value: 200
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Hubei',
+          value: 60
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Jiangxi',
+          value: 60
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shandong',
+          value: 60
+      }]
+  ];
+  var AGENTData = [
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Beijing',
+          value: '010-86526657'
+      }],
+	  [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shanghai',
+          value: '021-60765025'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Guangdong',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Hunan',
+          value: '#'
+      }],
+	  
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Liaoning',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Jiangsu',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Sichuan',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shaanxi',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Zhejiang',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Hubei',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Jiangxi',
+          value: '#'
+      }],
+	  
+	  [{
+          name: 'Shanghai'
+      }, {
+          name: 'Xinjiang',
+          value: '#'
+      }],
+	  [{
+          name: 'Shanghai'
+      }, {
+          name: 'Heilongjiang',
+          value: '#'
+      }],
+      [{
+          name: 'Shanghai'
+      }, {
+          name: 'Shandong',
+          value: '#'
+      }]
+  ];
+  
+      var  planePath="path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z";
+
+  var convertData = function(data) {
+      var res = [];
+      for (var i = 0; i < data.length; i++) {
+          var dataItem = data[i];
+          var fromCoord = geoCoordMap[dataItem[0].name];
+          var toCoord = geoCoordMap[dataItem[1].name];
+          if (fromCoord && toCoord) {
+              res.push({
+                  fromName: L(dataItem[0].name),
+                  toName: L(dataItem[1].name),
+                  coords: [fromCoord, toCoord]
+              });
+          }
+      }
+      return res;
+  };
+
+  var color = ['#fff', '#3c8dbc', '#46bee9'];
+  var sale_Series= [],agent_Series= [];
+  
+  [
+      [myHosName, SALEData]
+  ].forEach(function(item, i) {
+	
+      sale_Series.push({ //线
+          name: item[0],
+          //                      name: item[0] + ' Top10',
+          type: 'lines',
+          zlevel: 1,
+          effect: {
+              show: true,
+              period: 6,
+              trailLength: 0.7,
+              color: '#3c8dbc',
+              symbolSize: 3
+          },
+          lineStyle: {
+              normal: {
+                  color: color[0],
+                  width: 0,
+                  curveness: 0.2
+              }
+          },
+          data: convertData(item[1])
+      }, { //移动 点
+	  
+          name: item[0],
+          //                      name: item[0] + ' Top10',
+          type: 'lines',
+          zlevel: 2,
+          effect: {
+              show: true,
+              period: 6,
+              trailLength: 0,
+              symbol: planePath,
+              symbolSize: 15
+          },
+          lineStyle: {
+              normal: {
+                  color: color[1],
+                  width: 1,
+                  opacity: 0.4,
+                  curveness: 0.2
+              }
+          },
+          data: convertData(item[1])
+      }, { //省份圆点
+          name: item[0],
+          //                      name: item[0] + ' Top10',
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          zlevel: 2,
+          rippleEffect: {
+              brushType: 'stroke'
+          },
+          label: {
+              normal: {
+                  show: true,
+                  position: 'right',
+                  formatter: '{b}'
+              }
+          },
+          symbolSize: function(val) {
+             // return val[2] / 10;
+			  return 8;
+          },
+          itemStyle: {
+              normal: {
+                  color: function(params) {
+                      var tmp = params.data.value[2]
+                      if (tmp < 100) {
+                          return '#008d4c';
+                      } else if (tmp > 150) {
+                          return '#dd4b39'
+                      } else
+                          return '#f39c12';
+                  }
+              }
+          },
+          data: item[1].map(function(dataItem) {
+              return {
+                  name: L(dataItem[1].name),
+                  value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+              };
+          })
+      });
+  });
+  [
+      [myHosName, AGENTData]
+  ].forEach(function(item, i) {
+      agent_Series.push({ //线
+          name: item[0],
+          //                      name: item[0] + ' Top10',
+          type: 'lines',
+          zlevel: 1,
+
+          lineStyle: {
+              normal: {
+                  color: color[1],
+                  width: 2,
+              }
+          },
+          data: convertData(item[1])
+      },{ //省份圆点
+          name: item[0],
+          //                      name: item[0] + ' Top10',
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          zlevel: 2,
+          rippleEffect: {
+              brushType: 'stroke'
+          },
+          label: {
+              normal: {
+                  show: true,
+                  position: 'right',
+                  formatter: '{b}'
+              }
+          },
+          symbolSize: function(val) {
+			  return 8;
+          },
+          itemStyle: {
+              normal: {
+                  color:'#3c8dbc'
+              }
+          },
+          data: item[1].map(function(dataItem) {
+              return {
+                  name: L(dataItem[1].name),
+                  value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+              };
+          })
+      });
+  });
+  sale_option = {
+      backgroundColor: '#fff',
+      title: {
+          text: '',
+          subtext: '',
+          left: 'center',
+          textStyle: {
+              color: '#000'
+          },
+          subtextStyle: {
+              color: '000',
+              fontWeight: 'bold'
+          }
+      },
+      tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+              if (params.seriesIndex == 2 || params.seriesIndex == 5 || params.seriesIndex == 8) {
+                  return params.name + ':' + params.data.value[2] + L('Family');
+              } else if (params.seriesIndex == 1 || params.seriesIndex == 4 || params.seriesIndex == 7) {
+                  return params.data.fromName + '→' + params.data.toName;
+              }
+          }
+      },
+      geo: {
+          map: 'china',
+          label: {
+              emphasis: {
+                  show: false
+              }
+          },
+          roam: true,
+          itemStyle: {
+              normal: {
+                  areaColor: '#ecf0f5',
+                  borderColor: '#ccc'
+              },
+              emphasis: {
+                  areaColor: '#aaaaaa'
+              }
+          }
+      },
+      series: sale_Series
+  };
+  
+  agent_option = {
+      backgroundColor: '#fff',
+      title: {
+          text: '',
+          subtext: '',
+          left: 'center',
+          textStyle: {
+              color: '#000'
+          },
+          subtextStyle: {
+              color: '000',
+              fontWeight: 'bold'
+          }
+      },
+      tooltip: {
+          trigger: 'item',
+         // formatter: '{b}->'
+		  formatter: function(params) {
+              if (params.seriesIndex == 2 || params.seriesIndex == 5 || params.seriesIndex == 8) {
+              } else if (params.seriesIndex == 1 || params.seriesIndex == 4 || params.seriesIndex == 7) {
+				  //console.log(params)
+                  return L('Telephone')+'：' + params.data.value[2];
+              }
+          }
+      },
+      geo: {
+          map: 'china',
+          label: {
+              emphasis: {
+                  show: false
+              }
+          },
+          roam: true,
+          itemStyle: {
+              normal: {
+                  areaColor: '#ecf0f5',
+                  borderColor: '#ccc'
+              },
+              emphasis: {
+                  areaColor: '#aaaaaa'
+              }
+          }
+      },
+      series: agent_Series
+  };  
+  
+  
+  
+
+
+  if (sale_option && typeof sale_option === "object") {
+      sale_chart.setOption(sale_option, true);
+  }
+  if (agent_option && typeof agent_option === "object") {
+      agent_chart.setOption(agent_option, true);
+  }
+  
+}); 
+  window.onresize = function() {
+      sale_chart.resize();
+	  agent_chart.resize();
+	  
+  }
+</script>

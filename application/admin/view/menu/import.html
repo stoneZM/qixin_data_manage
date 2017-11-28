@@ -1,0 +1,36 @@
+{extend name="common@public/base"/}
+{block name="body"}
+
+<section class="content-header">
+  <h1>{:lang('batch_import')} [{$data['title']|default=lang('top_menu')}]<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content-header">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<form id="form" action="{:url('import')}" method="post" class="form form-horizontal">
+			<!-- 基础文档模型 -->
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('import_content')}</label>
+				<div class="col-lg-10">
+					<textarea name="tree" class="form-control" style="width:80%; height:160px;"></textarea>
+					<span class="help-block"><b>{:lang('import_format')}：</b><br/>{:lang('home')}|Index/index|0|{:lang('group_name')}<br/>{:lang('update_cache')}|Index/clear|0|{:lang('group_name')}</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info.id|default=''}">            
+					<button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">{:lang('submit')}</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}

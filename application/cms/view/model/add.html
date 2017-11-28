@@ -1,0 +1,94 @@
+{extend name="common@public/base"/}
+
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+
+	<div class="box-body clearfix">
+		<!-- 表单 -->
+		<form id="form" action="{:url('update')}" method="post" class="form-horizontal form">
+			<!-- 基础 -->
+			<div id="tab1" class="tab-pane in tab1">
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('identifying')}</label>
+					<div class="col-lg-6 col-sm-10">
+						<input type="text" class="form-control " name="name" value="">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('name')}</label>
+					<div class="col-lg-6 col-sm-10">
+						<input type="text" class="form-control " name="title" value="">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('type')}</label>
+					<div class="col-lg-3 col-sm-10">
+						<select name="extend" class="form-control" style="width:auto">
+							<option value="2">{:lang('Independent_model')}</option>
+							<option value="1" selected="selected">{:lang('Document_model')}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('engine_type')}</label>
+					<div class="col-lg-3 col-sm-10">
+						<select name="engine_type" class="form-control" style="width:auto">
+							<option value="MyISAM">MyISAM</option>
+							<option value="InnoDB">InnoDB</option>
+                            <option value="MEMORY">MEMORY</option>
+                            <option value="BLACKHOLE">BLACKHOLE</option>
+                            <option value="MRG_MYISAM">MRG_MYISAM</option>
+                            <option value="ARCHIVE">ARCHIVE</option>
+						</select>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('Need_primary_key')}</label>
+					<div class="col-lg-10">
+						<select name="need_pk" class="form-control" style="width:auto">
+							<option value="1" selected="selected">{:lang('yes')}</option>
+							<option value="0">{:lang('no')}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('Member_display')}</label>
+					<div class="col-lg-10">
+						<select name="is_user_show" class="form-control" style="width:auto">
+							<option value="1" selected="selected">{:lang('yes')}</option>
+							<option value="0">{:lang('no')}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label">{:lang('icon')}</label>
+					<div class="col-lg-6 col-sm-10">
+						<input type="text" class="form-control " name="icon" value="">
+					</div>
+				</div>
+			</div>
+
+			<!-- 按钮 -->
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info.id|default=''}">
+					<button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">{:lang('submit')}</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}

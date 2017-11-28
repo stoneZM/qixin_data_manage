@@ -1,0 +1,71 @@
+.device_message { font-size:1em}
+#device_list .qinfoicon{ font-size:45px;margin-left:5px}
+/*#device_list  .product-list-in-box>.item{ border:1px solid #f4f4f4;}*/
+#device_list  .product-list-in-box>.item{padding: 1px;}
+#device_list  .products-list>.item{ padding:10px}
+.warning_text{color:#F90;}
+.error_text{color:#C00;}
+.online_text{color:#060;}
+.offline_text{color:#fff;}
+.info-box-text{ text-transform:none}
+
+
+
+/*修改之后的*/
+
+#device_list .product-description{
+    color: #0f0f0f;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+
+.text-green-color{
+    color: #14a24e;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+.text-green-light{
+    color: #0dea67;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+
+/*.product-info .btn-link.status-1{*/
+    /*color: #0dea67;*/
+    /*text-shadow: 0 0 1px rgba(255,255,255,0.2) ;*/
+/*}*/
+.product-info .btn-link.status-1{
+    color: #0073b7;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+.product-info .btn-link.status-0,#device_list .product-description.status-0{
+    color:  #707070   ;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+
+#device_list .product-list-in-box>.item{
+    /*background-color: rgba(255,255,255,0.2);*/
+    background-color: transparent;
+    border: 0;
+    border-radius: 2px;
+    padding: 1px;
+}
+#device_list .product-list-in-box>.item>.item-box{
+    /*background-color: rgba(255,255,255,0.2);*/
+    background-color: transparent;
+    border: 1px dotted #287683;
+    border-radius: 2px;
+    padding-bottom:5px;
+    padding-right: 5px;
+}
+
+.nav-tabs-custom .tab-content .list-group-item{
+    background-color: transparent;
+    color: #000;
+    border: 0;
+    font-weight: bold;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+}
+.go-into-cdp{
+
+    padding: 5px 10px;
+    border: 1px dotted #24466A;
+    border-radius: 2px;
+}

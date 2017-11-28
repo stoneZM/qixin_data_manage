@@ -1,0 +1,76 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<a href="{:url('Group/addnode')}" class="btn btn-primary">
+				<i class="fa fa-plus"></i> {:lang('add')}
+			</a>
+			<a href="{:url('Group/upnode')}" class="btn btn-primary ajax-get">
+				<i class="fa fa-edit"></i> {:lang('update')}{:lang('node')}
+			</a>
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<div class="nav-tabs-custom">
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab-home">
+				{if condition="empty($list)"}
+				<p>{:lang('no_content')}</p>
+				{else/}
+				<div class="table-responsive clearfix">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th width="30"><input class="checkbox check-all" type="checkbox"></th>
+								<th width="60">{:lang('id')}</th>
+								<th>{:lang('group_name')}</th>
+								<th>{:lang('identifying')}</th>
+								<th>{:lang('grouping')}</th>
+								<th>{:lang('state')}</th>
+								<th>{:lang('operation')}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{volist name="list" id="item"}
+							<tr>
+								<th width="30"><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></th>
+								<td>{$item['id']}</td>
+								<td>{:lang($item['title'])}</td>
+								<td>{$item['name']}</td>
+								<td>{:lang($item['group'])}</td>
+								<td>
+									{if condition="$item['status'] eq '0'"}
+									<span class="label label-danger">{:lang('disable')}</span>
+									{elseif condition="$item['status'] eq '1'"/}
+									<span class="label label-primary">{:lang('enable')}</span>
+									{/if}
+								</td>
+								<td>
+									<a href="{:url('Group/editnode',array('id'=>$item['id']))}">{:lang('edit')}</a>
+									<a href="{:url('Group/delnode',array('id'=>$item['id']))}" class="confirm ajax-get">{:lang('delete')}</a>
+								</td>
+							</tr>
+							{/volist}
+						</tbody>
+					</table>
+				{$page}
+				</div>
+				{/if}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</section>
+{/block}

@@ -1,0 +1,196 @@
+{extend name="public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/oscloud.css">
+<link href="__STATIC__/ext/foucs/foucs.css" rel="stylesheet" type="text/css"/>
+<link href="__STATIC__/css/download.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="body"}
+<div id="main-container" class="container">
+<div class="row">
+
+  <div class="common-block oscloud" style="padding-top: 20px;margin-top: 30px" >
+    <div class="container-fluid">
+        <div class="banner">
+            <div class="tab-wrap">
+                <ul id="myTab" class="nav nav-tabs download-tabs">
+                    <li class="tab-left-1 active dropdown">
+                        <a href="#tab1" data-toggle="tab">Web源码</a>
+                        <div class="sanjiao"></div>
+                    </li>
+                    <li class="tab-right">
+                        <a href="#tab2" data-toggle="tab">服务端</a>
+                        <div class="sanjiao"></div>
+                    </li>
+                    <li class="tab-right">
+                        <a href="#tab3" data-toggle="tab">客户端</a>
+                        <div class="sanjiao"></div>
+                    </li>
+                    <li class="tab-right">
+                        <a href="#tab4" data-toggle="tab">工具</a>
+                        <div class="sanjiao"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="tab1">
+        <div class="free-vission">
+          <div class="free-head">
+            <div class="free-title">Qinfo安装包</div>
+          </div>
+          <div class="row">
+            <div class="message col-xs-6">
+              <div class="id">最新版本: <span class="id-1">{$version_info.title}</span><span class="id-2">{$version_info['create_time']|date='Y年m月d日',###}更新</span> </div>
+              <div class="huanjin"> 环境要求: <span class="huanjin-1">Php5.5</span> <span class="huanjin-2">Apache</span> <span class="huanjin-3">Mysql5.0</span> </div>
+              <div class="instal"> <a class="local" id="local" data-title="下载说明">本地下载</a> </div>
+                <script>
+                var download_url = "{:url('goods/index/link',array('id'=>$version_info.link))}";
+                $('#local').modalTrigger({custom:
+                '<div class="a-box"><p>您目前下载的Qinfo的主程序，里面只包含设备模块，如需其他模块，请前往官方云市场（<a href="/goods/index/index.html" target="_blank">传送门</a>）下载安装，如有疑问，请与官方客服联系。</p>' +
+                '<div class="btn-g"><a class="os-suit-btn" href='+download_url+' target="_blank">下载</a></div></div>'
+                });
+                </script> 
+            </div>
+            <div class="col-xs-6">
+              <div class="log ghghghgh">
+                <div class="log-left ">
+                  <div class="log-title">更新日志</div>
+                  <div class="log-content"> 
+                   {volist name="version_info.log" id="vo"} 
+                    <p>{$vo}</p>
+                   {/volist} 
+                  </div>
+                  <a href="{:url('goods/index/historyweb')}">
+                  <div class="history">历史版本</div>
+                  </a> </div>
+              </div>
+            </div>
+          </div>
+          <div class="free-bottom"></div>
+        </div>
+        </div>
+      
+        <div class="tab-pane fade" id="tab2">
+            <div class="wrap-title">
+                <div class="app-title">
+                    Q-AHDR 服务端安装包
+                </div>
+            </div>
+            <div class="vission">
+                版本号:
+                <span>3.2.0  2017年02月17日更新</span>
+            </div>
+            <div class="row wrap-os-app">
+        
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-ios"></i>系统安装包</div>
+                    <div class="d-text">
+                        ISO镜像安装包
+                    </div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div>
+                    </a>
+                </div>
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-anzhuo-copy"></i>消息组件</div>
+                    <div class="d-text">
+                        Zip压缩包
+                    </div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div></a>
+                </div>
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-anzhuo-copy"></i>存储组件</div>
+                    <div class="d-text">
+                        Zip压缩包
+                    </div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div></a>
+                </div>
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-anzhuo-copy"></i>任务组件</div>
+                    <div class="d-text">
+                        Zip压缩包
+                    </div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div></a>
+                </div>
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-anzhuo-copy"></i>数据转换组件</div>
+                    <div class="d-text">
+                        Zip压缩包
+                    </div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div></a>
+                </div>
+            </div>
+            <div class="app-bottom"></div>
+        </div>
+
+        <div class="tab-pane fade" id="tab3">
+            <div class="wrap-title">
+                <div class="app-title">
+                    Q-AHDR 客户端安装包
+                </div>
+            </div>
+            <div class="vission">
+                版本号:
+                <span>3.2.0  2017年02月17日更新</span>
+            </div>
+            <div class="row wrap-os-app">
+        
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-ios"></i>Windows安装包</div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div>
+                    </a>
+                </div>
+                <div class="ios pull-left">
+                    <div class="d-head"><i class="iconfont icon-anzhuo-copy"></i>Linux安装包</div>
+                    <a href="javascript:"><div class="appstore">
+                        下载
+                    </div></a>
+                </div>
+            </div>
+            <div class="app-bottom"></div>
+        </div>
+      	<div class="tab-pane fade" id="tab4">
+            <div class="container">
+                <div class="row explain">
+                    <p>经过广大用户的反馈，QINFO特推出以下主流程序工具。使用这些工具可以帮助您快速完成系统环境的搭建。</p>
+                </div>
+                <div class="row toolWrap">
+                    <div class="tools row">
+                        <div class="info pull-left col-xs-12">
+                            <p class="name">系统环境检测工作</p>
+                            <p class="intro">支持对Linux系统基础系统信息探测工具。</p>
+                            <p><a href="javascript:" class="btn "target="_blank">下载</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row toolWrap">
+                    <div class="tools row">
+                        <div class="info pull-left col-xs-12">
+                            <p class="name">WinPE通用驱动库</p>
+                            <p class="intro">WinPE通用驱动库</p>
+                            <p><a href="javascript:" class="btn "target="_blank">下载</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+    </div>
+  </div>
+</div>
+{/block}
+{block name="script"}
+{/block}

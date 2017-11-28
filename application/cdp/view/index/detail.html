@@ -1,0 +1,927 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<!-- fullCalendar 2.2.5-->
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/fullcalendar/fullcalendar.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/fullcalendar/fullcalendar.print.css" media="print">
+<link rel="stylesheet" href="__CSS__/detail.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title} <small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="pull-left">
+
+                <a class="btn btn-primary" href="javascript:" data_role="add_task" data-toggle="modal" data-target="#add_task">{:lang('add_task')}</a>
+
+                <a class="btn btn-primary" href="{:url($back_url)}" >{:lang('back')}</a>
+
+                <!--{if condition='$auto_config eq 1'}-->
+                <!--<a class="btn  btn-info" href="{:url('auto_conf',array('device_id'=>$device_data['id']))}" style="margin-left: 10px">{:lang('auto_configure')}</a>-->
+                <!--{/if}-->
+            </div>
+            <a class="btn btn-default" href="javascript:" data_role="view_device_info" style="float: right;margin-left: 10px"><i class="fa fa-eye"></i> {:lang('view_device_info')}</a>
+            <a class="btn btn-default" href="javascript:" data_role="view_log" style="float: right;" ><i class="fa fa-eye"></i> {:lang('view_log')}</a>
+        </header>
+        <div class="box-body clearfix">
+
+            <!--日志信息 begin-->
+            <div class="box box-default box-solid log_body info temp_info" style="display: none;">
+                <div class="box-header with-border"><h3 class="box-title">{:lang('log')}{:lang('info')}</h3></div>
+                <div class="box-body" style="max-height: 400px;overflow-x: auto">
+                    <div class="clearfix log-content">
+                        <div class="text-center">
+                            <i  class="fa fa-spinner fa-spin" style="font-size: 30px"></i>
+                            <span style="font-size: 15px;font-weight: bold;line-height: 40px">正在获取...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--日志信息 end -->
+
+            <!--设备信息 begin-->
+            <div class="box box-default box-solid device_body info temp_info" style="display: none">
+                <div class="box-header with-border"><h3 class="box-title">{:lang('device_info')}</h3></div>
+                <div class="box-body">
+                    <div class="clearfix">
+                        <ul class="list-group col-md-6 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0;">
+                            <li class="list-group-item left" >&nbsp;I&nbsp;&nbsp;P&nbsp;：{$hardware_info['ip']}</li>
+                            <li class="list-group-item left">MAC：{$hardware_info['mac_desc']}</li>
+                            <li class="list-group-item left">{:lang('cpu')}：{$hardware_info['cpu']}</li>
+                            <li class="list-group-item left" >{:lang('memory')}：{$hardware_info['memory']|format_bytes}</li>
+                        </ul>
+                        <ul class="list-group col-md-6 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0;">
+                            <li class="list-group-item right">{:lang('number')}：{$device_data['id']}</li>
+                            <li class="list-group-item right">{:lang('computer_name')}：{$system_info['computername']}</li>
+                            <li class="list-group-item right">{:lang('system_version')}：{$system_info['systemversion']}</li>
+                            <li class="list-group-item right">{:lang('state')}：
+                                {if condition="$device_data['status'] eq 1"}
+                                <span class="text-green-color">{:lang('online')}</span>
+                                {else/}
+                                <span class="text-muted">{:lang('offline')}</span>
+                                {/if}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="clearfix" style="margin-top: 10px">
+                        {volist name='harddisk_list' id='item_hdd'}
+                        <div   class="col-xs-12 disk-info-box">
+                            <div class="disk-title-info" >
+                                <i class="glyphicon glyphicon-hdd"></i>
+                                <strong> {:lang('disk')} {$item_hdd['harddiskindex']}</strong>
+                                <br/>
+                                {$item_hdd['aliasname']}
+                                <br/>( {$item_hdd['totalsize']|format_bytes})
+
+                            </div>
+                            {if condition= "count($item_hdd['partitions']) eq 0 " }
+                            <div class="disk-no-info">
+                                <strong>无磁盘信息</strong>
+                            </div>
+                            {/if}
+                            {volist name='item_hdd.partitions' id='item_partition'}
+                            <div class="disk-info-detail">
+                                <p class="info-box-text"  data-toggle="tooltip"  data-html="true"  data-original-title="{$item_partition['driverletter']}"  data-placement="top" data_role="instead_hostX" >
+                                    <strong>分区:</strong>
+                                    {$item_partition['driverletter']}
+                                </p>
+                                <p class="info-box-text">
+                                    <strong>容量:</strong>
+                                    {$item_partition['totalsize']|format_bytes}
+                                </p>
+                                <p class="info-box-text">
+                                    <strong>文件系统:</strong>
+                                    {$item_partition['filesystem']}
+                                </p>
+                            </div>
+                            {/volist}
+                        </div>
+                        {/volist}
+                    </div>
+
+                </div>
+            </div>
+            <!--设备信息 end-->
+
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-4 col-lg-3 col-xs-12">
+                    <div class="box box-default box-solid">
+                        <div class="box-header with-border">
+
+                            <h3 class="box-title">{:lang('task_list')}</h3>
+                            <div class="box-tools">
+                                {if condition="$device_data['status'] eq 1"}
+                                <span class="label bg-green">{:lang('device')}{:lang('online')}</span>
+                                {else/}
+                                <span class="label bg-red">{:lang('device')}{:lang('offline')}</span>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="box-body" id="task_list" style="height:505px; overflow-y:auto">
+                            {if $task_list}
+                            <ul class="timeline">
+                                {volist name="task_list" id="item_time" key="k"}
+                                <li class="time-label">
+                                  <span class="bg-green" style="font-weight:normal; font-size:12px">
+                                    {$key}
+                                  </span>
+                                </li>
+                                {volist name="item_time" id="task"}
+                                <li>
+                                    <i class="fa fa-arrow-right "></i>
+                                    <div class="timeline-item">
+                                        <span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i> {:date('H:i',$task.create_time)}</span>
+                                        <h3 class="timeline-header" style="padding-top:3px; border-bottom:0">
+
+                                            {if $task.current eq 1}
+                                            <a class="get_task_btn text-red" id="task_index_{$k}"  data_id="{$task.id}" href="javascript:">{:lang('current_task')}</a>
+
+                                            {if $task.status eq 0}
+                                            <label class="text-grey" style="font-size: 12px;">{:lang('task_has_not_been_started')}</label>
+                                            {/if}
+
+                                            {if $task.status eq 1}
+                                            <label class="text-green" style="font-size: 12px;">{:lang('task_has_been_started')}</label>
+                                            {/if}
+
+                                            {if $task.status eq 2}
+                                            <label class="text-red" style="font-size: 12px">{:lang('task_has_been_pause')}</label>
+                                            {/if}
+
+                                            {if $task.status eq 3}
+                                            <label class="text-muted" style="font-size: 12px">{:lang('task_has_been_stopped')}</label>
+                                            {/if}
+
+                                            {else/}
+                                            {if condition="$task.type eq 'move' "}
+                                            <a class="get_task_btn" id="task_index_{$k}"  data_id="{$task.id}" href="javascript:">{:lang('move_task')}</a>
+                                            {else/}
+                                            <a class="get_task_btn" id="task_index_{$k}"  data_id="{$task.id}" href="javascript:">{:lang('historical_task')}</a>
+                                            {/if}
+                                            {/if}
+                                        </h3>
+                                        <div class="timeline-footer">
+
+                                            {if $task.current neq 1}
+                                            <a  href="" task-id="{$task['id']}" class="cdp-task-btn btn btn-danger btn-xs" data-toggle="modal" data-target="#del_cdp_task">{:lang('delete')}</a>
+                                            {else/}
+                                            {if $task.status eq 1}
+                                            <a id="task_pause" href="" task-id="{$task['id']}" task-status="2"  class="cdp-task-btn btn btn-danger  btn-xs" data-toggle="modal" data-target="#del_cdp_task">{:lang('task_pause')}</a>
+                                            {/if}
+                                            {if $task.status eq 0 || $task.status eq 2}
+                                            <a id="start_task" href="" task-id="{$task['id']}" task-status="1" class="cdp-task-btn btn btn-success btn-xs" taskId="{$task['id']}" data-toggle="modal" data-target="#del_cdp_task">{:lang('start_up')}</a>
+                                            {/if}
+
+                                            {if $task.status eq 3}
+                                            <a href="" task-id="{$task['id']}" class="cdp-task-btn btn btn-danger btn-xs" data_role="del_task"  data-toggle="modal" data-target="#del_cdp_task" >{:lang('delete')}</a>
+                                            {else/}
+                                            <a href="{:url('cdp/index/create_snap',array('id'=>$task['id']))}" class="btn btn-primary btn-xs ajax-get" id="create_snapshot">{:lang('create_snapshot')}</a>
+                                            <!--<a href="{:url('cdp/index/merge_snap',array('id'=>$task['id']))}" class="btn btn-primary btn-xs ajax-get">{:lang('merge_snapshot')}</a>-->
+
+                                            <a class="btn btn-primary btn-xs" href="" data_role="edit_task" id="{$task['id']}" data-toggle="modal" data-target="#edit_task">{:lang('edit_task')}</a>
+                                            <!--<a href="{:url('cdp/index/task_status',array('id'=>$task['id'],'status'=>3))}" class="confirm btn btn-warning  btn-xs ajax-get">{:lang('stop')}</a>-->
+                                            <a href="" class="cdp-task-btn btn btn-warning btn-xs" task-id="{$task['id']}" task-status="3" data-toggle="modal" data-target="#del_cdp_task">{:lang('stop')}</a>
+
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </li>
+                                {/volist}
+                                {/volist}
+                                <!-- END timeline item -->
+                                <li>
+                                    <i class="fa fa-clock-o bg-gray"></i>
+                                </li>
+                            </ul>
+                            {else/}
+                            <div class="text-center" style="margin-top:100px">
+                                <a class="btn btn-app btn-primary" href="javascript:" data_role="add_task"  data-toggle="modal" data-target="#add_task" ><i class="fa fa-edit"></i>{:lang('add_task')}</a>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-lg-9  col-xs-12">
+                    <div class="box box-default box-solid">
+                        <div class="box-header with-border"><h3 class="box-title">{:lang('task_manage')}</h3></div>
+                        <div class="box-body">
+                            {if $task_list}
+                            <div class="col-lg-8 col-md-12 col-xs-12"  id="task_list">
+                                <div id="calendar"></div>
+                            </div>
+                            <div class="col-lg-4 col-md-12 col-xs-12 pull-right">
+                                <div class="" id="work_list"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                            {else/}
+                            <div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_task")}</div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{if condition="$is_liter eq 1" }
+{include file="index/detail_liter"}
+{else/}
+{include file="index/detail_high"}
+{/if}
+
+
+<div class="modal fade" id="del_cdp_task" tabindex="-1" role="dialog" aria-labelledby="del_cdp_task" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-fw fa-warning" style="font-size: 20px;color: red"></i> <span id="edit_task_title" class="operate_task_title">{:lang('del_task')}</span></h4>
+            </div>
+            <form class="form form-horizontal del-cdp-task" role="form" id="cdp-operate-form" method="post" action="{:url('cdp/index/del_task')}">
+                <div class="modal-body">
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input type="hidden" id="del_task_id" name="id" value="">
+                                <input type="hidden" id="task_status" name="status" value="">
+                                <div>
+                                    <span class="tip-info" style="font-weight: bold;font-size: 15px;">执行该操作会删除此任务的所有数据,将不可找回,是否确定删除？</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="submit" class="btn btn-success ajax-post click-del-task-btn" target-form="del-cdp-task">{:lang('confirm')}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+
+{block name="script"}
+<!-- fullCalendar 2.2.5 -->
+
+<script src="__PUBLIC__/adminlte/plugins/fullcalendar/fullcalendar.min.js"></script>
+
+
+<script id="work_list_template" type="text/html">
+
+    <!--[each work_list as vo i]-->
+    <li class="list-group-item clearfix">
+    <span style="">
+        <!--[vo['driverletter']]-->&nbsp;<!--[vo['totalsize']]-->
+        </span>
+        <span class="pull-right">
+    <!--[if vo.status == 0]-->
+    <span name="<!--[vo['key']]-->" class="label bg-gray partition" style="font-weight:normal; font-size:12px">{:lang('not_start')}</span>
+            <!--[else if vo.status == 1]-->
+    <span name="<!--[vo['key']]-->" class="label bg-green partition" style="font-weight:normal; font-size:12px">{:lang('have_in_hand')}</span>
+            <!--[else if vo.status == 2]-->
+    <span name="<!--[vo['key']]-->" class="label bg-red partition" style="font-weight:normal; font-size:12px">{:lang('have_pause')}</span>
+            <!--[else if vo.status == 3]-->
+    <span name="<!--[vo['key']]-->" class="label bg-light-blue partition" style="font-weight:normal; font-size:12px">{:lang('clone_finish')}</span>
+            <!--[/if]-->
+    </span>
+    </li>
+    <!--[/each]-->
+
+    <!--[if have_finished == 1 || history_have_finished == 1 ]-->
+    <li class="list-group-item clearfix" style="display: none">
+        <!--[else if have_finished != 1]-->
+    <li class="list-group-item clearfix" >
+        <!--[/if]-->
+
+        <div class="progress" style="margin-bottom:5px; margin-top:6px">
+            <!--[if have_finished == 1]-->
+            <div  id='dc_state_val' class="progress-bar progress-bar-striped active" role="progressbar"  aria-valuenow="100"  aria-valuemin="0" aria-valuemax="100" style="min-width: 0em; color: black; width: 100%;">
+                100%
+            </div>
+            <!--[else if have_finished == 0]-->
+            <div id='dc_state_val' class="progress-bar progress-bar-striped active" role="progressbar"  aria-valuenow="0"  aria-valuemin="0" aria-valuemax="100" style="min-width:0em; color: black">
+                0%
+            </div>
+            <!--[/if]-->
+        </div>
+    </li>
+
+
+    <!--[if is_current_task ]-->
+    <li class="list-group-item clearfix">
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"><span id='dc_speed'>0kb/s</span></div>
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"><span id='dc_usetime'>00:00:00</span></div>
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="text-align: right;padding-right: 0px">
+            <!--[/if]-->
+
+        </div>
+    </li>
+</script>
+
+<script>
+
+    var operateTaskStatus;
+    // 任务操作模态框
+    $('.cdp-task-btn').click(function(e){
+        e.preventDefault();
+        var task_id = $(this).attr('task-id');
+        var task_status = $(this).attr("task-status");
+        operateTaskStatus = task_status;
+        if(task_status){
+            setTipInfo(task_status);
+            $("#cdp-operate-form").attr("action","{:url('cdp/index/task_status')}");
+            $('#task_status').val(task_status);
+        }else{
+            setTipInfo(false);
+            $("#cdp-operate-form").attr("action","{:url('cdp/index/del_task')}");
+            $('#task_status').val('');
+            $(".fa-warning").css({"color":"red"});
+        }
+        $('#del_task_id').val(task_id);
+//        $("#del_cdp_task").modal("show");
+    });
+
+    //    $('#del_cdp_task').on('shown.bs.modal', function (e) {
+    //
+    //        $(this).css('display', 'block');
+    //        var modalHeight=$(window).height() / 3
+    //        $(this).find('.modal-dialog').css({
+    //            'margin-top': modalHeight,
+    //            "width":"400px"
+    //        });
+    //    });
+
+    $(".click-del-task-btn").click(function(e){
+
+        e.preventDefault();
+        var tipStr = "正在删除,请稍后..";
+        var errStr = "删除失败";
+        switch (operateTaskStatus){
+            case "1":
+                tipStr = "正在启动,请稍后..."  ;
+                errStr = "启动失败";
+                break;
+            case "2":
+                tipStr = "正在暂停,请稍后..."  ;
+                errStr = "暂停失败";
+                break;
+            case "3":
+                tipStr = "正在终止任务,请稍后..."  ;
+                errStr = "任务终止失败";
+                break;
+        }
+
+        $("#del_cdp_task").modal("hide");
+        friendlyTip(tipStr,errStr,4000,3000);
+
+    });
+
+    function setTipInfo(status){
+        var tipStr = '';
+        var titleStr = "";
+        switch (status){
+            case "1":
+                $(".fa-warning").css({"color":"green"});
+                titleStr = "启动任务";
+                tipStr = "确定启动任务?";
+                break;
+            case "2":
+                $(".fa-warning").css({"color":"#f39c12"});
+                titleStr = "暂停任务";
+                tipStr = "确定暂停任务？";
+                break;
+            case "3":
+                $(".fa-warning").css({"color":"red"});
+                titleStr = "终止任务";
+                tipStr = "终止任务后,该任务将不能再次启动,确定终止?";
+                break;
+            default :
+                $(".fa-warning").css({"color":"red"});
+                titleStr = "删除任务";
+                tipStr = "执行该操作会删除此任务的所有数据,将不可找回,是否确定删除？";
+        }
+        $(".operate_task_title").html(titleStr);
+        $(".tip-info").html(tipStr);
+    }
+
+    $("#create_snapshot").click(function(e){
+        e.preventDefault();
+        friendlyTip("正在创建快照,请稍后...","快照创建失败",3000,1000);
+    })
+</script>
+
+<script>
+
+    /**
+     *  开启任务时，开始请求备份进度
+     */
+    var intervalProcess;
+    //var useTime=0 ;
+    var deviceStatus = "{$device_status}";
+    var isCurrentTask = 0;
+    $(document).ready(function(){
+
+
+
+        var taskId = "{$current_task_id}";
+        var taskStatus = "{$current_task.status}";
+        var enginStatus = "{$current_task['engine_status']}";
+        var taskHaveFinished = "{$task_have_finished}";
+
+        var refresh_state = function(){
+
+            if( deviceStatus != 1){
+                clearInterval(intervalProcess);
+                return false;
+            }
+            $.ajax({
+                url: '/cdp/index/get_clone_state/id/'+taskId,
+                type: 'get',
+                async: true,
+                dataType:'json',
+                success: function (json) {
+
+                    if (!isCurrentTask)
+                        return true;
+
+                    if(json == ""){
+                        clearInterval(intervalProcess);
+                    }else{
+
+                        if(json.code == 1){
+//                        useTime++;
+                            var jsondata = json;
+                            var processVal = jsondata.progress;
+                            var useTime = jsondata.ntime;
+                            var partitionList = jsondata.partition_status;
+
+                            $("#dc_state_val").width( processVal+ '%');
+                            $("#dc_state_val").html(processVal+ '%');
+
+                            if(jsondata.speed && jsondata.speed > 0){
+                                jsondata.speed =  bytesToSize(jsondata.speed)
+                            }else{
+                                jsondata.speed = '0k';
+                            }
+                            $("#dc_speed").html(jsondata.speed+ '/s');
+                            $("#dc_usetime").html(sToHms(useTime));
+
+                            for(var item in partitionList){
+
+                                var partition = partitionList[item];
+                                var partitionName = partition['key'];
+                                var partitionStatus = partition['status'];
+                                changePartitionSpanClass(partitionName,partitionStatus);
+                            }
+
+                        }else if(json.code == 3){  //表明所有clone全部完成
+
+                            var engineStatus = json.engine_status;
+                            var engin_span_class = '';
+                            var span_html = '';
+                            var partition_span_class;
+                            partition_span_class = 'label bg-light-blue partition';
+                            span_html = "{:lang('finish')}";
+
+
+                            $(".partition").attr('class',partition_span_class);
+                            $(".partition").html(span_html);
+                            $("#dc_state_val").width(100+'%');
+                            $("#dc_state_val").html(100+ '%');
+//                        $(".progress-div").hide();
+                            clearInterval(intervalProcess);
+                            location.reload();
+
+                        }else if(json.code == 4){
+
+                            clearInterval(intervalProcess);
+
+                        }else if(json.code == 9){  //引擎状态改变
+
+                            var engineStatus = json.engine_status;
+                            var engin_span_class = '';
+                            var span_html = ''
+                            var partition_span_class
+                            switch (engineStatus){
+                                case 0:
+                                    engin_span_class = 'label bg-gray engine-status';
+                                    partition_span_class = 'label bg-gray partition';
+                                    span_html = "{:lang('not_start')}";
+                                    break;
+                                case 1:
+                                    engin_span_class = 'label bg-green engine-status';
+                                    partition_span_class = 'label bg-green partition'
+                                    span_html = "{:lang('have_in_hand')}";
+                                    break;
+                                case 2:
+                                    engin_span_class = 'label bg-red engine-status';
+                                    partition_span_class = 'label bg-red partition'
+                                    span_html = "{:lang('have_pause')}";
+                                    break;
+                                case 3:
+                                    engin_span_class = 'label bg-light-blue engine-status';
+                                    partition_span_class = 'label bg-light-blue partition'
+                                    span_html = "{:lang('finish')}";
+                                    break;
+                            }
+
+                            $(".engine-status").attr('class',engin_span_class);
+                            $(".engine-status").html(span_html);
+                            $(".partition").attr('class',partition_span_class);
+                            $(".partition").html(span_html);
+                            clearInterval(intervalProcess);
+
+                        }else{
+                            clearInterval(intervalProcess);
+                        }
+                    }
+                },
+            });
+        }
+
+        if(deviceStatus == 1 && enginStatus == 1 && taskStatus==1 && taskHaveFinished != 1){
+            intervalProcess=setInterval(refresh_state,1000);
+        }
+
+    });
+
+    function changePartitionSpanClass(partitionKey,partitionStatus){
+
+
+        var spanObj = $("[name="+partitionKey+"]");
+        var engin_span_class = '';
+        var span_html = ''
+        var partition_span_class;
+        switch (partitionStatus){
+            case 0:
+                partition_span_class = 'label bg-gray partition';
+                span_html = "{:lang('not_start')}";
+                break;
+            case 1:
+                engin_span_class = 'label bg-green engine-status';
+                partition_span_class = 'label bg-green partition'
+                span_html = "{:lang('have_in_hand')}";
+                break;
+            case 2:
+                engin_span_class = 'label bg-red engine-status';
+                partition_span_class = 'label bg-red partition'
+                span_html = "{:lang('have_pause')}";
+                break;
+            case 3:
+                engin_span_class = 'label bg-light-blue engine-status';
+                partition_span_class = 'label bg-light-blue partition'
+                span_html = "{:lang('finish')}";
+                break;
+        }
+
+        spanObj.attr('class',partition_span_class);
+        spanObj.html(span_html);
+
+    }
+
+    $(function () {
+
+        function isEmptyObject(e) {
+            var t;
+            for (t in e)
+                return !1;
+            return !0
+        }
+        function get_task(id){
+            if(!id){
+                layer.msg('{:lang("parameter_error")}',{icon: 2, time: 2000});
+                return false;
+            }
+            $.ajax({
+                url: '/cdp/index/get_task_snap',
+                type: 'get',
+                data: {id:id},
+                async: true,
+                dataType:'json',
+                success: function (res) {
+                    if(res.code == 0){
+                        layer.msg(res.msg,{icon: 2, time: 2000});
+                        return false;
+                    }else{
+                        if(!isEmptyObject(res)){
+                            isCurrentTask = res.is_current;
+//                      	if(res.sanp_list.data){
+                            $('#calendar').html('');
+                            $('#calendar').removeClass();
+                            $('#calendar').fullCalendar('destroy');
+                            var sanp_list = res.sanp_list.data;
+                            var date = new Date();
+                            var d = date.getDate(),
+                                    m = date.getMonth(),
+                                    y = date.getFullYear();
+                            $('#calendar').fullCalendar({
+                                defaultDate: res.sanp_list.first_time,
+                                header: {
+                                    left: 'title',
+                                    center: '',
+                                    right: 'prev,next today',
+                                    //right: 'month,agendaWeek,agendaDay'
+                                },
+                                aspectRatio: 1.35,
+                                height:480,
+                                firstDay:1,
+                                buttonText: {
+                                    today: '今天',
+                                    month: '月视图',
+                                    week: '周视图',
+                                    day: '日视图'
+                                },
+                                weekNumbers:false,
+                                allDayText: "全天",
+                                //timeFormat: 'H:mm',
+                                timeFormat: ' ',
+                                //weekMode: "variable",
+                                columnFormat: {
+                                    month: 'dddd',
+                                    week: 'dddd M-d',
+                                    day: 'dddd M-d'
+                                },
+                                titleFormat: {
+                                    month: 'YYYY年 MMMM月',
+                                    day: 'YYYY年 MMMM月d日 dddd'
+                                },
+                                monthNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+                                dayNames: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+                                dayClick: function(date, allDay, jsEvent, view) { //当单击日历中的某一天时，触发callback
+                                    /*var views = $('#calendar').fullCalendar('getView'); */
+                                    // console.log(date);
+                                    //openLayer(date);
+                                    // $(this).css('background-color', 'red');
+                                    // alert("The view's title is " + view.title);
+                                    // console.log(this);
+                                    // alert('a day has been clicked!');
+                                },
+                                eventClick:function(event, jsEvent, view){
+                                    //当点击日历中的某一日程（事件）时，触发此操作
+                                    //openEditLayer(event);
+                                    location.href = '/cdp/index/snap_detail/task_id/'+event.task_id+'/time/'+event.id;
+                                    return false;
+                                },
+                                events: sanp_list,
+                                editable: false,
+                                droppable: false,
+                            });
+//						}else{
+//							$('#calendar').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_snapshot")}</div>');
+//						}
+                            if(res.work_list){
+                                var have_finished = "{$task_have_finished}";
+                                var history_have_finished = res.have_finished
+                                var data = {work_list: res.work_list,engine_status:res.engine_status,have_finished:have_finished,history_have_finished:history_have_finished,is_current_task:isCurrentTask};
+                                $('#work_list').html(template('work_list_template', data));
+                            }else{
+                                $('#work_list').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_data")}</div>');
+                            }
+
+                        }
+                    }
+                }
+            });
+        }
+        var firstTaskId = $("#task_index_1").attr("data_id");
+        if(firstTaskId){
+            get_task(firstTaskId);
+        }
+
+        $(document).on('click', '.get_task_btn', function (e) {
+            var $this = $(this);
+            var id = $this.attr('data_id');
+            $('.get_task_btn').removeClass('text-red');
+            $this.addClass("text-red");
+
+            get_task(id);
+
+        })
+        /*醒看设备信息*/
+        $(document).on('click', '[data_role="view_device_info"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            if($(".device_body").is(":hidden")){
+                $(".temp_info").hide();
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye-slash");
+                $('.device_body').slideToggle();
+
+            }else{
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye");
+                $('.device_body').slideToggle();
+            }
+        })
+
+        /*醒看设备信息*/
+        $(document).on('click', '[data_role="view_log"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            if($(".log_body").is(":hidden")){
+                $(".temp_info").hide();
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye-slash");
+                $('.log_body').slideToggle();
+            }else{
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye");
+                $('.log_body').slideToggle();
+            }
+        })
+
+
+        /*创建任务*/
+        $(document).on('click', '[data_role="add_task"]', function (e) {
+            e.preventDefault();
+            if(deviceStatus != 1){
+                layer.msg('{:lang("device_off_cannot_add_task")}',{icon: 2, time: 2500});
+                return false;
+            }
+            $("#conf_step1").css("display","block")
+            $("#conf_step2").css("display","none")
+            $("#conf_step3").css("display","none")
+//		$("#add_task").modal('show')
+        });
+
+        /*配置任务*/
+        $(document).on('click', '[data_role="edit_task"]', function (e) {
+            e.preventDefault();
+            var task_id = $(this).attr('id');
+            $.ajax({
+                url: '/cdp/index/get_task',
+                type: 'get',
+                data: {id:task_id},
+                async: true,
+                dataType:'json',
+                success: function (res) {
+
+                    var task_id = res['id'];
+                    var storage = res['storage_id'];
+                    var sub_snap_num = res['sub_snap_num'];
+                    var backup_speed = res['backup_speed'];
+                    var snap_time  = res['snap_time'];
+                    var synchr_time = res['synchr_time'];
+                    var snap_num = res['snap_num'];
+                    var synchr_interval_type = res['synchr_interval_type'];
+//                var snap_merge_inter_type = res['snap_merge_inter_type'];
+                    var snap_inter_type = res['snap_inter_type'];
+
+                    $("#edit_synchr_interval_type option[value="+synchr_interval_type+"]").attr('selected',true);
+//                $("#edit_snap_merge_inter_type option[value="+snap_merge_inter_type+"]").attr('selected',true);
+                    $("#edit_snap_inter_type option[value="+snap_inter_type+"]").attr('selected',true);
+                    $('#edit_task_id').val(task_id);
+                    $("#edit_storage_id option[value="+storage+"]").attr('selected',true);
+                    $('#edit_backup_speed').val(backup_speed);
+                    $('#edit_snap_time').val(snap_time);
+                    $('#edit_synchr_time').val(synchr_time);
+//                $('#edit_snap_num').val(snap_num);
+                    var option = "option[value='"+snap_num+"']";
+                    $("#edit_snap_num").find(option).attr('selected',true);
+                    $('#edit_snap_merge_time').val(sub_snap_num);
+                    $('edit_task_id').val(task_id);
+                    $("#edit_conf_step2").css("display","block");
+                    $("#edit_conf_step3").css("display","none");
+//                $("#edit_task").modal('show')
+                }});
+
+        })
+
+    });
+
+    function conf_nextto(s,t,idPre)
+    {
+        if(s==1)
+        {
+            document.getElementById('partition[]');
+        }
+        if(s)
+        {
+            targetid= idPre+s;
+            if (document.getElementById){
+                target=document.getElementById(targetid);
+                if (target.style.display=="block"){
+                    target.style.display="none";
+                } else {
+                    target.style.display="block";
+                }
+            }
+        }
+        if(t)
+        {
+            targetid= idPre+t;
+            if (document.getElementById){
+                target=document.getElementById(targetid);
+                if (target.style.display=="block"){
+                    target.style.display="none";
+                } else {
+                    target.style.display="block";
+                }
+            }
+        }
+    }
+    $(".add-cdp-task").click(function(){
+        friendlyTip("正在创建任务,请稍后...","创建任务失败",5000,1000)
+    });
+    $(".edit-cdp-task").click(function(){
+        friendlyTip("正在编辑,请稍后...",'编辑任务失败',5000,1000);
+    });
+
+
+</script>
+
+<!--请求日志信息-->
+<script>
+
+
+
+    $(function () {
+
+        var id = "{$device_id}";
+
+        $(document).on('click', '[data_role="view_log"]', function (e) {
+            e.preventDefault();
+            var _this=$(this);
+            if (_this.hasClass('have-get-log')){
+                return ;
+            }
+            $.ajax({
+                url:"{:url('cdp/index/get_log')}",
+                data:{"type":"cdp_detail","id":id},
+                type:"get",
+                async:true,
+                success:function(resJson){
+
+                    if(resJson.code==0){
+                        var html = '<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>';
+
+                    }else{
+
+                        _this.addClass('have-get-log');
+                        var time = resJson.time;
+                        var data = resJson.data;
+                        var logs = '';
+                        var html = ' <ul class="timeline">';
+                        for(var i=0;i<time.length;i++){
+                            html += ' <li class="time-label">';
+                            html += ' <span class="bg-green" style="font-weight:normal; font-size:12px">';
+                            html += time[i];
+                            html += ' </span></li>';
+                            logs = data[i];
+                            for(var j=0;j<logs.length;j++){
+                                var log = logs[j];
+                                html += '<li> <i class="fa fa-arrow-right "></i><div class="timeline-item"><span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i>';
+                                html += formatDateTime(log.create_time);
+                                html += '</span><h3 class="timeline-header" style="padding-top:3px; border-bottom:0"> <a class=" text-red" href="javascript:">';
+                                html += log.action_title;
+                                html += '</a> </h3>';
+                                html += '<div class="timeline-body" style="padding: 2px 10px">';
+                                html += log.remark;
+                                html += '</div></div></li>';
+                            }
+                        }
+                        html += '</ul>';
+                    }
+                    $(".log-content").html(html);
+                }
+            });
+        })
+
+    });
+
+    function formatDateTime(timeStamp) {
+        var date = new Date();
+        date.setTime(timeStamp * 1000);
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        second = second < 10 ? ('0' + second) : second;
+        return h+':'+minute+':'+second;
+    };
+
+</script>
+
+
+{/block}

@@ -1,0 +1,600 @@
+{extend name="common@public/base"/}
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/bootstrap-slider/bootstrap-slider.css">
+<style>
+    .task_list > ul>li{ padding-left:0}
+    .task_list > ul{ line-height:30px;}
+    .task_list .qinfoicon{ font-size:30px}
+    .panel-title{ padding-bottom:15px;}
+    .panel-collapse{ padding:10px;}
+    .clone_disk{ padding-left:15px;}
+    .div-relative-forward{ float:left; width:20px; height:100%;  text-align:center;}
+    .div-relative-forward > i{font-size:14px; color:#060; margin-top:50px;}
+    .clone_disk .clone_icon{font-size:20px; color:#F60}
+    .clone_disk .clone_text{font-size:14px;}
+    .relative{ float:left; width:105px; display:inline;overflow: auto}
+    .div-keli{ float:left; margin: 0px -20px 0px -40px}
+    .div-keli span{ float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+    .div-keli > span.not-vailable{ border: solid darkgray 2px;
+    }
+    .div-keli > span.vailable{
+        float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+    .div-keli  span.have-virtual{
+        background-color: lightgrey;padding-left: 1px;  text-align: center;color: black; font-weight: 500; float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+    .div-keli > span.line{
+        float: left; display: inline-block; color:#060; margin-top:60px;width: 25px;height: 3px;border-radius: 10px; background-color: green;}
+    .div-relative{float:left;width:85px; height:110px; }
+    .div-relative-title{ height:40px; text-align:center}
+    .div-relative-title .badge{ font-weight:normal; margin-top:14px;}
+    .div-relative-title .label{ display:block; padding:5px 4px; font-weight:normal; font-size:12px}
+    .div-relative-body{height:70px; text-align:center}
+    .div-relative-img{ height:40px; padding-top:10px; position:relative; width:45px; margin:0 auto}
+    .div-relative-img > .qinfoicon{ font-size:30px; line-height:24px; color:#5cb85c}
+    .div-relative-img > .glyphicon{ position:absolute; right:5px; top:22px; color:#5cb85c; font-weight:normal; font-size:9px}
+    .div-relative-time{height:20px; line-height:20px; font-size:12px}
+    .div-relative-cursor{ cursor:pointer}
+    .create_keli{margin: 0px 0px 0px 15px;display: inline-block;border-radius: 10px;background-color: lightgrey;font-size: 10px;padding: 2px 8px;cursor: pointer}
+    .qinfo-kuaizhao1,.qinfo-dangqianchengshi,.qinfo-kuaizhao,.glyphicon-plus,.glyphicon-forward,.qinfo-kuaizhao2,.qinfo-kelong{
+        color: #15ff08 !important;
+    }
+    .div-keli > span.line{
+        background-color: #15ff08 !important;
+    }
+</style>
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+
+
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+
+            {if count($task_ids)!=0 }
+            <div class="col-sm-4">
+                <form class="form-inline select-task-form" action="{:url('/remote/index/detail')}" >
+                    <input type="hidden" name="uuid" value="{$unique_id}">
+                    <div class="form-group">
+                        <label for="select-task" class="control-label">可选任务编号:</label>&nbsp;
+                        <select class="form-control" name="task_id" id="select-task">
+                            {volist name="task_ids" id="item"}
+                              {if $item==$current_id }
+                                <option value="{$item}" selected="selected"> {$item} </option>
+                              {else/}
+                                  <option value="{$item}"> {$item}</option>
+                              {/if}
+                            {/volist}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-primary" href="{:url('/remote/index/index/type/2')}" >{:lang('back')}</a>
+            </div>
+            {else/}
+            <div class="pull-left">
+                <a class="btn btn-primary" href="{:url('/remote/index/index/type/2')}" >{:lang('back')}</a>
+            </div>
+            {/if}
+        </header>
+
+        <div class="box-body clearfix">
+
+            {volist name='snap_list' id='vo'}
+            {if condition="$vo.type eq 0 " }
+            <div class="relative">
+                <div class="div-relative">
+                    <div class="div-relative-title">
+                        <div class="label label-info">{$vo['create_time']|date="Y-m-d",###}</br>{$vo['create_time']|date="H:i:s",###}</div>
+                    </div>
+                    <div class="div-relative-body">
+                        <div class="div-relative-cursorX"  data_modal="#myModal__0">
+                            <div class="div-relative-img">
+                                <i class="qinfoicon qinfo-kelong"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div-relative-forward">
+                    <i class="glyphicon glyphicon-forward"></i>
+                </div>
+            </div>
+            {/if}
+
+            {if condition="$vo.type eq 1 or $vo.type eq 4" }
+            <div class="relative" >
+                <div class="div-relative">
+                    <div class="div-relative-title" >
+                        {if condition="$vo.vir_type eq 0"}
+                        <a href="{:url('device/manage/virtual_detail',array('id'=>$vo['virtual_id']))}" title="{$vo.vir_title}">
+                            <span class="badge">R</span>
+                        </a>
+                        {/if}
+                        {if condition="$vo.vir_type eq 3"}
+                        <a href="{:url('device/manage/virtual_detail',array('id'=>$vo['virtual_id']))}" title="{$vo.vir_title}">
+                            <span class="badge">T</span>
+                        </a>
+                        {/if}
+                    </div>
+                    {if condition="$vo.vir_type neq -1"}
+                    <div class="div-relative-cursorX" data_modal="#myModal__0">
+                        {else/}
+                        {if condition="$vo.have_os eq 1"}
+                        <div class="div-relative-cursor" data_role="add_virtual"  data_modal="#myModal__0"  create_time="{$vo['create_time']|date='Y-m-d H:i:s',###}" snap_group_id="{$vo['group_id']}" >
+                            {else/}
+                            <div class="div-relative-cursorX" data_modal="#myModal__0">
+                                {/if}
+                                {/if}
+                                <div class="div-relative-body">
+                                    <?php $disk_html = '' ;?>
+                                    <?php foreach ($vo['disk'] as $item) {
+
+                     $html_os='';
+                     if($item['have_os'] == 1 ){
+                              $html_os =(lang('system_disk'));
+                            }
+                     $disk_html .= "<div class='' align='left' style='line-height:22px'>".lang('disk')." : ".$item['harddisk_id'].$html_os;
+                                    $disk_html .= "</div>";
+                                }
+                                ?>
+                                <div class="div-relative-cursorX"   data-toggle="tooltip"  data-html="true"  data-original-title="{$disk_html}"  data-placement="bottom" data_role="instead_hostX"  data_modal="#myModal__0">
+                                    <div class="div-relative-img">
+                                        {if $vo.type==4}
+                                        <i class="qinfoicon qinfo-kuaizhao"></i>
+                                        {/if}
+                                        {if $vo.type==1}
+                                          <i class="qinfoicon qinfo-kuaizhao1"></i>
+                                        {/if}
+                                        {if condition="$vo.vir_type eq -1 && $vo.have_os eq 1" }
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        {/if}
+                                    </div>
+                                    <div class="div-relative-time">{$vo['create_time']|date='H:i:s',###}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div-relative-forward">
+                        <i class="glyphicon glyphicon-forward"></i>
+                    </div>
+                </div>
+                {/if}
+
+
+                <!--合并快照正在进行...-->
+                {if condition="$vo.type eq 3" }
+                <div class="relative" >
+                    <div class="div-relative">
+                        <div class="div-relative-title" >
+                            <span class="badge" style="background-color: #5CB85C;color: #FFFFFF">合并中...</span>
+                        </div>
+
+                        <div class="div-relative-cursorX" data_modal="#myModal__0">
+                            <div class="div-relative-body">
+                                <?php $disk_html = '' ;?>
+                                <?php foreach ($vo['disk'] as $item) {
+
+                                                             $html_os='';
+                                                             if($item['have_os'] == 1 ){
+                                                                      $html_os =(lang('system_disk'));
+                                                                    }
+                                                             $disk_html .= "<div class='' align='left' style='line-height:22px'>".lang('disk')." : ".$item['harddisk_id'].$html_os;
+                                $disk_html .= "</div>";
+                            }
+                            ?>
+                            <div class="div-relative-cursorX"   data-toggle="tooltip"  data-html="true"  data-original-title="{$disk_html}"  data-placement="bottom" data_role="instead_hostX"  data_modal="#myModal__0">
+                                <div class="div-relative-img">
+                                    <i class="qinfoicon qinfo-kuaizhao2"></i>
+                                </div>
+                                <div class="div-relative-time">{$vo['create_time']|date='H:i:s',###}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div-relative-forward">
+                    <i class="glyphicon glyphicon-forward"></i>
+                </div>
+            </div>
+            {/if}
+
+
+
+
+
+
+                {if condition="$vo.type eq 2"}
+                <div class="relative">
+                    <div class="div-relative">
+                        <div class="div-relative-title"></div>
+                        <div class="div-relative-body">
+                            <div class="div-relative-cursor"  data_modal="#myModal__0">
+                                <div class="div-relative-img">
+                                    <i class="qinfoicon qinfo-dangqianchengshi"></i>
+                                </div>
+                                <div class="div-relative-time">{:lang('current')}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                {/volist}
+
+            </div>
+    </div>
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal" id="add_virtual">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="modal_hidden">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>{:lang('create_virtual')}</h4>
+                </div>
+                <form class="form form-horizontal instead_host add_virtual_form" role="form" method="post" action="{:url('remote/index/add_virtual')}">
+                    <input type="hidden" name="snap_group_id" id="snap_group_id">
+                    <input type="hidden" name="unique_id" value="{$unique_id}">
+                    <input type="hidden" name='vir_type' value="1">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{:lang('snap')}</label>
+                            <div class="col-sm-10">
+                                <strong><div id='skvcreatetimeS1' class="form-control-static"></div></strong>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{:lang('host_name')}</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id='skvhostnameS1' name='host_name' class="form-control input-sm" />
+                                <span class="input-group-addon get_serialnumber label-warning">
+                                    <span style="cursor:pointer"  class="glyphicon glyphicon-refresh" id="host_name-refresh" ></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{:lang('compute_snap')}</label>
+                            <div class="col-sm-6">
+                                <select id='computing' name='comput_id' class="form-control select2" style="width:100%">
+                                    {volist name="computing_list" id="vo_comp"}
+                                    <option value="{$vo_comp['id']}" bridge='{$vo_comp["compute_info"]}'>{$vo_comp['name']}({$vo_comp['ip']}) </option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top:40px;">
+                            <label class="col-sm-2 control-label">CPU</label>
+                            <div class="col-sm-8">
+                                <input id="skvhostcpuS1" name="cpu_kernel" type="text" value="1" class="slider form-control" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top:40px;">
+                            <label class="col-sm-2 control-label">{:lang('memory')}</label>
+                            <div class="col-sm-8">
+                                <input id="skvhostmemoryS1" name="memory" type="text" value="512" class="slider form-control" data-slider-min="512" data-slider-max="2048" data-slider-step="512" data-slider-value="16384" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{:lang('network_adapter')}</label>
+                            <div class="col-sm-10" id="net_html">
+
+                                {volist name="hardware_info.netcards" id='item' key='k'}
+                                <div  class="row network" style="margin-bottom:5px; padding-left:15px" id="data_net_index_{$k-1}">
+                                    <div class="col-sm-2 no-padding text-center net-num" style="line-height:32px;border:1px #ccc solid;border-right:0"> 网卡{$k} </div>
+                                    <div class="col-sm-3 no-padding">
+                                        <input  name="netdata[{$k-1}][ip]" type="text" value="{$item['ip']}" class="form-control net-ip" index="{$k-1}">
+                                    </div>
+                                    <div class="col-sm-4 no-padding">
+                                        <input name="netdata[{$k-1}][mac]" type="text" value="{$item['mac']}" dataindex="{$k-1}" data_role_mac="" class="form-control net_mac">
+                                    </div>
+                                    <div class="col-sm-2 no-padding">
+                                        <select name="netdata[{$k-1}][type]" class="modelselect form-control net_mac_model">
+                                            <option value="NAT">NAT</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <i class="glyphicon glyphicon-trash" data_role="trash_net" data_role_index="{$k-1}"></i>
+                                    </div>
+                                    <div class="col-sm-12 no-padding">
+                                        <span style="font-size:12px;color:#F00" id="tooltip_1"></span>
+                                    </div>
+                                </div>
+                                {/volist}
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-1 control-label"></label>
+                            <div class="col-sm-10"><div class="btn btn-success" id="add_net">{:lang('add_network')}</div></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button  type="submit" class="btn btn-success ajax-post add_virtual_submitBtn" target-form="instead_host">{:lang('submit')}</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                    </div>
+                    <input hidden="hidden"  name='system_type'  value="{$client_system}" />
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</section>
+{/block}
+{block name="script"}
+<script>
+
+    /*创建虚拟机*/
+    $('[data_role="add_virtual"]').click(function (e) {
+
+        e.preventDefault();
+        var _this = $(this);
+        var createTime = _this.attr('create_time');
+        var groupId = _this.attr('snap_group_id') ? _this.attr('snap_group_id'):-1;
+        var keliId = _this.attr('keli-id') ? _this.attr('keli-id'):-1
+        $('#snap_group_id').val(groupId);
+        $('#keli_id').val(keliId);
+        $('#skvcreatetimeS1').html(createTime);
+        $("#add_virtual").show();
+    });
+
+
+    $('[data-dismiss="modal"]').click(function(e){
+        e.preventDefault;
+        $("#add_virtual").hide();
+        $('#add_keli').hide();
+    });
+
+    var bridge = '';
+    $("#computing").change(function(){
+        var selectOp = $("#computing option:selected");
+        var bridges = selectOp.attr("bridge");
+        if(bridges){
+            bridge = JSON.parse(bridges).bridges;
+        }else{
+            bridge = new Array();
+        }
+
+        if(selectedvalue == 0){
+            var new_net_html = '';
+            new_net_html += '<option value="NAT">NAT</option>';
+            var length = bridge.length;
+            for(var i=0;i<length;i++){
+                new_net_html += '<option value="'+bridge[i].uuid+'" class="model_br">'+bridge[i].uuid+'</option>';
+            }
+            $(".modelselect").html(new_net_html);
+        }
+    });
+
+    var is_litter = "{$is_liter_type}";
+    var add_net_index = $("#net_html").children("div.network").length;
+    var device_id = "{$back_id}";
+    $('#add_net').on('click', function (event) {
+
+        var cardIndex = getNetCardsIndex();
+        var mac_addr = '';
+
+        $.ajax({
+            url: '/device/manage/generate_mac_addr',
+            type: 'get',
+            data: {type:add_net_index,device_id:device_id,index:cardIndex},
+            async: true,
+            dataType:'json',
+            success: function (res) {
+                var mac_addr = res['mac_addr'];
+                var ip = res['ip'];
+                var index = res['index'];
+                var vir_type_val  = '';
+
+                $("input[name='vir_type']:radio").each(function(){
+                    if(true == $(this).is(':checked')){
+                        vir_type_val  = $(this).val();
+                    }
+                });
+
+                var add_html_model = ''
+                var add_html = ''
+                add_html_model += '<option value=NAT>NAT</option>';
+
+                if (vir_type_val == 1 || is_litter==1) {
+
+                } else {
+                    var length = bridge.length;
+                    for(var i=0;i<length;i++){
+                        add_html_model += '<option value="'+ bridge[i].uuid +'" class="model_br">'+bridge[i].uuid+'</option>';
+                    }
+                }
+                add_html += '<div class="row network" style="margin-bottom:5px; padding-left:15px" id="data_net_index_'+add_net_index+'">';
+                add_html += '<div class="col-sm-2 no-padding text-center net-num" style="line-height:32px;border:1px #ccc solid;border-right:0"> {:lang("net_work")}'+ (add_net_index+1) +' </div>';
+//                add_html += '<div class="col-sm-3 no-padding"><select name="netdata['+add_net_index+'][nic_type]" type="text" value="" class="form-control"><option value="default">default</option><option value="rtl8139">rtl8139</option><option value="e1000">e1000</option><option value="pcnet">pcnet</option><option value="ne2k_pci">ne2k_pci</option><option value="virtio">virtio</option></select></div>';
+                add_html += '<div class="col-sm-3 no-padding"><input index="'+index+'" name="netdata['+add_net_index+'][ip]" type="text" value="'+ip+'" class="form-control net-ip"></div>';
+                add_html += '<div class="col-sm-4 no-padding"><input name="netdata['+add_net_index+'][mac]" type="text" value="'+mac_addr+'" dataindex="'+ (add_net_index+1) +'"   data_role_mac="" class="form-control net_mac"></div>';
+                add_html += '<div class="col-sm-2 no-padding">';
+                add_html += '<select name="netdata['+add_net_index+'][type]" class="modelselect form-control net_mac_model">';
+                add_html += add_html_model;
+                add_html += '</select>';
+                add_html += '</div>';
+                add_html += '<div class="col-sm-1"><i class="glyphicon glyphicon-trash" data_role="trash_net" data_role_index="'+add_net_index+'" ></i></div>';
+                add_html += '<div class="col-sm-12 no-padding"><span style="font-size:12px;color:#F00"  id="tooltip_'+(add_net_index+1)+'"></div>';
+                add_html += '</div>';
+                add_net_index ++;
+                $("#net_html").append(add_html);
+            }
+        })
+    });
+
+    // 获取网卡的坐标
+    function getNetCardsIndex(){
+
+        var indexStr = '';
+        $(".net-ip").each(function(){
+            var _this = $(this);
+            indexStr += _this.attr('index') + ",";
+        })
+        indexStr = indexStr.substring(0,indexStr.length-1);
+        return indexStr;
+    }
+
+
+    $(document).on("click",'[data_role="trash_net"]',function(e){
+        var $this = $(this);
+        var data_index = $this.attr('data_role_index');
+        $('#data_net_index_'+ data_index).remove();
+        changeNetNum();
+        add_net_index =  $("#net_html").children("div.network").length;
+    });
+
+    /**
+     *  改变网卡的数字
+     */
+    function changeNetNum(){
+
+        var count = 1;
+        var netStr = '';
+        $(".net-num").each(function(){
+            netStr = "网卡"+count;
+            $(this).html(netStr);
+            count++;
+        })
+    }
+
+    $(document).on("blur",'.net_mac',function(e){
+
+        var $this = $(this);
+        var data_def_var = $this.attr('data_role_mac');
+        var data_index = $this.attr('dataindex');
+        var data_var = $this.val();
+        if(data_def_var==''){
+            $('#tooltip_'+data_index).html('');
+        }else{
+            if(data_def_var !== data_var){
+                if(data_var == ''){
+//                    mac地址为空,表示添加新网卡设备,需要进入系统配置网卡信息
+                    $('#tooltip_'+data_index).html('');
+                }else{
+//                    mac地址修改就是删除旧网卡设备，添加新网卡设备，需要进入系统配置网卡信息
+                    $('#tooltip_'+data_index).html('');
+                }
+            }
+        }
+    });
+
+    var selectedvalue = 1;
+    $('.vir_type').on('ifClicked', function (event) {
+
+        if ($(this).attr("checked",true)) {
+            $(this).iCheck('uncheck');//如果已选择，可以用iCheck取消选择
+        } else {
+            $(this).iCheck('check');//如果没选择，可以用iCheck美化选择
+        }
+
+        if(!bridge){
+            $("#computing").trigger("change");
+        }
+
+        selectedvalue  = $(this).val();
+        if (selectedvalue == 1) {
+            $(".modelselect").html('<option value=NAT>NAT</option>');
+        } else {
+            var new_net_html = '';
+            new_net_html += '<option value="NAT">NAT</option>';
+            var length = bridge.length;
+            for(var i=0;i<length;i++){
+                new_net_html += '<option value="'+ bridge[i].uuid +'" class="model_br">'+bridge[i].uuid+'</option>';
+            }
+            $(".modelselect").html(new_net_html);
+        }
+    });
+
+    $(".select2").select2({
+        minimumResultsForSearch: -1
+    });
+
+    $("#skvhostcpuS1").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return 'CPU: ' + value +'个';
+        }
+    });
+
+    $("#skvhostmemoryS1,#skvhostmaxmemoryS1").slider({
+        tooltip: 'always',
+        value: 1,
+        formatter: function(value) {
+            return '内存: ' + value +'MB';
+        }
+    });
+
+    //生成主机名称
+    $('#host_name-refresh').click(function(){
+        var time = new Date().getTime();
+        var time = new Date(time);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        if (m<10) m = "0"+m;
+        var d = time.getDate();
+        if (d<10) d = "0"+d;
+        var h = time.getHours();
+        var mm = time.getMinutes();
+        var s = time.getSeconds();
+        var name = "Server-"+y+m+d+"-"+h+mm+s;
+        $('#skvhostnameS1').val(name);
+    });
+
+    $(".modal_hidden").click(function(e){
+        e.preventDefault();
+        $("#add_virtual").hide();
+    });
+
+    $("#host_name-refresh").trigger("click");
+
+
+    //选取不同的节点有不同的cpu
+    $("#computing").change(function(){
+
+//        var max_cpu = $("#computing option:selected").attr('max_cpu');
+//        $("#skvhostcpuS1").attr('data-slider-max',max_cpu);
+//        $("#skvhostcpuS1").attr('data-slider-max');
+    });
+
+
+
+    function formatDate(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    }
+</script>
+
+<script>
+    $("#select-task").change(function(e){
+
+
+        var selectedId = $("#select-task option:selected").val();
+        if(selectedId){
+            $(".select-task-form").submit();
+        }else{
+            return false;
+        }
+
+
+    });
+</script>
+{/block}

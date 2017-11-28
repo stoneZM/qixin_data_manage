@@ -1,0 +1,19 @@
+<div class="clearfix" style="margin-bottom:5px"></div>
+<div class="row">
+<div class="col-md-12">
+    <ul class="list-group " style="line-height:20px;margin-bottom:0; padding-right:0;">
+        <li class="list-group-item info-box-text col-md-12"><strong>{:lang('basic')}</strong></li>
+        <li class="list-group-item info-box-text col-md-4">{:lang('virtual_name')}：<strong>{$virtual_data['name']}</strong></li>
+        <!--基本信息展示-->
+        <li class="list-group-item info-box-text col-md-4">{:lang('source_device_ip')}：<strong>{$virtual_data['source_device_ip']}</strong></li>
+        <li class="list-group-item info-box-text col-md-4">{:lang('source_device_name')}：<strong>{$virtual_data['source_device_name']}</strong></li>
+
+        <li class="list-group-item info-box-text col-md-4">{:lang('cpu')}：<strong>{$virtual_data['cpu_kernel']}</strong></li>
+        <li class="list-group-item info-box-text col-md-4">{:lang('memory')}(M)：<strong>{$virtual_data['memory']*1024|format_bytes}</strong></li>
+        <li class="list-group-item info-box-text col-md-4">{:lang('remote_port')}：<strong>{$virtual_data['remote_port']}</strong></li>
+
+    </ul>
+</div>
+</div>
+
+

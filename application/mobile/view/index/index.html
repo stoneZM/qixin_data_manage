@@ -1,0 +1,133 @@
+{extend name="public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<div class="page">
+  <header class="bar bar-nav">
+    <h1 class="title">齐信软件</h1>
+  </header>
+    <div class="bar bar-tab">
+        <a class="tab-item active" href="{:url('index')}"> <span class="icon icon-home"></span> <span class="tab-label">首页</span></a>
+        <a class="tab-item " href="{:url('product')}"> <span class="icon iconfont icon-chanpin1"></span> <span class="tab-label">产品</span></a>
+        <a class="tab-item " href="{:url('plan')}"> <span class="icon iconfont icon-fangan"></span> <span class="tab-label">方案</span></a>
+        <a class="tab-item " href="{:url('service')}"> <span class="icon iconfont icon-fuwu2"></span> <span class="tab-label">服务</span></a>
+    </div>
+    <div class="content">
+    <div class="page-index">
+        <div class="swiper-container" data-space-between='10'>
+          <div class="swiper-wrapper">
+            {volist name="advert" id="item"}
+            <div class="swiper-slide"><img src="{:get_cover($item.cover_id,'path')}" alt="" style='width: 100%'></div>
+            {/volist}
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+        
+        {if $product_list}
+        <div class="card">
+          <div class="card-header"><a href="{:url('product')}">应用产品</a></div>
+          <div class="card-content">
+            <div class="list-block media-list">
+              <ul>
+                {volist name="product_list" id="vo"}
+                <li>
+                <a href="{:url('detail',array('id'=>$vo['id']))}" class="item-link item-content">
+                  <div class="item-media"> <img src="{:get_thumb($vo.cover_id,200,200)}" width="44"> </div>
+                  <div class="item-inner">
+                    <div class="item-title-row">
+                      <div class="item-title">{$vo.title}</div>
+                    </div>
+                  </div>
+                 </a>
+                </li>
+                {/volist}
+              </ul>
+            </div>
+          </div>
+        </div> 
+        {/if} 
+        {if $plan_list}
+        <div class="card" >
+          <div class="card-header"><a href="{:url('plan')}">解决方案</a></div>
+          <div class="card-content">
+             <div class="list-block contacts-block">
+                <ul>
+                {volist name="plan_list" id="vo"}
+                <li>
+                    <a href="{:url('detail',array('id'=>$vo['id']))}" class="item-link">
+                    <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">{$vo.title}</div>
+                        </div>
+                    </div>
+                    </a>
+                </li>
+                {/volist}
+                </ul>
+             </div>  
+          </div>
+        </div>  
+        {/if}
+        {if $feed_list}
+        <div class="card" >
+          <div class="card-header"><a href="{:url('feed')}">行业动态</a></div>
+          <div class="card-content">
+             <div class="list-block contacts-block">
+                <ul>
+                {volist name="feed_list" id="vo"}
+                <li>
+                    <a href="{:url('detail',array('id'=>$vo['id']))}" class="item-link">
+                    <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">{$vo.title}</div>
+                        </div>
+                    </div>
+                    </a>
+                </li>
+                {/volist}
+                </ul>
+             </div>  
+          </div>
+        </div>
+        {/if}
+        {if $app_module}
+        <div class="card">
+        <div class="card-header"><a href="{:url('app')}">云市场</a></div>
+        <div class="card-content">
+          <div class="list-block media-list">
+          	<ul>
+            	{volist name="app_module" id="vo"}
+                <li class="">
+                	<a href="{:url('module_detail',array('id'=>$vo['id']))}" class="item-content item-link ">
+                    <div class="item-media"><img src="{:get_thumb($vo.cover_id,200,200)}" width="44"> </div>
+                    <div class="item-inner">
+                        <div class="item-title-row">
+                        	<div class="item-text">{$vo.title}</div> <div class="item-text">{if $vo.is_com}商业{else}免费{/if} </div>
+                        </div>
+                    </div>
+                    </a>
+                </li>
+                 {/volist}
+            </ul>
+          </div>
+        </div>
+        </div>
+        {/if}
+    </div>
+    </div>
+</div>
+{/block}
+{block name="script"} 
+<script>
+  //打开自动初始化页面的功能
+  //建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+	$.config = {
+		autoInit: true,
+		router:false
+	}
+	$(function() {
+	$(".swiper-container").swiper();
+	});
+  
+</script> 
+{/block}

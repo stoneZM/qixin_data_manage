@@ -1,0 +1,63 @@
+
+.tyg-div-form{
+    background-color: #23305a;
+    color:#2ec0f6;
+    margin:30% auto;
+    min-width:330px;!important;
+    max-width: 350px !important;
+}
+@media (min-height:700px){
+    .tyg-div-form {
+        margin: 250px auto;
+    }
+}
+
+@media (max-height:600px){
+.tyg-div-form {
+    margin: 20% auto;
+    }
+}
+
+@media (max-height:500px){
+    .tyg-div-form {
+        margin: 10% auto;
+    }
+}
+@media (max-height:500px){
+    .tyg-div-form {
+        margin: 0 auto;
+    }
+}
+
+
+
+
+.tyg-div-form form #login-btn {
+    cursor: pointer;
+    width: 90%;
+    height: 44px;
+    padding: 0;
+    background: #264380;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #2ec0f6;
+    -moz-box-shadow:
+            0 15px 30px 0 rgba(255,255,255,.25) inset,
+            0 2px 7px 0 rgba(0,0,0,.2);
+    -webkit-box-shadow:
+            0 15px 30px 0 rgba(255,255,255,.25) inset,
+            0 2px 7px 0 rgba(0,0,0,.2);
+    box-shadow:
+            0 15px 30px 0 rgba(255,255,255,.25) inset,
+            0 2px 7px 0 rgba(0,0,0,.2);
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,.1);
+    -o-transition: all .2s;
+    -moz-transition: all .2s;
+    -webkit-transition: all .2s;
+    -ms-transition: all .2s;
+}

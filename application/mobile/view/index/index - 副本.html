@@ -1,0 +1,368 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/device.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+     {volist name="device_group" id="dg"}
+        <li class="{$dg.tabs}"><a href="" class="group_btn" id="{$dg.group_id}" role="tab" data-toggle="tab" >{$dg.group_name}</a></li>
+     {/volist}
+    <li class="pull-left header">
+     <a class="badge bg-light-blue" style="display:inline" data_role="device_add" ><i class="fa fa-plus"></i> {:lang('add')}</a>
+     <a class="badge bg-light-blue" style="display:inline" href="{:url('device/manage/device_group')}" ><i class="fa fa-arrow-circle-right"></i> {:lang('grouping')}</a>
+     </li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_1-1">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left">
+                     <span class="text-green"><span class="qinfoicon qinfo-msnui-server "></span> {:lang('online')}</span>
+                     <span class="text-muted"><span class="qinfoicon qinfo-msnui-server"></span> {:lang('offline')}</span>
+                     <span class="text-red"><span class="qinfoicon qinfo-msnui-server"></span> {:lang('noagent')}</span>
+                 </div>
+                </div>
+                <div class="box-body" id="device_list"></div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+
+<div class="modal" id="device_add">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('add')}{:lang('device')}<strong><span id='device_name_add' class="form-control-static"></span></strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="nav-tabs-custom" style="box-shadow:0 0 0 0 ">       
+            <div class="tab-content">
+                <div class="tab-pane active" >
+                <form class="form form-horizontal device_add_form" role="form" method="post" action="{:url('device/manage/device_add')}">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">{:lang('ip')}</label>
+                        <div class="col-lg-8"><input id='device_ip_add' name='device_ip' class="form-control input-sm"/></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">{:lang('alias')}</label>
+                        <div class="col-lg-8"><input id='device_alias_add' name='device_alias' class="form-control input-sm"/></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">{:lang('grouping')}</label>
+                        <div class="col-lg-8">
+                            <select name="device_group" class="form-control input-sm device_group_add" style="width:100%">
+                            {volist name="device_group" id="dg"}
+                            <option value="{$dg.group_id}">{$dg.group_name}</option>
+                            {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-8">
+                            <button type="submit" class="btn btn-success ajax-post" target-form="device_add_form">{:lang('submit')}</button>
+        					<button type="button" class="btn btn-default" data-dismiss="modal">{:lang('back')}</button>
+                        </div>
+                    </div> 
+                </form> 
+                </div>
+            </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="device_edit">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('edit')}{:lang('device')} <span><span id='device_name_edit' class="form-control-static"></span></span></h4>
+      </div>
+      <div class="modal-body">
+        <div class="nav-tabs-custom" style="box-shadow:0 0 0 0 ">
+            <ul class="nav nav-tabs">
+             <li class="active"><a href="#Basics" role="tab" data-toggle="tab" >{:lang('basic')}</a></li>
+             <li><a href="#Senior" id="Senior_tab" role="tab" data-toggle="tab" >{:lang('install_agent')}</a></li>
+            </ul>        
+            <div class="tab-content">
+                <div class="tab-pane active" id="Basics">
+                <form class="form form-horizontal device_edit_form" role="form" method="post" action="{:url('device/manage/device_edit')}">
+                    <input id='device_id' name='id'  type="hidden" />
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">{:lang('alias')}</label>
+                        <div class="col-lg-8"><input id='device_alias_edit' name='device_alias' class="form-control input-sm"/></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">{:lang('grouping')}</label>
+                        <div class="col-lg-8">
+                            <select name="device_group" class="form-control input-sm device_group_edit" style="width:100%">
+                            {volist name="device_group" id="dg"}
+                            <option value="{$dg.group_id}">{$dg.group_name}</option>
+                            {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-8">
+                            <button type="submit" class="btn btn-success ajax-post" target-form="device_edit_form">{:lang('submit')}</button>
+        					<button type="button" class="btn btn-default" data-dismiss="modal">{:lang('back')}</button>
+                        </div>
+                    </div> 
+                </form> 
+                </div>
+                <div class="tab-pane" id="Senior">
+                 <form class="form form-horizontal test_link_form">   
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">{:lang('type')}</label>
+                        <div class="col-lg-8">
+                        	<select name="host_type" class="form-control input-sm" style="width:100%">
+                                <option value="1">Linux</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">{:lang('name')}</label>
+                        <div class="col-lg-8"><input id='host_ip' name='host_ip' class="form-control input-sm" readonly /></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">{:lang('port')}</label>
+                        <div class="col-lg-8">
+                            <input id='host_port' name='host_port' class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">{:lang('username')}</label>
+                        <div class="col-lg-8">
+                            <input id='host_name' name='host_name' class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">{:lang('password')}</label>
+                        <div class="col-lg-8">
+                            <input id='host_password' name='host_password' class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-3 col-lg-8">
+                            <a class="btn btn-success test_link_btn" style="" >{:lang('test_connection')}</a> <a class="btn btn-success instll_agent_btn">{:lang('install_agent')}</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-3 col-lg-8">
+                            <span class="test_link_msg"></span>
+                        </div>
+                    </div>
+                  </form> 
+                </div>
+            </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{/block}
+{block name="script"}
+<script id="device_list_template" type="text/html">
+<ul class="products-list product-list-in-box">
+<!--[each device_list as vo i]-->
+   <li class="item col-sm-6 col-md-4 col-lg-3">
+	<div class="product-img text-right">
+	<div class="qinfoicon qinfo-msnui-server <!--[if vo.status == 1]--> text-green<!--[else if vo.status == 2]--> text-muted<!--[else]--> text-red<!--[/if]-->"></div>
+	</div>
+	<div class="product-info">
+		<a class="product-title" href="<!--[vo['url']]-->"><!--[vo['ip']]--></a>
+		<div class="product-description">{:lang('name')}：<!--[vo['client_computer_name']]--></div>
+		<div class="product-description">{:lang('alias')}：<!--[vo['alias']]--></div>
+		<div class="product-description">{:lang('number')}：<!--[vo['id']]--></div>
+		<div class="text-right">
+			<a class="label label-default " data_role="device_edit" data_id="<!--[vo['id']]-->" ><i class="glyphicon glyphicon-pencil"></i></a>
+			<a class="label label-default confirm ajax-get" href="/device/manage/device_del/id/<!--[vo['id']]-->" data_id="<!--[vo['id']]-->" ><i class="glyphicon glyphicon-trash"></i></a>
+		</div>
+	
+	</div>
+	
+  </li>
+<!--[/each]-->
+</ul>
+
+</script>
+<script>
+$(function () {
+	function isEmptyObject(e) {  
+		var t;  
+		for (t in e)  
+			return !1;  
+		return !0  
+	} 
+	function set_loading(){
+		$('#device_list').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-spinner fa-spin"></i> {:lang("struggling_to_load")} ...</div>');
+	}
+	
+	function get_device(group_id){
+		$.ajax({
+			url: '/device/manage/get_device_lists',
+			type: 'get',
+			data: {group_id:group_id},
+			async: true,
+			dataType:'json', 
+			success: function (res) {
+				if(isEmptyObject(res)){
+					clear_task();
+					$('#device_list').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>');
+				}else{
+					var data = {device_list: res};
+					$('#device_list').html(template('device_list_template', data));	
+				}	
+			}
+		});
+	}
+	function get_data(group_id){
+		set_loading();
+		get_device(group_id);
+		set_task();
+	}
+	function set_task(){
+		task_device=self.setInterval(function(){
+			 get_device(group_id);	
+		},2000)
+	}
+	function clear_task(){
+		clearInterval(task_device);
+	}
+	var group_id = 1;
+	var task_device = '';
+	get_data();
+
+	$('.group_btn').on('show.bs.tab', function (e) {
+		get_id = e.target.id;
+		if(!get_id){
+			layer.msg('{:lang("parameter_error_please_refresh_and_try_again")}',{icon: 2, time: 2000});
+			return false;
+		}else{
+			clear_task();
+			group_id = get_id;
+			get_data(get_id);
+		}
+	})
+	function writeMessage($data) {
+		$('.test_link_msg').append($data);
+	}
+
+	function test_install(is_install){
+		var formContent = $(".test_link_form").serialize();
+	
+		if(is_install == 1){
+			formContent =formContent +"&"+"install=1"
+		}
+		$.post('/device/manage/test_link', formContent, function (json) {
+			if(json.code == 0 ){
+				$('.test_link_msg').html('<span class="text-red">'+json.msg+'</span>');
+				return false;
+			}else{
+				if(is_install == 1){
+					$('.test_link_msg').html('');
+					if(json['title']){writeMessage(json['title']);}
+					if(json['error']){writeMessage(json['error']);}
+					if(json['output']){writeMessage(json['output']);}
+					return false;
+				}else{
+					$('.test_link_msg').html('<span class="text-success">'+json.msg+'</span>');
+					return false;
+				}
+			}
+		},'json');	
+		
+		return false;
+	}
+	
+	
+	$(document).on('click', '.test_link_btn', function (e) {
+		$('.test_link_msg').html('<i class="fa fa-spinner fa-spin"></i> {:lang("connecting_host")}');
+		test_install();
+	})
+	$(document).on('click', '.instll_agent_btn', function (e) {
+		$('.test_link_msg').html('<i class="fa fa-spinner fa-spin"></i> {:lang("executing_installation")}');
+		test_install(1);
+	})
+	
+	/*添加设备*/
+	$(document).on('click', '[data_role="device_add"]', function (e) {
+		$("#device_add").modal('show');
+	})	
+	
+	/*修改设备*/
+	$(document).on('click', '[data_role="device_edit"]', function (e) {
+
+		e.preventDefault();
+		var $this = $(this);
+		var id = $this.attr('data_id');
+		
+		if(!id){
+			layer.msg('{:lang("parameter_error_please_refresh_and_try_again")}',{icon: 2, time: 2000});
+			return false;
+		}
+		$.ajax({
+			url: '/device/manage/get_device',
+			type: 'get',
+			data: {id:id},
+			async: true,
+			dataType:'json', 
+			success: function (res) {
+				if(res.code == 0){
+					layer.msg(res.msg,{icon: 2, time: 2000});
+					return false;
+				}else{
+					if(!isEmptyObject(res)){
+						if(res.status == 0){
+							$("#Senior_tab").show();
+							
+							$("#host_ip").val(res.ip);
+							$("#host_port").val(22);
+							
+							
+						}else{
+							$("#Senior_tab").hide();
+						}
+						$("#device_id").val(res.id);
+						$("#device_name_edit").html(res.client_computer_name);
+						$("#device_alias_edit").val(res.alias);
+						$(".device_group_edit").val(res.group_id);
+						$("#device_edit").modal('show');
+					}
+					
+				}		
+			}
+		});	
+	})
+	
+	$('#device_edit').on('shown.bs.modal', function (e) {
+	 clear_task();
+	})
+	
+	$('#device_edit').on('hide.bs.modal', function (e) {
+	  set_task();
+	})
+	
+}); 
+
+
+</script>
+{/block}

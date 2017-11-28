@@ -1,0 +1,143 @@
+
+<!--添加任务模态框-->
+<div class="modal fade" id="add_task" tabindex="-1" role="dialog" aria-labelledby="add_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> <span id="task_title">{:lang('add_task')}</span></h4>
+            </div>
+            <form class="form form-horizontal cdp_add_form" role="form" method="post" action="{:url('cdp/index/task_add')}">
+                <input type="hidden" name='device_id' value="{$device_data['id']}">
+                <input type="hidden" name='device_status' value="{$device_data['status']}">
+                <input type="hidden" name='harddisk_info' value='{$device_data["harddisk_info"]}'>
+
+                <div class="modal-body">
+                        <div class="box-body">
+
+                           <div style="display: none">
+                            {volist name="harddisk_list" id="vo0"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">{:lang('disk')}-{$vo0['harddiskindex']}</label>
+                                    <div class="col-sm-10">
+                                        {volist name="vo0.partitions" id="vo"}
+                                        {if condition="$vo.filesystem neq 'Linux LVM' "}
+                                        <div style="margin-bottom:5px;">
+                                            <input type="checkbox" checked="checked" name="partition[]"   value="{$vo['harddiskindex']}_{$vo['partitionindex']},{$vo['harddiskindex']},{$vo['partitionindex']},{$vo['totalsize']},{$vo['driverletter']}">
+                                            <span style="font-size:12px"><strong>{:lang('partition')}：{$vo['driverletter']}</strong>（{$vo['totalsize']|format_bytes}）</span>
+                                        </div>
+                                        {/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                            {/volist}
+                           </div>
+
+                            <div class="form-group" id="diskclone_storage" style="display: none">
+                                <label class="col-sm-2 control-label">{:lang('storage_path')}</label>
+                                <div class="col-sm-10" >
+                                    <select  name='storage_id' id="storage_id" class="form-control select2" style="width:100%;">
+                                        {volist name="storage_path_list" id="vo"}
+                                        <option disabled="disabled">{$vo['name']}</option>
+                                        {volist name="vo.storage_path" id="path"}
+                                        <option value="{$vo['id']}_{$path['id']}">{$path['path']}</option>
+                                        {/volist}
+                                        {/volist}
+                                        </if>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('synchar_duration')}</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  name="synchr_time" id="synchr_time" value="30" class="form-control" style="width:20%; display:inline-block" valign="center">
+                                    <select id="synchr_interval_type" id="synchr_interval_type" name="synchr_interval_type" class="form-control select2" style="width:20%;display:inline-block;"  >
+                                        <!--<option  value="sec" >{:lang('second')}</option>-->
+                                        <option  value="min" selected="selected" >{:lang('min')}</option>
+                                        <option  value="hour" >{:lang('hour')}</option>
+                                        <option  value="day" >{:lang('day')}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('snap_duration')}</label>
+                                <div class="col-sm-10">
+                                        <input type="text" id="snap_time" value="2" name="snap_time" class="form-control"  style="width:20%; display:inline-block" valign="center">
+                                        <select  name='snap_inter_type'  id="snap_inter_type" class="form-control snap_inter_type" style="width:20%;display: inline-block" >
+                                            <!--<option  value="sec" >{:lang('second')}</option>-->
+                                            <option  value="min" >{:lang('min')}</option>
+                                            <option  value="hour" >{:lang('hour')}</option>
+                                            <option  value="day" selected="selected">{:lang('day')}</option>
+                                        </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button type="submit" class="btn btn-success ajax-post auto_add_task add-cdp-task" target-form="cdp_add_form">{:lang('submit')}</button>
+                            </div>
+                        </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--编辑任务模态框-->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="edit_task"  id="edit_task" tabindex="-1" role="dialog" aria-labelledby="edit_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> <span id="edit_task_title">{:lang('edit_task')}</span></h4>
+            </div>
+            <form class="form form-horizontal cdp_edit_form" role="form" method="post" action="{:url('cdp/index/task_edit')}">
+                <input id="edit_task_id" type="hidden" name='task_id' value="">
+                <div class="modal-body">
+                    <div id='edit_conf_step2' name='edit_conf_step2' style="display: none;">
+                        <div class="box-body">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('synchar_duration')}</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  name="synchr_time" id="edit_synchr_time" class="form-control" style="width:20%; display:inline-block" valign="center">
+                                    <select id="edit_synchr_interval_type"  name="synchr_interval_type" class="form-control select2" style="width:20%;display:inline-block;"  >
+                                        <!--<option  value="sec" >{:lang('second')}</option>-->
+                                        <option  value="min" >{:lang('min')}</option>
+                                        <option  value="hour" >{:lang('hour')}</option>
+                                        <option  value="day" >{:lang('day')}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('snap_duration')}</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  name="snap_time" id="edit_snap_time" class="form-control" style="width:20%; display:inline-block" valign="center">
+                                    <select id="edit_snap_inter_type"  name="snap_inter_type" class="form-control select2" style="width:20%;display:inline-block;"  >
+                                        <!--<option  value="sec" >{:lang('second')}</option>-->
+                                        <option  value="min" >{:lang('min')}</option>
+                                        <option  value="hour" >{:lang('hour')}</option>
+                                        <option  value="day" >{:lang('day')}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button type="submit" class="btn btn-success ajax-post edit-cdp-task" target-form="cdp_edit_form">{:lang('submit')}</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

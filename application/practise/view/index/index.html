@@ -1,0 +1,194 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<!--<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">-->
+<link rel="stylesheet" href="__CSS__/style.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+
+            <!--<div class="pull-left">-->
+                <!--<a class="btn btn-default" href="javascript:" data_role="view_log" ><i class="fa fa-eye"></i>{:lang('view_log')}</a>-->
+            <!--</div>-->
+        </header>
+
+
+        <!--日志信息 begin-->
+        <div class="box box-default box-solid log_body info temp_info" style="display: none;">
+            <div class="box-header with-border"><h3 class="box-title">{:lang('log')}{:lang('info')}</h3></div>
+            <div class="box-body" style="max-height: 400px;overflow-x: auto">
+                <div class="clearfix">
+                    {if $logs}
+                    <ul class="timeline">
+                        {volist name="logs" id="item_time"}
+                        <li class="time-label">
+                                          <span class="bg-green" style="font-weight:normal; font-size:12px">
+                                            {$key}
+                                          </span>
+                        </li>
+                        {volist name="item_time" id="task"}
+                        <li>
+                            <i class="fa fa-arrow-right "></i>
+                            <div class="timeline-item">
+                                <span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i> {:date('H:i',$task.create_time)}</span>
+                                <h3 class="timeline-header" style="padding-top:3px; border-bottom:0">
+                                    <a class=" text-red" data_id="{$task.id}" href="javascript:">{$task.action_title}</a>
+                                </h3>
+                                <div class="timeline-body" style="padding: 2px 10px">
+                                    {$task.remark}
+                                </div>
+                                <div class="timeline-footer" style="padding: 2px 10px">
+                                    <label class="text-grey" style="font-size: 12px;">{$task.user_id|get_nickname}({$task.action_ip|long2ip})</label>
+                                </div>
+                            </div>
+                        </li>
+                        {/volist}
+                        {/volist}
+                        <!-- END timeline item -->
+                        <li>
+                            <i class="fa fa-clock-o bg-gray"></i>
+                        </li>
+                    </ul>
+                    {else/}
+                    <div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        <!-- 日志信息end -->
+
+        <div class="box-body clearfix">
+            <div class="table-responsive clearfix">
+                <table class="table table-hover ">
+                    <thead>
+                    <tr>
+                        <th><input class="checkbox check-all" type="checkbox"></th>
+                        <th>{:lang('id')}</th>
+                        <th >{:lang('ip')}</th>
+                        <th>{:lang('system_type')}</th>
+                        <th>{:lang('creation_time')}</th>
+                        <th>{:lang('operation')}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="item"}
+                    <tr >
+                        <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['device_id']}"></td>
+                        <td>{$item['device_id']|default=0}</td>
+                        <td >
+                            <div>
+                                <a class="ip_a btn-link status-{$item['data']['status']}" data-toggle="tooltip" data-html="true"   data-placement="top"  data-original-title="{$device_info_html}" data_role="instead_hostX" href="{:url('auto_config?id='.$item['device_id'])}" >
+                                    {$item['data']['ip']}
+                                    {if !empty($item['data']['alias'])}
+                                    ({$item['data']['alias']})
+                                    {/if}
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            {if $item['data']['system_type']=="Linux" }
+                            <i  class="fa fa-fw fa-linux system-font status-{$item['data']['status'] }"  title="Linux"></i>
+                            {else/}
+                            <i class="fa fa-fw fa-windows system-font status-{$item['data']['status'] } "  title="Windows"></i>
+                            {/if}
+                        </td>
+                        <td>{$item['create_time']}</td>
+                        <td>
+                            <a href="{:url('auto_config?id='.$item['device_id'])}" class="btn btn-default btn-xs">{:lang('configure')}</a>
+                            <!--{:url('del_device?id='.$item['device_id'])}-->
+                            <!--<a href="javascript:" class="del-device-btn" device-id="{$item['device_id']}">{:lang('delete')}</a>-->
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                {$page}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+
+
+    $(function() {
+
+        $('.device_config').iCheck({
+            labelHover: false,
+            cursor: true,
+            checkboxClass: 'icheckbox_minimal-blue',
+        });
+
+        /*增加设备*/
+        $(document).on('click', '[data_role="add_device"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            var id = $this.attr('data_id');
+            $("#add_device").modal('show');
+        });
+
+        $(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+
+//    $(".ip_a").mouseover(function(){
+//
+//        var obj = $(this);
+//        var ip = obj.html();
+//        var html = " ";
+//
+//        $.ajax({
+//
+//            url : '/cdp/index/get_system_info/ip/'+ip,
+//            type : 'get',
+//            async : true,
+//            dataType : 'json',
+//            success : function(res){
+//
+//                var totalMem = bytesToSize(res.total);
+//                var freeMem = bytesToSize(res.free);
+//
+//                html += "<div>{:lang('total_mem')}:" +  totalMem 　+　"<div>";
+//                html += "<div>{:lang('free_mem')}:" + freeMem +'<div>';
+//
+//                obj.attr('data-original-title',html)
+//
+//            }
+//        });
+//
+//    });
+        /*醒看设备信息*/
+        $(document).on('click', '[data_role="view_log"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            if($(".log_body").is(":hidden")){
+                $(".temp_info").hide();
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye-slash");
+                $('.log_body').slideToggle();
+            }else{
+                $this.find('i').removeClass();
+                $this.find('i').addClass("fa fa-eye");
+                $('.log_body').slideToggle();
+            }
+        })
+
+
+    });
+</script>
+{/block}

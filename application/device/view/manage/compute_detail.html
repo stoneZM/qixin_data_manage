@@ -1,0 +1,333 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/device.css">
+<style>
+    .legendLabel{color:#FFF;}
+    .list-group-item:first-child{border-radius:0}
+    .btn-group>button.delete-btn:hover{
+        background-color: #dd4b39;
+        border-color: #dd4b39;;
+        color: white;
+    }
+    .btn-group>button.start-btn:hover{
+        background-color: #3c8dbc;
+        border-color: #367fa9;
+        color: white;
+    }
+</style>
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+
+<div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_1-1"  role="tab" data-toggle="tab" >{:lang('compute_info')}</a></li>    
+        <li><a href="#tab_1-2" role="tab" data-toggle="tab" >{:lang('compute_pool')}{:lang('log')}</a></li>  
+        </ul>        
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_1-1">
+                <div class="box box-solid clearfix">
+                    <!--<header class="box-header clearfix">-->
+                        <!--<div class="pull-left">-->
+                            <!--<a href="{:url('manage/storage_space_add',array('storageid'=>$storage_data['id']))}" class="btn btn-primary"> <i class="fa fa-plus-circle fa-lg"></i> {:lang('storage_space_add')}</a>-->
+                            <!--<a href="{:url('manage/storage')}" class="btn btn-primary"> {:lang('back')}</a>-->
+                        <!--</div>-->
+                    <!--</header>-->
+                    <div class="box-body clearfix">
+            
+                        <h4>{:lang('compute_info')}
+                            <small>{:lang('state')}：
+                                {if $compute_info['status'] == 1}
+                                <span class="label label-success">{:lang('enable')}</span>
+                                {else/}
+                                <span class="label label-danger">{:lang('disable')}</span>
+                                {/if}
+                            </small>
+                    <span class="pull-right">
+                    <a href="{:url('manage/compute_edit',array('id'=>$compute_info['id']))}" class="btn btn-primary btn-sm" title="">{:lang('edit')}</a>
+                    {if $compute_info['status'] == 0}
+                    <a href="{:url('manage/compute_status',array('id'=>$compute_info['id'],'status'=>1))}" class="btn btn-primary btn-sm ajax-get">{:lang('enable')}</a>
+                    {else/}
+                    <a href="{:url('manage/compute_status',array('id'=>$compute_info['id'],'status'=>0))}" class="btn btn-primary btn-sm ajax-get">{:lang('disable')}</a>
+                    {/if}
+                    {if $compute_info['is_primary'] == 0}
+                    <a href="{:url('manage/compute_del',array('id'=>$compute_info['id']))}" class="btn btn-primary btn-sm confirm ajax-get">{:lang('delete')}</a>
+                    {/if}
+                    </span>
+                        </h4>
+                        <div class="clearfix" style="margin-bottom:5px"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="list-group " style="line-height:20px;margin-bottom:0; padding-right:0;">
+                                    <li class="list-group-item info-box-text col-md-12"><strong>{:lang('basic')}</strong></li>
+                                    <li class="list-group-item info-box-text col-md-4">{:lang('compute_name')}：<strong>{$compute_info['name']}</strong></li>
+                                    <li class="list-group-item info-box-text col-md-4">{:lang('compute_ip')}：<strong>{$compute_info['ip']}</strong></li>
+                                    <li class="list-group-item info-box-text col-md-4">{:lang('compute_port')}：<strong>{$compute_info['port']}</strong></li>
+            
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 20px">
+                            <div style="padding-left: 20px;" >
+                                <div class="btn-group" role="group" aria-label="..." >
+                                    <button type="button" class="btn btn-default shut-btn" data-role="shutdown">关机</button>
+                                    <button type="button" class="btn btn-default start-btn" data-role="start">开机</button>
+                                    <button type="button" class="btn btn-default delete-btn " data-role="delete">删除</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table user-list table-hover">
+                                <thead>
+                                <tr>
+                                    <th><input class="checkbox check-all" type="checkbox"></th>
+                                    <th>{:lang('id')}</th>
+                                    <th>{:lang('name')}</th>
+                                    <th>{:lang('client')}</th>
+                                    <th>{:lang('type')}</th>
+                                    <th>{:lang('memory')}</th>
+                                    <th>{:lang('cpu')}</th>
+                                    <th>{:lang('state')}</th>
+                                    <th>{:lang('operation')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="virtual_data" id="item"}
+                                <tr>
+                                    <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                                    <td>{$item['id']}</td>
+                                    <td>{$item['name']}</td>
+                                    <td>{$item['source_device_ip']}</td>
+                                    <td>
+                                        {if condition="$item['type'] eq 1"}
+                                             {:lang('exercise')}
+                                        {/if}
+                                        {if $item['type']==0}
+                                            {:lang('take_over')}
+                                        {/if}
+                                        {if $item['type']==3}
+                                            {:lang('remote_exercise')}
+                                        {/if}
+                                    </td>
+            
+            
+                                    <td>{$item['memory']*1024|format_bytes}</td>
+                                    <td>{$item['cpu_kernel']}</td>
+                                    <td>
+                                        {if condition="$item['status'] eq '0'"}
+                                        <span class="label label-danger">{:lang('off')}</span>
+                                        {elseif condition="$item['status'] eq '1'"/}
+                                        <span class="label label-success">{:lang('on')}</span>
+                                        {/if}
+                                    </td>
+
+                                    <td>
+                                        <div class="btn-group">
+
+                                            <a href="{:url('manage/virtual_detail',array('id'=>$item['id']))}" title="" class="btn btn-default btn-sm">{:lang('manage')} </a>
+
+                                            {if condition="$item['status'] eq '0'" }
+                                            <a href="{:url('manage/virtual_status',array('id'=>$item['id'],'status'=>1))}" class="ajax-get start_virtual btn btn-default btn-sm" type="start">{:lang('start_virtual')} </a>
+                                            {else/}
+                                            <a href="{:url('manage/virtual_status',array('id'=>$item['id'],'status'=>0))}" class="ajax-get stop_virtual btn btn-default btn-sm" type="stop">{:lang('stop_virtual')} </a>
+                                            {/if}
+                                            {if condition="$item['status'] eq '0'"}
+                                              <a href="{:url('manage/vnc',array('id'=>$item['id']))}" class="ajax-get btn btn-default btn-sm"target="_blank">{:lang('sign_in')}</a>
+                                            {elseif condition="$item['status'] eq '1'"/}
+                                              <a href="{:url('manage/vnc',array('id'=>$item['id']))}" class="btn btn-default btn-sm"  target="_blank">{:lang('sign_in')}</a>
+                                            {/if}
+                                            <a href="{:url('manage/virtual_del',array('id'=>$item['id'],'from'=>1))}" class="table-link confirm ajax-get delete_virtual btn btn-default btn-sm"  type="delete">{:lang('delete')}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            {$page}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_1-2">
+                {if $compute_log}
+                    <ul class="timeline">
+                    {volist name="compute_log" id="item_time"}
+                    <li class="time-label">
+                          <span class="bg-green" style="font-weight:normal; font-size:12px">
+                            {$key}
+                          </span>
+                    </li>
+                        {volist name="item_time" id="task"}
+                        <li>
+                          <i class="fa fa-arrow-right "></i>
+                          <div class="timeline-item">
+                            <span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i> {:date('H:i',$task.create_time)}</span>
+                            <h3 class="timeline-header" style="padding-top:3px; border-bottom:0"> 
+                            <a class="get_task_btn text-red" data_id="{$task.id}" href="javascript:">{$task.action_title}</a>
+                            </h3>
+                            <div class="timeline-body">
+                            {$task.remark}
+                            </div>
+                            <div class="timeline-footer">
+                            <label class="text-grey" style="font-size: 12px;">{$task.user_id|get_nickname}({$task.action_ip|long2ip})</label>
+                            </div>
+                          </div>
+                        </li>
+                        {/volist}
+                    {/volist}
+                    <!-- END timeline item -->
+                    <li>
+                      <i class="fa fa-clock-o bg-gray"></i>
+                    </li>
+                  </ul>
+                {else/}
+                <div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>
+                {/if}
+            </div>
+        </div>        
+    </div>
+
+<div class="modal" id="del_virtual_confirm" >
+    <div class="modal-dialog" style="margin-top: 150px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-fw fa-warning" style="font-size: 20px;color: red"></i> <span id="edit_task_title" class="operate_task_title">删除虚拟机</span></h4>
+            </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <form class="form form-horizontal" role="" id="" method="" action="">
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="del_task_id" name="id" value="">
+                                    <input type="hidden" id="task_status" name="status" value="">
+                                    <div>
+                                        <span class="tip-info" style="font-weight: bold;font-size: 15px;">
+                                            确定删除选中的虚拟机？
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                       </form>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-success click-confirm-btn">确认</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+</section>
+{/block}
+{block name="script"}
+<script type="application/javascript">
+
+    $(".start_virtual,.stop_virtual").click(function(){
+
+        var actionType = $(this).attr('type');
+        var actionTip = "";
+        var errorTip = "";
+        switch (actionType){
+            case "start":
+                actionTip = "正在开机...";
+                errorTip = "开机失败";
+                break;
+            case "stop":
+                actionTip = "正在关机...";
+                errorTip = "关机失败";
+                break;
+        }
+        friendlyTip(actionTip,errorTip,8000);
+    });
+
+    var url = '';
+    var ids = '';
+    var tipStr = '';
+    var status = '';
+
+   $(".btn-group>button").click(function (e) {
+
+       e.preventDefault();
+       var role = $(this).attr('data-role');
+       var inputs = $("input.ids:checked");
+       var obj = '';
+       for(var i=0;i<inputs.length;i++){
+           obj = inputs[i];
+           ids += obj.value + ";";
+       }
+       if(ids===''){
+           layer.msg('请选择虚拟机',{icon:5,time:2000});
+           return ;
+       }
+       if(role=='shutdown'){
+             status = 0;
+             tipStr = '关机';
+             url = "{:url('manage/virtual_status')}";
+
+       }
+       if(role=='start'){
+             status = 1;
+             tipStr = '开机';
+             url = "{:url('manage/virtual_status')}";
+
+       }
+       if(role=="delete"){
+             url = "{:url('manage/virtual_del')}";
+             tipStr = '删除';
+             status = -1;
+            $("#del_virtual_confirm").modal("show");
+            return ;
+       }
+
+       massOperation(ids,url,status,tipStr);
+   });
+
+    $(".click-confirm-btn").click(function(){
+        $("#del_virtual_confirm").modal("hide");
+        massOperation(ids,url,status,tipStr);
+    });
+
+    function massOperation(ids,url,status,tipStr){
+
+        friendlyTip('正在'+tipStr,tipStr+'失败',10000);
+        $.ajax({
+            url:url,
+            data:{id:ids,status:status,from:1},
+            async:true,
+            type:'post',
+            success:function(res){
+
+                if(res.code == 1){
+                    tipStr+= "成功!";
+                    var icon=1;
+                }else{
+                    var fail_count = res.f_count;
+                    var successs_count = res.s_count;
+                    tipStr =  successs_count + "成功! "+fail_count + "失败!" ;
+                    icon = 5
+                }
+                layer.msg(tipStr,{icon:icon,time:2000});
+                setTimeout("window.location.reload();",2000);
+            }
+        })
+    }
+
+</script>
+
+{/block}

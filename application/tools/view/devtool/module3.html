@@ -1,0 +1,75 @@
+{extend name="common@public/base"/}
+{block name="body"}
+    <section class="content-header">
+      <h1>第三步.导出用户行为<small>（请先在后台为模块建立对应的用户行为和行为限制）</small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix">
+    <div class="with-padding">
+        <div class="clearfix">
+
+            <div class="alert alert-info col-xs-6">
+               当前打包模块，<strong>{$module.alias}-{:session('module')}</strong>
+            </div>
+        </div>
+        <form action="{:url('module4')}" method="post">
+            <div class="clearfix">
+                <div class="lead">系统检测的用户行为</div>
+                {neq name="action" value=""}
+                    <div class="col-xs-5" >
+                    	<blockquote style="font-size:14px">
+                            {volist name="action" id="one"}
+                                <p><label> <span class="text-primary">【{$one.id}】-{$one.title} </span>&nbsp;&nbsp;&nbsp; {$one.name}</label></p>
+                            {/volist}
+                        </blockquote>
+                    </div>
+                    <div class="col-xs-4">
+                    <div class="lead">导出的引导脚本预览</div>
+                    <textarea name="action" class="form-control" style="height: 200px">{:json_encode($action)}</textarea>
+                    </div>
+                {else/}
+                    <div class="alert alert-success col-xs-6">未检测到任何的用户行为，如果确定不需要行为，可直接跳过本步骤</div>
+                {/neq}
+
+            </div>
+                <div class="clearfix">
+                    <div class="lead">系统检测的用户行为限制</div>
+                {neq name="action_limit" value=""}
+                    <div class="col-xs-5">
+                        <blockquote style="font-size:14px">
+                            {volist name="action_limit" id="one"}
+                                <p><label> <span class="text-primary">【{$one.id}】-{$one.name} </span>&nbsp;&nbsp;&nbsp; {$one.title}</label></p>
+                            {/volist}
+                        </blockquote>
+
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="lead">导出的引导脚本预览</div>
+                        <textarea name="action_limit" class="form-control" style="height: 200px">{:json_encode($action_limit)}</textarea>
+                    </div>
+                {else/}
+                    <div class="alert alert-success col-xs-6">未检测到任何的用户行为限制，如果确定不需要用户行为限制，可直接跳过本步骤</div>
+                {/neq}
+            </div>
+
+            <div class="with-padding">
+                <a class="btn  btn-default" href="{:url('module2')}">上一步</a>
+                <a class="btn btn-default" href="{:url('module3')}"><i class="icon-refresh"></i> 重新检测</a>
+                {neq name="havent_created" value=""}
+                    {php}$str='disabled="disabled"';{/php}
+                {/neq}
+                <input type="submit" id="next_step" style="width: 300px" title="{$title}" {$str} class="btn  btn-success"  value="下一步">
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+    </section> 
+{/block}

@@ -1,0 +1,77 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	
+	<div class="box-body clearfix">
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+				{volist name="$config_group_list" id="item"}
+				<li {if condition="$key eq $id"}class="active"{/if}>
+					<a href="{:url('config/group',array('id'=>$key))}">{:lang($item)}</a>
+				</li>
+				{/volist}
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab-home">
+					<form method="post" class="form form-horizontal" role="form">
+						{volist name="list" id="item"}
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{$item['title']}</label>
+							<div class="col-lg-10">
+								{switch name="item['type']"}
+								{case value="text"}
+								<input type="text" class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" value="{$item['value']}" placeholder="{$item['title']}" style="width:50%;">
+								{/case}
+								{case value="num"}
+								<input type="text" class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" value="{$item['value']}" placeholder="{$item['title']}" style="width:30%;">
+								{/case}
+								{case value="string"}
+								<input type="text" class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" value="{$item['value']}" placeholder="{$item['title']}" style="width:80%;">
+								{/case}
+								{case value="textarea"}
+								<textarea class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" style="width:80%; height:120px;">{$item['value']}</textarea>
+								{/case}
+								{case value="select"}
+								<select class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" style="width:auto;">
+									{volist name=":parse_config_attr($item['extra'])" id="vo"}
+									<option value="{$key}" {eq name="item['value']" value="$key"}selected{/eq}>{:lang($vo)}</option>
+									{/volist}
+								</select>
+								{/case}
+								{case value="bool"}
+								<select class="form-control" name="config[{$item['name']}]" id="config[{$item['name']}]" style="width:auto;">
+									{volist name=":parse_config_attr($item['extra'])" id="vo"}
+									<option value="{$key}" {eq name="item['value']" value="$key"}selected{/eq}>{:lang($vo)}</option>
+									{/volist}
+								</select>
+								{/case}
+								{/switch}
+								{if condition="$item['remark']"}
+								{/if}
+							</div>
+						</div>
+						{/volist}
+						<div class="form-group">
+							<div class="col-lg-offset-2 col-lg-10">
+								<button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">{:lang('submit')}</button>
+								<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</section>
+{/block}

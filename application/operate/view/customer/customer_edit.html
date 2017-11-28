@@ -1,0 +1,78 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<!-- 修改密码表单 -->
+		<form method="post" class="form-horizontal">
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('level')}：</label>
+				<div class="col-lg-4">
+                	<select class="form-control" name="level" style="width:100%;">
+                    {if $info.level eq ''}
+                    <option value="0" >{:lang('please_select')}</option>
+                    {/if}
+                    <option value="1" {if $info.level eq 1 } selected{/if} >1</option>
+                    <option value="2" {if $info.level eq 2 } selected{/if} >2</option>
+                    </select>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('name')}：</label>
+				<div class="col-lg-4">
+                    <input type="text" class="form-control" name="name" value="{$info.name}">
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('telephone')}：</label>
+				<div class="col-lg-4">
+                    <input type="text" class="form-control" name="telephone" value="{$info.telephone}">
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('email')}：</label>
+				<div class="col-lg-4">
+                    <input type="text" class="form-control" name="email" value="{$info.email}">
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('address')}：</label>
+				<div class="col-lg-4">
+                    <input type="text" class="form-control" name="address" value="{$info.address}">
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('state')}：</label>
+				<div class="col-lg-4">
+                	<select class="form-control" name="status" style="width:100%;">
+                    	<option value="0" {if $info.status eq 0 } selected{/if}>{:lang('disable')}</option>
+                        <option value="1" {if $info.status eq 1 } selected{/if}>{:lang('enable')}</option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+                	<input type="hidden" name="id" value="{$info['id']|default=''}">   
+					<button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="form-horizontal">{:lang('submit')}</button>
+					<button class="btn btn-default btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+{/block}

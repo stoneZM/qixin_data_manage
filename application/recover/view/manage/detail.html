@@ -1,0 +1,204 @@
+{extend name="common@public/base"/}
+{block name="style"}
+
+<!-- fullCalendar 2.2.5-->
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/fullcalendar/fullcalendar.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/fullcalendar/fullcalendar.print.css" media="print">
+<link rel="stylesheet" href="__CSS__/style.css">
+<link rel="stylesheet" href="__CSS__/style.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+            <a class="btn btn-primary" href="{:url('index')}" >{:lang('back')}</a>
+		</div>
+	</header>
+    <div class="box-body clearfix">
+        
+        <div class="clearfix"></div>
+        <div class="row">
+        	<div class="col-md-12 col-lg-12 col-xs-12">
+            	<div class="box box-default ">
+                	<div class="box-header with-border">
+                    
+                    <h3 class="box-title">
+                    
+                    {$move_info['source_ip']}→{$move_info['target_ip']}
+                    
+                    </h3>
+                    <div class="box-tools">
+                    {if condition="$move_info['status'] eq 0"}
+                    <span class="label bg-gray">{:lang('not_begin')}</span>
+                    {elseif condition="$move_info['status'] eq 1"}
+                    <span class="label bg-yellow">{:lang('have_in_hand')}</span>
+                    {elseif condition="$move_info['status'] eq 2"}
+                    <span class="label bg-green">{:lang('completed')}</span>
+                    {else}
+                    <span class="label bg-red">{:lang('fail')}</span>
+                    {/if}
+                    </div>
+                    </div>
+                	<div class="box-body">
+                    	<div class="device_list">
+                          <div class="col-xs-12">
+                            <div class="info-box">
+                            
+                            <span class="info-box-icon bg-gray"><i class="text-green qinfoicon qinfo-shebeileifuwuqi"></i></span>
+                            <span class="info-box-icon bg-gray pull-right"><i class="text-green qinfoicon qinfo-shebeileifuwuqichucun"></i></span>
+                          
+                          
+                              <div class="info-box-content" style="margin-right:90px;">
+                              
+                              <span class="info-box-text"><span class="pull-left">原机：{$source_info['alias']}</span><span class="pull-right">目标机：{$target_info['alias']}</span></span>
+                              <span class="info-box-text"><span class="pull-left">IP：{$move_info['source_ip']}</span><span class="pull-right">IP：{$move_info['target_ip']}</span></span>
+                              <span class="info-box-text">
+                              {if condition="$source_info['status'] eq 1"}
+                              <span class="pull-left label label-success">{:lang('online')}</span>
+                              {elseif condition="$source_info['status'] eq 2"}
+                              <span class="pull-left label label-danger">{:lang('offline')}</span>
+                              {/if}
+                              
+                              {if condition="$target_info['status'] eq 1"}
+                              <span class="pull-right label label-success">{:lang('online')}</span>
+                              {elseif condition="$target_info['status'] eq 2"}
+                              <span class="pull-right label label-danger">{:lang('offline')}</span>
+                              {/if}
+                              </span>
+                              <span class="info-box-number text-center" style="font-size:16px; color:#000"><span id="progress_text" >0%</span> <span id="speed_text" ></span> <span id="usetime_text" ></span></span>
+                              <span class="info-box-text">
+                                  <div class="progress" style="margin:5px 0">
+                                    <div class="progress-bar bg-green" id="progress_width" style="width: 0%; "></div>
+                                  </div>
+                              </span>
+                              </div>
+                              <div class="clearfix"></div>
+                              {volist name="versus" id="vo"}
+                              <div class="row" style="margin:8px 0">
+                                <div class="col-md-5 no-padding"><span class="label bg-green" style="font-weight:normal">快照节点: {$vo['snap']}</span></div>
+                                <div class="col-md-2 text-center"><i class="fa fa-arrow-right text-muted" style="font-size:14px;"></i></div>
+                                <div class="col-md-5 no-padding text-right"><span class="label bg-green" style="font-weight:normal">磁盘 <b>{$vo['disk']}</b></span></div>
+                              </div>
+                              {/volist}
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                    </div>
+                </div>
+                {if $is_temp!=0 && $move_info['status']==2}
+                    <div class="col-sm-12 async-box" style="display:none">
+                        <a href="{:url('start_task',array('id'=>$move_info['id'],'status'=>4))}" type="button" class="confirm ajax-get col-sm-4 col-sm-offset-4 btn btn-primary">同步增量数据</a>
+                    </div>
+                {/if}
+            </div>
+        	
+        </div>
+        
+        
+        
+    </div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script>
+var intervalProcess;
+
+$(document).ready(function(){
+
+    var taskId = "{$move_info['id']}";
+    var deviceStatus = "{$move_info['status']}";
+
+    var refresh_state = function(){
+
+        if( deviceStatus != 1){
+            clearInterval(intervalProcess);
+            return false;
+        }
+        $.ajax({
+            url: '/recover/manage/get_recover_state/id/'+taskId,
+            type: 'get',
+            async: true,
+            dataType:'json',
+            success: function (json) {
+                if(json == ""){
+                    clearInterval(intervalProcess);
+                }else{
+                    
+                    if(json.code == 0){
+						clearInterval(intervalProcess);
+						layer.msg(json.msg,{icon: 2, time: 2000});
+						return false;
+						//location.reload();
+                    }
+                    if(json.code == 2){
+                        $("#progress_width").width(100 + '%');
+                        $("#progress_text").html('已完成');
+                        $("#speed_text").html('');
+                        $("#usetime_text").html('');
+                        $(".async-box").show();
+                        clearInterval(intervalProcess);
+                        return false;
+                    }
+                    if(json.code == 1){
+                        var jsondata = json;
+                        var processVal = jsondata.progress;
+                        //var partitionList = jsondata.partition_status;
+                        $("#progress_width").width( processVal+ '%');
+                        if(json.istemp == 0)
+                        {
+                            var tempStr = "磁盘-";
+                        }
+                        else
+                        {
+                            var tempStr ="磁盘增量-";
+                        }
+                        processVal = "("+ tempStr+json.harddisk +") "+ processVal+ '%';
+                        $("#progress_text").html(processVal);
+                        if(jsondata.speed && jsondata.speed > 0){
+                            jsondata.speed =  bytesToSize(jsondata.speed)
+                        }else{
+                            jsondata.speed = '0k';
+                        }
+                        $("#speed_text").html(jsondata.speed+ '/s');
+                        $("#usetime_text").html(sToHms(jsondata.useTime));
+
+                    }
+                }
+            },
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				clearInterval(intervalProcess);
+		    },
+			complete: function(XMLHttpRequest, textStatus) {
+		 		if(textStatus != 'success'){
+					clearInterval(intervalProcess);
+				}
+		    }
+        });
+    }
+
+    if(deviceStatus == 1){
+        intervalProcess=setInterval(refresh_state,1000);
+    }else if(deviceStatus == 2){
+
+        $("#progress_width").width(100 + '%');
+        $("#progress_text").html('已完成');
+        $(".async-box").show();
+    }
+
+});
+
+</script>
+{/block}

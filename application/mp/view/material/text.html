@@ -1,0 +1,173 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+<style type="text/css">
+/* PIN BOARD */
+ul.notes{
+    margin-top: 10px;
+}
+ul.notes li,
+ul.tag-list li {
+  list-style: none;
+  cursor: pointer;
+}
+ul.notes li h4 {
+  margin-top: 20px;
+  font-size: 16px;
+}
+ul.notes li div {
+  text-decoration: none;
+  color: #000;
+  background: #ffc;
+  display: block;
+  height: 140px;
+  width: 140px;
+  padding: 1em;
+  position: relative;
+}
+ul.notes li div small {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 14px;
+}
+ul.notes li div a {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: inherit;
+}
+ul.notes li {
+  margin: 10px 40px 50px 0px;
+  float: left;
+}
+ul.notes li div p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 20px 0 !important;
+}
+ul.notes li div {
+  text-decoration: none;
+  color: #000;
+  background: #ffc;
+  display: block;
+  height: 140px;
+  width: 140px;
+  padding: 1em;
+  /* Firefox */
+  -moz-box-shadow: 5px 5px 2px #212121;
+  /* Safari+Chrome */
+  -webkit-box-shadow: 5px 5px 2px rgba(33, 33, 33, 0.7);
+  /* Opera */
+  box-shadow: 5px 5px 2px rgba(33, 33, 33, 0.7);
+}
+ul.notes li div {
+  -webkit-transform: rotate(-6deg);
+  -o-transform: rotate(-6deg);
+  -moz-transform: rotate(-6deg);
+}
+ul.notes li:nth-child(even) div {
+  -o-transform: rotate(4deg);
+  -webkit-transform: rotate(4deg);
+  -moz-transform: rotate(4deg);
+  position: relative;
+  top: 5px;
+}
+ul.notes li:nth-child(3n) div {
+  -o-transform: rotate(-3deg);
+  -webkit-transform: rotate(-3deg);
+  -moz-transform: rotate(-3deg);
+  position: relative;
+  top: -5px;
+}
+ul.notes li:nth-child(5n) div {
+  -o-transform: rotate(5deg);
+  -webkit-transform: rotate(5deg);
+  -moz-transform: rotate(5deg);
+  position: relative;
+  top: -10px;
+}
+ul.notes li div:hover,
+ul.notes li div:focus {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  position: relative;
+  z-index: 5;
+}
+ul.notes li div {
+  text-decoration: none;
+  color: #000;
+  background: #ffc;
+  display: block;
+  height: 210px;
+  width: 210px;
+  padding: 1em;
+  -moz-box-shadow: 5px 5px 7px #212121;
+  -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
+  box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
+  -moz-transition: -moz-transform 0.15s linear;
+  -o-transition: -o-transform 0.15s linear;
+  -webkit-transition: -webkit-transform 0.15s linear;
+}
+</style>
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="{:url('material/text')}" >文本素材</a></li>
+    <li class=""><a href="{:url('material/image')}" >图片素材</a></li>
+    <li class=""><a href="{:url('material/news')}" >图文素材</a></li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left">
+                    <a class="btn btn-primary" href="{:url('add',array('type'=>'text'))}" >添加文本素材</a>
+                 </div>
+                </div>
+                <div class="box-body">
+                        <div class="clearfix">
+                            <ul class="notes">
+                                 {volist name="list" id="vo"}
+                                <li data-url="{:url('edit',array('id'=>$vo['id']))}">
+                                    <div>
+                                        <small>{$vo.create_time}</small>
+                                        <p>{$vo.content}</p>
+                                        <a href="{:url('delete',array('id'=>$vo['id']))}" class="confirm ajax-get" confirm_msg ="删除此素材，可能会导致引用了该素材的内容不可用，是否确认要删除？"><i class="fa fa-trash-o "></i></a>
+                                    </div>
+                                </li>
+                                {/volist}
+                            </ul>
+                        </div>
+                        {$page}
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $('.notes li small,.notes li p').on('click', function() {
+			var url = $(this).parent('div').parent('li').attr('data-url');
+            window.location.href = url;
+        });
+    });
+</script>
+{/block}

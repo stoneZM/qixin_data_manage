@@ -1,0 +1,1008 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/device.css">
+<style>
+    .legendLabel{color:#FFF;}
+    .list-group-item:first-child{border-radius:0}
+    .timeline:before{left:9px}
+    .timeline>li>.timeline-item{ margin-left:20px; margin-right:0px}
+    .timeline>li>.fa, .timeline>li>.glyphicon, .timeline>li>.ion{ width:20px; height:20px; line-height:20px; font-size:12px; left:0px}
+    .disk-info-box{
+        text-align: center;
+        margin-top: 5px;
+        background-color: transparent;
+        border: 1px dotted #F0F0F0;
+        border-radius: 3px;
+    }
+
+
+</style>
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1-1"  class="device_group" role="tab" data-toggle="tab" >{:lang('basic')}</a></li>
+
+
+            {if $device_monitor.status == 1}
+            <li class=""><a href="#tab_1-2" class="device_group" id="{$device_data['id']}" role="tab" data-toggle="tab" >{:lang('device')}{:lang('monitor')}</a></li>
+            {/if}
+            <li class=""><a href="#tab_1-3" class="device_group" role="tab" data-toggle="tab" >{:lang('device')}{:lang('log')}</a></li>
+
+            <li class="left header">
+                <!--<a class="badge bg-light-blue" style="display:inline" href="javascript:" data_role="snmp_config" data_id="{$device_data['id']}" data_url="{:url('manage/device_snmp')}" ><i class="fa fa-cog"></i> {:lang('monitor_config')}</a>-->
+                <a class="badge bg-light-blue" style="display:inline" href="{:url('manage/device')}" > <i class="fa fa-arrow-circle-left"></i>{:lang('back')}</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_1-1">
+
+
+                <ul class="list-group col-md-3 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0;">
+                    <li class="list-group-item info-box-text"><strong>{:lang('hardware')}</strong></li>
+                    <li class="list-group-item info-box-text">&nbsp;I&nbsp;&nbsp;P&nbsp;：{$hardware_info['ip']}</li>
+                    <li class="list-group-item info-box-text" data-toggle="tooltip" data-html="true"  data-original-title="{$hardware_info['mac_desc']}"  data-placement="top" data_role="instead_hostX">
+                        MAC：{$hardware_info['mac_desc']}
+                    </li>
+                    <li class="list-group-item info-box-text">{:lang('cpu')}：{$hardware_info['cpu']}</li>
+                    <li class="list-group-item info-box-text">{:lang('memory')}：{$hardware_info['memory']|format_bytes}</li>
+                    <li class="list-group-item info-box-text">{:lang('state')}：
+                        {if condition="$device_data['status'] eq 1"}
+                        <span class="text-green-light">{:lang('agent_online')}</span>
+                        {else/}
+                        <span class="text-red">{:lang('agent_offline')}</span>
+                        {/if}
+                    </li>
+
+                </ul>
+                <ul class="list-group col-md-3 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0">
+                    <li class="list-group-item info-box-text"><strong>{:lang('system')}</strong></li>
+                    <li class="list-group-item info-box-text">{:lang('number')}：{$device_data['id']}</li>
+                    <li class="list-group-item info-box-text"  data-toggle="tooltip" data-html="true"  data-original-title="{$system_info['computername']}"  data-placement="top" data_role="instead_hostX">
+                        {:lang('computer_name')}：{$system_info['computername']}
+                    </li>
+
+                    <li class="list-group-item info-box-text"  data-toggle="tooltip"  data-html="true"  data-original-title="{$system_info['systemversion']}"  data-placement="top" data_role="instead_hostX">
+                        {:lang('system_version')}：{$system_info['systemversion']}
+                    </li>
+                    <li class="list-group-item info-box-text">{:lang('system_user')}：{$system_info['username']}</li>
+                    <li class="list-group-item info-box-text">{:lang('working_group')}：{$system_info['workgroup']}</li>
+                </ul>
+                <ul class="list-group col-md-6 col-xs-12" style="line-height:20px;margin-bottom:0; padding-right:0">
+                    <li class="list-group-item info-box-text"><strong>{:lang('software')}</strong></li>
+                    {if $software_count > 0}
+                    {volist name="software_info" id="soft"}
+                    <div class="col-md-{$software_class} no-padding">
+                        <li class="list-group-item info-box-text">{:lang('name')}：<span class="text-green-light" >{$soft['softname']}</span></li>
+                        <li class="list-group-item info-box-text">{:lang('version')}：{$soft['softversion']}</li>
+                        <li class="list-group-item info-box-text">{:lang('install_time')}：{$soft['softsetupdate']}</li>
+                        <li class="list-group-item info-box-text">{:lang('state')}：
+
+                            {if condition="$device_data['status'] eq 1"}
+                            {if condition="$soft['softstatus'] eq 1"}
+                            <span class="text-green-light">{:lang('online')}</span>
+                            {elseif condition="$soft['softstatus'] eq 0"}
+                            <span class="text-muted">{:lang('offline')}</span>
+                            {/if}
+                            {else/}
+                            <span class="text-muted">{:lang('offline')}</span>
+                            {/if}
+                        </li>
+
+                        <!--{if condition="$device_data['status'] eq 1"}-->
+                        <!--<li class="list-group-item info-box-text" style="padding:5px 10px">-->
+                        <!--{if condition="$soft['softstatus'] eq 1"}-->
+                        <!--<a  href="{:url('device/manage/soft_status',array('id'=>$device_data['id'],'status'=>0,'name'=>$soft['softname']))}" class="btn btn-sm btn-primary btn-success ajax-get  ">{:lang('stop')}</a>-->
+                        <!--{elseif condition="$soft['softstatus'] eq 0"}-->
+                        <!--<a  href="{:url('device/manage/soft_status',array('id'=>$device_data['id'],'status'=>1,'name'=>$soft['softname']))}" class="btn btn-sm btn-primary btn-danger ajax-get  ">{:lang('start')}</a>-->
+                        <!--{/if}-->
+                        <!--<a href="{:url('device/manage/update',array('id'=>$device_data['id'],'name'=>$soft['softname']))}" class="btn btn-sm btn-primary ajax-get ">{:lang('update')}</a>-->
+                        <!--<a href="{:url('device/manage/uninstall',array('id'=>$device_data['id'],'name'=>$soft['softname']))}" class="btn btn-sm btn-primary ajax-get loading">{:lang('uninstall')}</a>-->
+
+                        <!--{if condition="$soft['softstatus'] eq 1"}-->
+                        <!--<a  href="{:url('device/manage/soft_restart',array('id'=>$device_data['id'],'name'=>$soft['softname']))}" class="btn btn-sm btn-primary btn-success ajax-get  ">{:lang('restart')}</a>-->
+
+                        <!--{/if}-->
+
+                        <!--</li>-->
+
+                        <!--{else/}-->
+                        <!--<li class="list-group-item info-box-text">&nbsp;</li>   -->
+                        <!--{/if} -->
+                        <li class="list-group-item info-box-text">
+                            {if condition="$soft['softname'] eq 'clone' and $have_in_cdp eq 1"}
+                            <a class="go-into-cdp"  href="{:url('cdp/index/detail',array('id'=>$device_data['id'],'type'=>3))}">进入cdp管理</a>
+                            {else/}
+                            &nbsp;
+                            {/if}
+                        </li>
+                    </div>
+                    {/volist}
+
+                    {else/}
+                    <li class="list-group-item text-center" style=" height:206px; line-height:206px; font-size:18px">{:lang('not_app')}</li>
+                    {/if}
+                </ul>
+                <div class="clearfix"></div>
+                {if $harddisk_list}
+                <h4>{:lang('disk_info')}</h4>
+                <div class="panel-group">
+                    {volist name="harddisk_list" id="item_hdd"}
+                    <div class="box disk-info-box">
+
+                        <div class="box-body no-border">
+
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-1" style="padding:0 5px">
+                                <div class="" style="margin-bottom:5px">
+                                    <div class="border-radius-none">
+                                        <p class="info-box-text col-xs-4 col-sm-4 col-md-12 col-lg-12 no-padding"><strong><i class="glyphicon glyphicon-hdd"></i> {:lang('disk')}: {$item_hdd['harddiskindex']}</strong></p>
+                                        <p class="col-xs-4 col-sm-4 col-md-12 col-lg-12 no-padding"><span>{$item_hdd['aliasname']}</span></p>
+                                        <div class="col-xs-4 col-sm-4 col-md-12 col-lg-12 no-padding">
+                                            {$item_hdd['totalsize']|format_bytes}
+                                            ({:lang('online-x')})
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {if isset($item_hdd.partitions)}
+                            {volist name="item_hdd.partitions" id="item_partition" key="kk"}
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2" style="padding:0 5">
+                                <div class="box box-solid box-default" style="margin-bottom:0">
+                                    <div class="box-body border-radius-none">
+                                        <p class="info-box-text" data-toggle="tooltip"  data-html="true"  data-original-title="{$item_partition['volumelabel']} ({$item_partition['driverletter']}"  data-placement="top" data_role="instead_hostX"><strong>{$item_partition['volumelabel']}&nbsp;({$item_partition['driverletter']})</strong></p>
+                                        <p><span data-toggle="" data-placement="right" data-original-title="{:lang('starting_sector')}：{$item_partition['startoffset']}">{$item_partition['totalsize']|format_bytes}</span> {$item_partition['filesystem']}</p>
+                                        <div>
+                                            {:lang('goodstate')}
+                                            {if condition="$item_partition['hassystem'] eq 1"}
+                                            ({:lang('system')})
+                                            {/if}
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                            {/if}
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {/if}
+            </div>
+            <div class="tab-pane" id="tab_1-2">
+                <div id="monitor_msg"></div>
+                <div id="monitor_content" style="display:none">
+                    <div class="row">
+                        {if $device_data.is_memory}
+                        <div class="{$device_data['snmp_memory_class']|default="col-lg-4"}">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title">{:lang('memory')}</h3>
+                                <div class="box-tools pull-right">
+
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <h5>{:lang('memory_usage_record')} <small>
+                                    <span id="total_size_unit"></span>
+                                    <span id="used_size_unit"></span>
+                                </small></h5>
+                                <div id="flot_placeholder_memory" style="height: 300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+
+                    {if $device_data.is_cpu}
+                    <div class="{$device_data['snmp_cpu_class']|default='col-lg-8'}">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title">CPU</h3>
+                                <div class="box-tools pull-right">
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2">
+                                    <h5>{:lang('cpu_usage')}</h5>
+                                    <div id="monitor_cpu_all" class="monitor_cpu" style="height: 280px;"></div>
+                                    <div id="monitor_cpu_all_text" class="text-center" style="height: 20px;"></div>
+                                </div>
+                                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+                                    <h5>{:lang('cpu_usage_record')}</h5>
+                                    <div id="monitor_cpu" style="max-height: 300px; overflow-y:auto; overflow-x:hidden"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+                {if $device_data.is_storage}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title">{:lang('disk')}</h3>
+                                <div class="box-tools pull-right">
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="monitor_storage" style="height: 250px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                {if $device_data.is_course}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <div class="pull-left">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <h3 class="box-title">{:lang('process')}<small id="coures_count"></small></h3>
+                                </div>
+                                <div class=" pull-right">
+                                    <select name="s_course_type" class="form-control input-sm s_course_type" style="width:100%; float:left">
+                                        <option value="index,asc">PID {:lang('asc')}</option>
+                                        <option value="index,desc">PID {:lang('desc')}</option>
+                                        <option value="name,asc">{:lang('name')} {:lang('asc')}</option>
+                                        <option value="name,desc">{:lang('name')} {:lang('desc')}</option>
+                                        <option value="cpu,asc">CPU {:lang('asc')}</option>
+                                        <option value="cpu,desc">CPU {:lang('desc')}</option>
+                                        <option value="mem,asc">{:lang('memory')} {:lang('asc')}</option>
+                                        <option value="mem,desc">{:lang('memory')} {:lang('desc')}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="monitor_course" style="height: 250px;overflow-y:auto; overflow-x:hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if $device_data.is_net}
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <div class="pull-left">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <h3 class="box-title">{:lang('network_adapter')}</h3>
+                                </div>
+                                <div class=" pull-right">
+                                    <select name="s_net_type" class="form-control input-sm s_net_type" style="width:100%; float:left">
+                                        <option value="index,asc">ID {:lang('asc')}</option>
+                                        <option value="index,desc">ID {:lang('desc')}</option>
+                                        <option value="outoctets,asc">{:lang('send_out')} {:lang('asc')}</option>
+                                        <option value="outoctets,desc">{:lang('send_out')} {:lang('desc')}</option>
+                                        <option value="inoctets,asc">{:lang('receive')} {:lang('asc')}</option>
+                                        <option value="inoctets,desc">{:lang('receive')} {:lang('desc')}</option>
+                                        <option value="alloctets,asc">{:lang('total-x')} {:lang('asc')}</option>
+                                        <option value="alloctets,desc">{:lang('total-x')} {:lang('desc')}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="monitor_net" style=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title">{:lang('system_info')}</h3>
+                                <div class="box-tools pull-right">
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="monitor_system" style=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_1-3">
+            {if $device_log}
+            <ul class="timeline">
+                {volist name="device_log" id="item_time"}
+                <li class="time-label">
+                                  <span class="bg-green" style="font-weight:normal; font-size:12px">
+                                    {$key}
+                                  </span>
+                </li>
+                {volist name="item_time" id="task"}
+                <li>
+                    <i class="fa fa-arrow-right "></i>
+                    <div class="timeline-item">
+                        <span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i> {:date('H:i',$task.create_time)}</span>
+                        <h3 class="timeline-header" style="padding-top:3px; border-bottom:0">
+                            <a class="get_task_btn text-red" data_id="{$task.id}" href="javascript:">{$task.action_title}</a>
+                        </h3>
+                        <div class="timeline-body">
+                            {$task.remark}
+                        </div>
+                        <div class="timeline-footer">
+                            <label class="text-grey" style="font-size: 12px;">{$task.user_id|get_nickname}({$task.action_ip|long2ip})</label>
+                        </div>
+                    </div>
+                </li>
+                {/volist}
+                {/volist}
+                <!-- END timeline item -->
+                <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+            </ul>
+            {else/}
+            <div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>
+            {/if}
+        </div>
+    </div>
+
+    </div>
+
+    <div class="modal" id="snmp_edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('monitor_config')}<strong><span id='device_name_edit' class="form-control-static"></span></strong></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form form-horizontal device_edit_form" role="form" method="post" action="{:url('device/manage/snmp_edit')}">
+                        <input id='device_id' name='id'  type="hidden" />
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">{:lang('ip')}</label>
+                            <div class="col-lg-8"><input id='snmp_ip' name='snmp_ip' class="form-control input-sm"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">{:lang('snmp_name')}</label>
+                            <div class="col-lg-8"><input id='snmp_name' name='snmp_name' class="form-control input-sm"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">{:lang('port')}</label>
+                            <div class="col-lg-8"><input id='snmp_port' name='snmp_port' class="form-control input-sm"/></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">{:lang('state')}：</label>
+                            <div class="col-lg-8">
+                                <select class="form-control" name="snmp_status" id="snmp_status" style="width:auto;">
+                                    <option value="0" selected>{:lang('disable')}</option>
+                                    <option value="1">{:lang('enable')}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:20px; display:block">
+                            <label class="col-lg-3 control-label">{:lang('monitor_type')}</label>
+                            <div class="col-lg-9">
+                                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" id="snmp_config_cpu" class="snmp_config" name="snmp_config[]" value="cpu"> CPU</label>
+                                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" id="snmp_config_memory" class="snmp_config" name="snmp_config[]" value="memory"> {:lang('memory')}</label>
+                                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" id="snmp_config_storage" class="snmp_config" name="snmp_config[]" value="storage"> {:lang('storage')}</label>
+                                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" id="snmp_config_course" class="snmp_config" name="snmp_config[]" value="course"> {:lang('process')}</label>
+                                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" id="snmp_config_net" class="snmp_config" name="snmp_config[]" value="net"> {:lang('net')}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-3 col-lg-8">
+                                <button type="submit" class="btn btn-success ajax-post" target-form="device_edit_form">{:lang('submit')}</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{/block}
+{block name="script"}
+
+
+<script src="__PUBLIC__/adminlte/plugins/flot/jquery.flot.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/flot/jquery.flot.resize.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/flot/jquery.flot.time.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/flot/jquery.flot.pie.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/flot/jquery.flot.categories.min.js"></script>
+
+
+<script id="monitor_system_template" type="text/html">
+    <ul class="todo-list ui-sortable">
+        <li class="">{:lang("description")}：<!--[system_data['desc']]--></li>
+        <li class="info-box-text">{:lang("computer_name")}：<!--[system_data['name']]--></li>
+    </ul>
+</script>
+
+<script id="monitor_course_template" type="text/html">
+    <table class="table table-hover">
+        <tr>
+            <td class="" width="10%">PID</td>
+            <td class="" width="15%">{:lang("name")}</td>
+            <td class="" width="10%">CPU</td>
+            <td class="" width="10%">{:lang("memory")}</td>
+            <td class="">{:lang("route")}</td>
+        </tr>
+        <!--[each course_data as vo i]-->
+        <tr>
+            <td class=""><!--[vo['index']]--></td>
+            <td class=""><!--[vo['name']]--></td>
+            <td class=""><!--[vo['cpu_usage']]--></td>
+            <td class=""><!--[vo['mem']]--></td>
+            <td class=""><!--[vo['path']]--></td>
+
+        </tr>
+        <!--[/each]-->
+    </table>
+</script>
+
+<script id="monitor_net_template" type="text/html">
+    <table class="table table-hover">
+        <tr>
+            <td class="" width="5%">ID</td>
+            <td class="">{:lang("name")}</td>
+            <td class="" width="10%">{:lang("ip")}</td>
+            <td class="" width="10%">{:lang("mask")}</td>
+            <td class="" width="10%">{:lang("bandwidth")}</td>
+            <td class="" width="10%">{:lang("send_out")}({:lang("total-z")})</td>
+            <td class="" width="10%">{:lang("receive")}({:lang("total-z")})</td>
+            <td class="" width="10%">{:lang("total-x")}({:lang("total-z")})</td>
+        </tr>
+        <!--[each net_data as vo i]-->
+        <tr>
+            <td class=""><!--[vo['index']]--></td>
+            <td class=""><!--[vo['desc']]--></td>
+            <td class=""><!--[vo['addar']]--></td>
+            <td class=""><!--[vo['mask']]--></td>
+            <td class=""><!--[vo['speed']]--></td>
+            <td class=""><!--[vo['outoctets']]--></td>
+            <td class=""><!--[vo['inoctets']]--></td>
+            <td class=""><!--[vo['alloctets']]--></td>
+        </tr>
+        <!--[/each]-->
+    </table>
+</script>
+<script id="monitor_storage_template" type="text/html">
+    <!--[each storage_data as vo i]-->
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="info-box
+		<!--[if vo.use >90]-->
+		bg-red
+		<!--[else if vo.use >80 && vo.use <=90]-->
+		bg-yellow
+		<!--[else]-->
+		bg-green
+		<!--[/if]-->
+		">
+            <span class="info-box-icon"><i class="glyphicon glyphicon-hdd"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text"><!--[vo['description']]--></span>
+                <span class="info-box-number"><!--[vo['total_size_unit']]--></span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: <!--[vo['use']]-->%"></div>
+                </div>
+                <span class="progress-description">
+				{:lang("has_been")} <!--[vo['use']]-->%
+			  </span>
+            </div>
+        </div>
+    </div>
+    <!--[/each]-->
+</script>
+<script id="monitor_cpu_template" type="text/html">
+    <!--[each cpu_data as vo i]-->
+    <!--[if cpu_data.length < 6]-->
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 no-padding">
+        <!--[else]-->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 no-padding">
+            <!--[/if]-->
+
+            <!--[if cpu_data.length < 6]-->
+            <div id="monitor_cpu_<!--[i]-->" class="monitor_cpu" style="height: 300px;"></div>
+            <!--[else]-->
+            <div id="monitor_cpu_<!--[i]-->" class="monitor_cpu" style="height: 150px;"></div>
+            <!--[/if]-->
+        </div>
+    </div>
+    <!--[/each]-->
+</script>
+<script>
+
+
+    var totalPoints = 100;
+    var updateInterval = 1000;
+    var now = new Date().getTime();
+    var cpudata = [];
+
+    var options_memory = {
+        series: {
+            stack:true,
+            lines: {
+                show: true,
+                lineWidth: 1.2,
+                fill: false,
+            }
+        },
+        xaxis: {
+            mode: "time",
+            tickSize: [2, "second"],
+            tickFormatter: function (v, axis) {
+                var date = new Date(v);
+
+                if (date.getSeconds() % 20 == 0) {
+                    var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                    var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                    var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                    return hours + ":" + minutes + ":" + seconds;
+                } else {
+                    return "";
+                }
+            },
+            axisLabel: "Time",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 10
+        },
+        yaxis: {
+            min: 0,
+            max: 100,
+            tickSize: 10,
+            tickFormatter: function (v, axis) {
+                if (v % 20 == 0) {
+                    return v + "%";
+                } else {
+                    return "";
+                }
+            },
+            axisLabel: "Memory loading",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 6
+        },
+        legend: {
+            labelBoxBorderColor: "#fff"
+        },
+        grid: {
+            backgroundColor: "#000000",
+            tickColor: "#008040",
+            aboveData:false,
+            hoverable: true,
+            borderColor: "#f3f3f3",
+            borderWidth: 1,
+        }
+    };
+
+
+    var options_cpu = {
+        series: {
+            stack:true,
+            lines: {
+                show: true,
+                lineWidth: 1.2,
+                fill: true,
+            }
+        },
+        xaxis: {
+            mode: "time",
+            tickSize: [5, "second"],
+            tickFormatter: function (v, axis) {
+                var date = new Date(v);
+
+                if (date.getSeconds() % 60 == 0) {
+                    var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                    var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                    var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                    return hours + ":" + minutes + ":" + seconds;
+                } else {
+                    return "";
+                }
+            },
+            axisLabel: "Time",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 10
+        },
+        yaxis: {
+            min: 0,
+            max: 100,
+            tickSize: 20,
+            tickFormatter: function (v, axis) {
+                if (v % 20 == 0) {
+                    return v + "%";
+                } else {
+                    return "";
+                }
+            },
+            axisLabel: "Cpu loading",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 6
+        },
+        legend: {
+            labelBoxBorderColor: "#fff"
+        },
+        grid: {
+            backgroundColor: "#000000",
+            tickColor: "#008040",
+            aboveData:false,
+            hoverable: true,
+            borderColor: "#f3f3f3",
+            borderWidth: 1,
+        }
+    };
+    var options_cpu_all = {
+        series: {
+            stack:true,
+            lines: {
+                show: true,
+                lineWidth: 1.2,
+                fill: true,
+            }
+        },
+        xaxis: {
+            mode: "time",
+            tickSize: [100, "second"],
+            tickFormatter: function (v, axis) {
+                return '';
+            },
+            axisLabel: "Time",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 10
+        },
+        yaxis: {
+            min: 0,
+            max: 100,
+            tickSize: 10,
+            tickFormatter: function (v, axis) {
+                return '';
+            },
+            axisLabel: "CPU loading",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Verdana, Arial',
+            axisLabelPadding: 6
+        },
+        legend: {
+            labelBoxBorderColor: "#fff"
+        },
+        grid: {
+            backgroundColor: "#000000",
+            tickColor: "#008040",
+            aboveData:false,
+            hoverable: true,
+            borderColor: "#000000",
+            borderWidth: 1,
+        }
+    };
+    //Initialize tooltip on hover
+    $('<div class="tooltip-inner" id="line-chart-tooltip"></div>').css({position: "absolute",display: "none",opacity: 0.8}).appendTo("body");
+
+
+
+
+    $(function () {
+        function isEmptyObject(e) {
+            var t;
+            for (t in e)
+                return !1;
+            return !0
+        }
+        function set_loading(){
+            $('#monitor_msg').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-spinner fa-spin"></i> {:lang("struggling_to_load")} ...</div>');
+        }
+
+        function get_device(){
+
+            if(!device_id){
+                clear_task();
+                return false;
+            }
+            $.ajax({
+                url: '/device/manage/device_detail',
+                type: 'post',
+                data: {id:device_id,type:device_type,course_type:course_type,course_sort:course_sort,net_type:net_type,net_sort:net_sort,system_uptime:system_uptime},
+                async: true,
+                dataType:'json',
+                success: function (res) {
+                    if(res  &&  res.code == 0){
+                        $('#monitor_msg').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> '+res.msg+'</div>');
+                        $('#monitor_content').hide();
+                    }else{
+
+                        if(!res){
+                            clear_task();
+                            $('#monitor_content').hide();
+                            $('#monitor_msg').html('<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>');
+                            return false;
+                        }else{
+
+                            $('#monitor_content').show();
+                            if(res.system){
+                                $('#monitor_system').html(template('monitor_system_template', {system_data: res.system}));
+                                $('#coures_count').html(' 【'+res.system.service+'】');
+                                $('#monitor_msg').html('');
+                                system_uptime = res.system_uptime;
+                            }
+
+                            if(res.storage){
+                                $('#monitor_storage').html(template('monitor_storage_template', {storage_data: res.storage}));
+                                $('#monitor_msg').html('');
+                            }
+
+                            if(res.cpu){
+
+                                if(device_key == 0){
+                                    $('#monitor_cpu').html(template('monitor_cpu_template', {cpu_data: res.cpu}));
+                                    $(".monitor_cpu").bind("plothover", function (event, pos, item) {
+                                        if (item) {
+                                            var x = item.datapoint[0].toFixed(2),
+                                                    y = item.datapoint[1].toFixed(2);
+                                            $("#line-chart-tooltip").html("{:lang('usage')}：" + y + "%")
+                                                    .css({top: item.pageY + 5, left: item.pageX + 5})
+                                                    .fadeIn(200);
+                                        } else {
+                                            $("#line-chart-tooltip").hide();
+                                        }
+                                    });
+                                }
+                                $(res.cpu).each(function(index,dom){
+                                    if(device_key == 0){
+                                        cpudata[index] = getRandomData();
+                                        $.plot($("#monitor_cpu_"+index), [{ label: "&nbsp;&nbsp;cpu"+index, data: cpudata[index], color: "#00FF00" }], options_cpu);
+                                    }else{
+                                        cpudata[index] = getUpdaData(cpudata[index],dom);
+                                        $.plot($("#monitor_cpu_"+index), [{ label: "&nbsp;&nbsp;cpu"+index, data: cpudata[index], color: "#00FF00" }], options_cpu);
+                                    }
+                                });
+                                $('#monitor_msg').html('');
+
+                            }
+                            if(res.cpu_all){
+
+                                if(device_key == 0){
+                                    $("#monitor_cpu_all").bind("plothover", function (event, pos, item) {
+                                        if (item) {
+                                            var x = item.datapoint[0].toFixed(2),
+                                                    y = item.datapoint[1].toFixed(2);
+                                            $("#line-chart-tooltip").html("{:lang('usage')}：" + y + "%")
+                                                    .css({top: item.pageY + 5, left: item.pageX + 5})
+                                                    .fadeIn(200);
+                                        } else {
+                                            $("#line-chart-tooltip").hide();
+                                        }
+                                    });
+                                }
+
+                                cpu_all_data = [];
+                                for (i=0;i<100;i++) {
+                                    cpu_all_data.push([i, res.cpu_all]);
+                                }
+                                if(res.cpu_all>80 ){
+                                    v_color = "#ff0000";
+                                }else if(res.cpu_all >50 && res.cpu_all <= 80 ){
+                                    v_color = "#fcff00";
+                                }else{
+                                    v_color = "#00FF00";
+                                }
+                                $.plot($("#monitor_cpu_all"), [{ label: "", data: cpu_all_data, color: v_color }], options_cpu_all);
+
+                                $("#monitor_cpu_all_text").html(res.cpu_all + ' %');
+                                $('#monitor_msg').html('');
+
+                            }
+                            if(res.memory){
+                                if(device_key == 0){
+                                    $("#flot_placeholder_memory").bind("plothover", function (event, pos, item) {
+                                        if (item) {
+                                            var x = item.datapoint[0].toFixed(2),
+                                                    y = item.datapoint[1].toFixed(2);
+                                            $("#line-chart-tooltip").html("{:lang('usage')}：" + y + "%")
+                                                    .css({top: item.pageY + 5, left: item.pageX + 5})
+                                                    .fadeIn(200);
+                                        } else {
+                                            $("#line-chart-tooltip").hide();
+                                        }
+                                    });
+                                    memorydata_physical = getRandomData();
+                                    memorydata_virtual = getRandomData();
+
+                                    $.plot($("#flot_placeholder_memory"), [{ label: "&nbsp;&nbsp;{:lang('physical_memory')}", data: memorydata_physical, color: "#00FF00" },{ label: "&nbsp;&nbsp;{:lang('virtual_memory')}", data: memorydata_virtual, color: "#9a9817" }], options_memory);
+                                }else{
+                                    memorydata_physical = getUpdaData(memorydata_physical,res.memory['physical'].use);
+                                    memorydata_virtual = getUpdaData(memorydata_virtual,res.memory['virtual'].use);
+                                    $.plot($("#flot_placeholder_memory"), [{ label: "&nbsp;&nbsp;{:lang('physical_memory')}", data: memorydata_physical, color: "#00FF00" },{ label: "&nbsp;&nbsp;{:lang('virtual_memory')}", data: memorydata_virtual, color: "#9a9817" }], options_memory);
+                                }
+                                $("#total_size_unit").html('{:lang("total")}：'+res.memory['physical']['total_size_unit']);
+                                $("#used_size_unit").html('：'+res.memory['physical']['used_size_unit']);
+                                $('#monitor_msg').html('');
+                            }
+
+                            if(res.course){
+                                $('#monitor_course').html(template('monitor_course_template', {course_data: res.course}));
+                                $('#monitor_msg').html('');
+                            }
+                            if(res.net){
+                                $('#monitor_net').html(template('monitor_net_template', {net_data: res.net}));
+                                $('#monitor_msg').html('');
+                            }
+                            //device_type = 'memory,cpu,system';
+                            device_key = 1;
+                            set_task();
+                        }
+
+                    }
+                }
+            });
+        }
+
+        function getRandomData(){
+            nows = now;
+            fromdata = [];
+            for (i=0;i<100;i++) {
+                nows = nows + updateInterval;
+                fromdata.push([nows, -1]);
+            }
+            return fromdata;
+        }
+
+
+        function getUpdaData(fromdata,updata){
+            fromdata.shift(); //移除数组中的第一个项目
+            var args = fromdata[fromdata.length-1];
+            fromdata.push([args[0]+updateInterval, updata]);
+
+            return fromdata;
+        }
+
+
+
+        function get_data(device_id,device_type){
+            set_loading();
+            get_device();
+        }
+        function set_task(){
+            task_device = setTimeout(get_device, updateInterval);
+        }
+        function clear_task(){
+            clearTimeout(task_device);
+        }
+        var device_id = 0;
+        var device_type = "{$device_monitor['snmp_config']}";
+        var course_type = "index";
+        var course_sort = "asc";
+        var net_type = "index";
+        var net_sort = "asc";
+        var device_key = 0;
+        var task_device = '';
+        var system_uptime = '';
+
+        $('.device_group').on('shown.bs.tab', function (e) {
+            get_id = e.target.id;
+            if(!get_id){
+                clear_task();
+                $('#monitor_content').hide();
+                return false;
+            }else{
+                var device_monitor_status = "{$device_monitor['status']}";
+                if(!device_monitor_status){
+                    layer.msg('{:lang("set_monitor_configuration")}',{icon: 2, time: 2000});
+                    return false;
+                }
+                clear_task();
+                device_id = get_id;
+                get_data(get_id,'all');
+                //$.plot($("#flot_placeholder_memory"), dataset, options);
+            }
+        })
+        /*筛选*/
+        $(document).on('change', '.s_course_type', function (e) {
+            var $this = $(this);
+            var type_val = $this.val().split(",") ;
+            course_type = type_val[0];
+            course_sort = type_val[1];
+        })
+        $(document).on('change', '.s_net_type', function (e) {
+            var $this = $(this);
+            var type_val = $this.val().split(",") ;
+            net_type = type_val[0];
+            net_sort = type_val[1];
+        })
+        /*修改设备*/
+        $(document).on('click', '[data_role="snmp_config"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            var id = $this.attr('data_id');
+
+            if(!id){
+                layer.msg('{:lang("parameter_error_please_refresh_and_try_again")}',{icon: 2, time: 2000});
+                return false;
+            }
+            $.ajax({
+                url: '/device/manage/get_device_monitor',
+                type: 'get',
+                data: {deviceid:id},
+                async: true,
+                dataType:'json',
+                success: function (res) {
+                    if(res.code == 0){
+                        layer.msg(res.msg,{icon: 2, time: 2000});
+                        return false;
+                    }else{
+
+                        snmp_data = res.data;
+
+                        $("#device_id").val(id);
+
+                        if(snmp_data['ip']){
+                            $("#snmp_ip").val(snmp_data['ip']);
+                        }
+                        if(snmp_data['snmp_name']){
+                            $("#snmp_name").val(snmp_data['snmp_name']);
+                        }else{
+                            $("#snmp_name").val('public');
+                        }
+                        if(snmp_data['snmp_port']){
+                            $("#snmp_port").val(snmp_data['snmp_port']);
+                        }else{
+                            $("#snmp_port").val('161');
+                        }
+                        if(snmp_data['status']){
+                            $("#snmp_status").val(snmp_data['status']);
+                        }else{
+                            $("#snmp_status").val(0);
+                        }
+                        $('.snmp_config').iCheck({
+                            labelHover: false,
+                            cursor: true,
+                            checkboxClass: 'icheckbox_minimal-blue',
+                        });
+
+                        if(snmp_data['snmp_config']){
+                            $.each(snmp_data['snmp_config'], function(index, content){
+                                $("#snmp_config_"+content).iCheck('check');
+                            });
+                        }
+                        $("#snmp_edit").modal('show');
+
+                    }
+                }
+            });
+        })
+
+
+    });
+</script>
+{/block}

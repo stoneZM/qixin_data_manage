@@ -1,0 +1,78 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/cloud.css">
+{/block}
+{block name="body"}
+    <section class="content-header">
+      <h1>云市场扩展自动升级<small></small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> 控制台</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix col-lg-6 col-md-12">
+        {include file="Cloud/_updatingGoods"/}
+        {empty name="versionList"}
+            <div class="alert alert-success">已经是最新版本了哟</div>
+        {else/}
+            <div class="alert alert-info">
+                <p>当前需要升级的版本<strong>{$versionList.0.title}</strong></p>
+                <p>当前的版本号<strong>{$version.title}</strong></p>
+            </div>
+            <h4>可以升级的版本</h4>
+            <table class="table table-bordered table-striped table-hover ">
+                <thead>
+                <tr>
+                    <th style="width: 80px">版本号</th>
+                    <th style="width: 150px">发布时间</th>
+                    <th>更新日志</th>
+                </tr>
+                </thead>
+                {volist name="versionList" id="vo"}
+                    <tr>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.create_time|friendlyDate}</td>
+                        <td>{$vo.log|formatLog}</td>
+                    </tr>
+                {/volist}
+            </table>
+            <a href="{:url('Updating1',array('token'=>$token))}" class="btn btn-success btn-block btn-lg">开始升级</a>
+        {/empty}
+    </div>
+    </div>
+    </section> 
+{/block}
+{block name="script"}
+<script>
+$(function() {
+	//全选的实现
+	$('input[type="checkbox"].auth_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	});
+})
+                         
+function writeMessage($data) {
+	$('#message').append($data);
+}
+function replaceMessage($data) {
+	$('#message').children().last().remove();
+	$('#message').children().last().remove();
+	$('#message').append($data);
+}
+var progress = {
+	'show': function () {
+		$('#progress').parent().show();
+	},
+	'setValue': function ($value) {
+		$('#progress').css('width', $value);
+	},
+	'hide': function () {
+		$('#progress').parent().hide();
+	}
+}
+</script>
+{/block}

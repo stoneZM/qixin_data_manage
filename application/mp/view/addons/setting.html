@@ -1,0 +1,144 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    {volist name="mpnav" id="nav"}
+    <li class="{$nav.class}"><a href="{$nav.url}" >{$nav.title}</a></li>
+    {/volist}
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+            
+            	<ul class="nav nav-tabs">
+                {volist name="subnav" id="subnav"}
+                <li class="{$subnav.class}"><a href="{$subnav.url}" >{$subnav.title}</a></li>
+                {/volist}
+                </ul> 
+                <div class="box-body">
+                    
+                {if condition="$fields"}
+                <form method="post" action="" class="form-horizontal" role="form">
+                    {volist name="fields" id="vo"} 
+                    	<?php $keyname = $key; ?>
+                    
+                        {switch name="vo.type"}
+                            {case value="text"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        <input class="form-control" type="text" name="{$keyname}" placeholder="{$vo.placeholder}" value="{$vo.value}" {$vo.attr} />
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="password"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        <input class="form-control" type="password" name="{$keyname}" placeholder="{$vo.placeholder}" value="" />
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="email"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        <input class="form-control" type="email" name="{$keyname}" placeholder="{$vo.placeholder}" value="{$vo.value}" />
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="textarea"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        <textarea class="form-control" name="{$keyname}" placeholder="{$vo.placeholder}" rows="6">{$vo.value}</textarea>
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="select"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        <select name="{$keyname}" class="form-control">
+                                            {volist name="vo.options" id="vv"}
+                                            <option value="{$key}" {if condition="$vo['value'] eq $key"}selected{/if}>{$vv}</option>
+                                            {/volist}
+                                        </select>
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="radio"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        {volist name="vo.options" id="vv"}
+                                        <label class="radio-inline" style="padding-left:0">
+                                          <input type="radio" name="{$keyname}" value="{$key}" class="gl_checkbox" {if condition="$vo['value'] eq $key"}checked{/if}> {$vv}
+                                        </label>
+                                        {/volist}
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="checkbox"}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-3 control-label">{$vo.title}:</label>
+                                    <div class="col-sm-5 col-xs-8">
+                                        {volist name="vo.options" id="vv"}
+                                        <label class="checkbox-inline" style="padding-left:0">
+                                          <input type="checkbox" name="{$keyname}[]" class="gl_checkbox" value="{$key}" {if in_array($key, json_decode($vo['value'], true))} checked {/if}> {$vv}
+                                        </label>
+                                        {/volist}
+                                        <span class="help-block">{$vo.tip}</span>
+                                    </div>
+                                </div>
+                            {/case}
+                            {case value="hidden"}
+                                <input type="hidden" name="{$vo.name}" value="{$vo.value}" />
+                            {/case}
+                        {/switch}
+                    {/volist}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-5 col-xs-8">
+                            <input type="submit" value="确认提交" class="btn btn-primary ajax-post"  target-form="form-horizontal" />
+                        </div>
+                    </div>
+                </form>
+                {/if}   
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+<script>
+
+	//全选的实现
+	$('input[type="checkbox"].gl_checkbox, input[type="radio"].gl_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	  radioClass: 'iradio_minimal-blue'
+	});
+</script>
+{/block}

@@ -1,0 +1,535 @@
+<script src="__PUBLIC__/adminlte/plugins/echart/echarts-all-3.js"></script>
+<div class="col-lg-12">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="box-title">服务监控<small>&nbsp;&nbsp;</small></div>
+            <div class="box-tools pull-right"></div>
+        </header>
+        <div class="box-body clearfix">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="4">服务器实时数据</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<tr>
+                        <th width="20%">服务器域名/IP地址</th>
+                        <td width="30%"><span id="getServerHosts"><i class="fa fa-spinner fa-spin"></i></span></td>
+                        <th width="20%">主机/操作系统</th>
+                        <td width="30%"><span id="getServerHostName"><i class="fa fa-spinner fa-spin"></i><span></td>
+                    </tr>
+                    <tr>
+                        <th width="20%">服务器当前时间</th>
+                        <td width="30%"><span id="currentTime"><i class="fa fa-spinner fa-spin"></i></span></td>
+                        <th width="20%">服务器已运行时间</th>
+                        <td width="30%"><span id="uptime"><i class="fa fa-spinner fa-spin"></i></span></td>
+                    </tr>
+                    <tr>
+                        <th>CPU型号</th>
+                        <td colspan="3"><span id="cpu_cores"><i class="fa fa-spinner fa-spin"></i></span></td>
+                    </tr>
+                    <tr>
+                        <th>内存</th>
+                        <td colspan="3">
+                        	<div class="stxt" id="MemoryOne"><i class="fa fa-spinner fa-spin"></i></div>
+                            <div class="stxt" id="MemoryTwo"></div>
+                         </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="cpustatus" style="width: 100%; height: 300px;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="font-size:18px; font-weight:bold">内存使用率</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="main" style="width: 100%;height:200px;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><div id="hddstatus" style="width: 100%; height:300px"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="network">
+            
+            
+            </div>
+        </div>
+    </div>
+	
+</div>
+
+<script type="text/javascript">
+
+	var cpu_data = [];
+	var cpuPercent = 0;
+	var now = +new Date();
+	var time = [];
+	var _data = [];
+	var option = {};
+	var cpuChart = '';
+	var MemoryChart = '';
+	var hddChart = '';
+	var percent = ['MemoryPercent', 'MemoryCachedPercent', 'MemoryRealPercent', 'SwapPercent'];
+	var hddoption ={};
+	var inputSpeed = [], outSpeed = [];
+	
+	var Time_num = 0;
+	
+	
+	function ForDight(Dight,How)
+	{ 
+		if (Dight<0){
+			var Last=0+"B\/s";
+		}else if (Dight<1024){
+			var Last=Math.round(Dight*Math.pow(10,How))/Math.pow(10,How)+"B\/s";
+		}else if (Dight<1048576){
+			Dight=Dight/1024;
+			var Last=Math.round(Dight*Math.pow(10,How))/Math.pow(10,How)+"K\/s";
+		}else{
+			Dight=Dight/1048576;
+			var Last=Math.round(Dight*Math.pow(10,How))/Math.pow(10,How)+"M\/s";
+		}
+		return Last; 
+	}
+	
+	
+	
+	function size_format(bytes, decimals=4){
+		if (bytes === 0) return '0 B';  
+	
+		var k = 1024;  
+		sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];  
+		i = Math.floor(Math.log(bytes) / Math.log(k));
+	
+		return (bytes / Math.pow(k, i)).toPrecision(decimals) + ' ' + sizes[i];
+	}
+	
+	function getRealTime() {
+		setTimeout("getRealTime()", 5000);
+		$.ajax({
+			url: '/api/index/monitor',
+			type: 'get',
+			dataType: 'json',
+			success: function (jsondata) {
+				
+		
+			
+			$("#getServerHosts").html(jsondata['serivce']['getServerHosts']);
+			$("#getServerHostName").html(jsondata['serivce']['getServerHostName']+'/'+jsondata['serivce']['getServerOS']);
+			$("#cpu_cores").html('['+jsondata['svrinfo']['cpu']['cores']+'] '+jsondata['svrinfo']['cpu']['model']);
+			$("#currentTime").html(jsondata['currentTime']);
+			$("#uptime").html(jsondata['uptime']);
+			
+			
+			var _MemoryOnehtml = '物理内存：共 '+jsondata['MemoryTotal']+' 已用 '+jsondata['MemoryUsed']+','+' 空闲 '+jsondata['MemoryFree'];
+			
+			if(jsondata['svrinfo']['sBool'] > 0 ){
+				_MemoryOnehtml += ' - SWAP区：共 '+jsondata['SwapTotal']+' 已用 '+jsondata['SwapUsed']+','+' 空闲 '+jsondata['SwapFree'];
+			}
+			$("#MemoryOne").html(_MemoryOnehtml);
+
+			
+			var _MemoryTwohtml = '' ;
+			if(jsondata['svrinfo']['rBool'] > 0 ){
+				_MemoryTwohtml += '真实内存使用 '+jsondata['MemoryRealUsed']+' ,真实内存空闲 '+jsondata['MemoryRealFree'];
+			}
+			if(jsondata['svrinfo']['cBool'] > 0 ){
+				_MemoryTwohtml += ' - Cache：'+jsondata['MemoryCached']+' | Buffers缓冲为  '+jsondata['Buffers'];
+			}
+			$("#MemoryTwo").html(_MemoryTwohtml);
+			
+			var all_disk = jsondata['all_disk'];
+			var hddName=  jsondata['disk_info']['hddName'];
+			var hddFreePercent= jsondata['disk_info']['hddFreePercent'];
+			var hddUsedPercent= jsondata['disk_info']['hddUsedPercent'];
+			
+			newhddoption = {
+				legend: {
+					data: ['已用空间', '总空间']
+				},
+				grid: {
+					left: '3%',
+					right: '4%',
+					bottom: '3%',
+					containLabel: false
+				},
+				xAxis : [  
+					{   name:'' , type : 'value',  
+						axisLabel: {show:true},  
+						splitLine: {show:true},
+			
+					}  
+				],
+				tooltip: {
+					formatter: function(obj) {
+						disk_data = obj;
+						_html="";
+						_html +="["+disk_data.name+"]<br>";
+						_html +="总空间："+size_format(all_disk[disk_data.name]['hddTotal'])+"<br>";
+						_html +="已用空间："+size_format(all_disk[disk_data.name]['hddUsed'])+"<br>";
+						_html +="可用空间："+size_format(all_disk[disk_data.name]['hddFree'])+"<br>";
+
+						return _html;
+					}
+				},
+				yAxis : [  
+					{     
+						name:'',
+						offset:0,
+						position:'left',
+						axisLabel : {
+							show:false,
+							interval: 'auto',    // {number}
+							rotate: -30,
+							margin: 5,
+							formatter: '{value}',    // Template formatter!
+							showMinLabel:false,
+							showMaxLabel:true,
+							textStyle: {
+								color: 'red',
+								fontFamily: 'verdana',
+								fontSize: 14,
+								fontStyle: 'normal',
+								fontWeight: 'bold'
+							},
+							 
+						},
+						type : 'category' ,   
+						axisTick : {show: false},
+						data : hddName,
+						 
+					},  
+					{  
+						name:'',
+						type : 'category',  
+						axisLine: {show:false},axisTick: {show:false},axisLabel: {show:false},splitArea: {show:false},splitLine: {show:false},  
+						data:  hddName
+						
+					}  
+				],
+				series: [{
+					name: '已用空间',
+					type: 'bar',
+					stack: 'income',
+					barWidth: 30,
+					itemStyle: {
+						normal: {  
+							color:'rgba(221,75,57,1)',borderRadius: 5,label : {show: true , position: 'inside'}  
+						},
+					},
+					label: {
+						normal: {
+							show: true,
+							position: 'insideRight',
+							formatter: function(obj) {
+								return  '已用 '+ obj.value +' %';
+							}
+						}
+					},
+					data: hddUsedPercent
+				}, {
+					name: '总空间',
+					type: 'bar',
+					stack: 'income',
+					barWidth: 30,
+					itemStyle: {normal: {  
+						color:'rgba(0,166,90,1)',borderRadius: 5,label : {show: true, position: 'inside'}  
+					}},
+					label: {
+						normal: {
+							show: true,
+							position: 'insideRight',
+							formatter: function(obj) {
+								
+								return '总空间 '+ size_format(all_disk[obj.name]['hddTotal'])+' 可用 '+ obj.value +' %';
+							}
+						},
+						
+					},
+					data:hddFreePercent 
+				}]
+			};
+			hddChart.setOption(newhddoption);
+			hddChart.hideLoading(); 
+			
+			
+			cpuPercent = jsondata['cpuPercent'];
+			cpu_data.shift();
+			cpu_data.push(randomData(cpuPercent));
+			cpuChart.setOption({
+				series: [{
+					data: cpu_data
+				}]
+			});
+			
+			var memory_type = ['物理内存', 'Cache', '真实内存', 'SWAP'];
+			var is_memory = [jsondata['svrinfo']['mBool'],jsondata['svrinfo']['cBool'],jsondata['svrinfo']['rBool'],jsondata['svrinfo']['sBool']];
+		
+			var memoryoptions = [];
+			var centers = 15;
+			for(var i=0;i<memory_type.length;i++)
+			{
+				if(is_memory[i]){
+					memoryoptions[i] = {
+						name: memory_type[i],
+						type: 'gauge',
+						radius: '80%',
+						center: [centers + '%', '50%'],
+						axisLine: {
+							show: true,
+							lineStyle: {
+								width: 10
+							}
+						},
+						splitLine: {
+							show: true,
+							length: '15%'
+						},
+						axisTick: {
+							show: true,
+							length: '10%'
+						},
+						axisLabel: {
+							show: true,
+							textStyle: {
+								fontSize: 9
+							}
+						},
+						detail: {
+							show: true,
+							formatter:'{value}%',
+							offsetCenter: ['0', '65%'],
+							textStyle: {
+								fontSize: '14'
+							}
+						},
+						pointer: {
+							width: 5
+						},
+						data: [{value: 50, name: memory_type[i]}]
+					};
+					centers = centers + 23;
+				}else{
+					memoryoptions[i] = "";
+				}
+			}
+		
+			option = {
+				tooltip : {
+					formatter: "{a} <br/>{b} : {c}%"
+				},
+				series: memoryoptions
+			};
+			for (var i=0; i<percent.length; i++)
+			{
+				if(jsondata[percent[i]] !== null){
+					option.series[i].data[0].value = jsondata[percent[i]];	
+				} 
+			}
+			
+			MemoryChart.setOption(option, true);
+			MemoryChart.hideLoading(); 
+
+			if(jsondata['svrinfo']['nBool']){
+				
+				var items = jsondata['Network'];
+				
+				var net_html = '';
+				
+				net_html += '<table class="table">';
+                net_html += '<thead>';
+                net_html += '<tr>';
+                net_html += '<th colspan="4" style="font-size:18px; font-weight:bold">网络使用状况</th>';
+                net_html += '</tr>';
+                net_html += '</thead>';
+                net_html += '<tbody>';
+                net_html += '<tr>';
+                net_html += '<td class="text-center" width="15%">设备</td>';
+                net_html += '<td class="text-center" width="35%">接收</td>';
+                net_html += '<td class="text-center" width="35%">发送</td>';
+                net_html += '<td class="text-center" width="15%">错误/丢失</td>';
+                net_html += '</tr>';
+				
+				for(var item in items)
+				{
+                    net_html += '<tr>';
+                    net_html += '<td class="text-center">'+items[item].name+'</td>';
+						
+						
+					if(Time_num == 0){
+						net_html += '<td class="text-center"><span>'+items[item].rxbytes+'</span></td>';
+						net_html += '<td class="text-center"><span>'+items[item].txbytes+'</span></td>';
+					}else{
+						net_html += '<td class="text-center"><span>'+items[item].rxbytes+'</span>(<span class="stxt">'+ForDight((items[item].rxspeed-inputSpeed[items[item].name]), 3)+'</span>)</td>';
+						net_html += '<td class="text-center"><span>'+items[item].txbytes+'</span>(<span class="stxt">'+ForDight((items[item].txspeed-outSpeed[items[item].name]), 3)+'</span>)</td>';
+					}
+					net_html += '<td class="text-center"><span>'+items[item].errors+'</span> / <span>'+items[item].drops+'</span></td>';
+                    net_html += '</tr>';
+					
+					inputSpeed[items[item].name] = items[item].rxspeed;
+					outSpeed[items[item].name] = items[item].txspeed;
+                }
+				net_html += '</tbody>';
+				net_html += '</table>';
+				$(".network").html(net_html);
+				
+			}
+			
+			
+			Time_num ++ ;
+			},
+			complete: function (XHR, TS) { XHR = null } 
+		})
+
+	}
+	function getMemory()
+	{
+		MemoryChart = echarts.init(document.getElementById('main'));
+		MemoryChart.showLoading({  
+			text : "图表数据正在努力加载...",effect :'whirling',textStyle : {fontSize : 20 }  
+		});  
+	}
+	function randomData(cpuval)
+	{
+		now = new Date(+now + 1000);
+		time = (now).getTime();
+		_data = {
+			name: time,
+			value: [
+				time,
+				cpuval
+			]
+		};
+		return _data;
+	}
+	// cpu使用率
+	function getCpuStatus()
+	{
+		cpuChart = echarts.init(document.getElementById('cpustatus'));
+		for (var i = 0; i < 60; i++) {
+			cpu_data.push(randomData(cpuPercent));
+		}
+		var option = {
+			title: {
+				show: true,
+				text: '处理器使用率',
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+			xAxis: {
+				type : 'time',
+				splitLine: {
+					show: false
+				}
+			},
+			yAxis: {
+				type: 'value',
+				boundaryGap: [0, '100%'],
+				max: 100,
+				splitLine: {
+					show: true
+				},
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			series: [{
+				name: 'CPU使用率',
+				type: 'line',
+				showSymbol: false,
+				hoverAnimation: false,
+				data: cpu_data
+			}]
+		};
+		cpuChart.setOption(option);
+	}
+	// 磁盘使用率
+	function getHdd(){
+		
+		hddChart = echarts.init(document.getElementById('hddstatus'));
+		hddoption = {
+			title : {text: '磁盘使用率'},  
+			legend: {
+				data: ['已用空间', '总空间']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: false
+			},
+			xAxis : [  
+				{   name:'' , type : 'value',  
+					axisLabel: {show:true},  
+					splitLine: {show:true},
+				}  
+			],
+
+			yAxis : [  
+				{     
+					data : [],
+				},  
+				{  
+					data:  []
+				}  
+			],
+			series: [{
+				name: '已用空间',
+				type: 'bar',
+				stack: 'income',
+				barWidth: 30,
+				itemStyle: {
+					normal: {  
+						color:'rgba(221,75,57,1)',borderRadius: 5,label : {show: true , position: 'inside'}  
+					},
+				},
+				label: {
+					normal: {
+						show: true,
+						position: 'insideRight',
+					}
+				},
+				data: []
+			}, {
+				name: '总空间',
+				type: 'bar',
+				stack: 'income',
+				barWidth: 30,
+				itemStyle: {normal: {  
+					color:'rgba(0,166,90,1)',borderRadius: 5,label : {show: true, position: 'inside'}  
+				}},
+				label: {
+					normal: {
+						show: true,
+						position: 'insideRight',
+					},
+				},
+				data:[] 
+			}]
+		};
+		hddChart.showLoading({  
+			text : "图表数据正在努力加载...",effect :'whirling',textStyle : {fontSize : 20 }  
+		});  
+		hddChart.setOption(hddoption);  
+		//hddChart.hideLoading();  
+		
+	}	
+
+	
+	$(document).ready(function(){
+		getCpuStatus();
+		getMemory();
+		getHdd();
+		getRealTime();
+	})
+</script>

@@ -1,0 +1,83 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body">
+    <iframe name="upload" style="display: none"></iframe>
+    <form class="form form-horizontal" id="form" method="post" target="upload" enctype="multipart/form-data" action="{:\\think\\Url::build($Request.action)}">
+    	<div class="form-group">
+            <label class="col-lg-2 control-label">图片：</label>
+            <div class="col-lg-5">   
+                <input type="file" class="form-control" placeholder="图片" name="file" datatype="*" nullmsg="请选择上传文件">     
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary ">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default "  onclick="javascript:history.back(-1);return false;">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+    <p class="c-red">请参考百度编辑器，百度编辑器集成七牛上传</p>
+    <div id="markdown" class="mt-20"></div>
+</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/showdown/1.4.2/showdown.min.js"></script>
+<script>
+    $(function () {
+		
+		
+        var converter = new showdown.Converter(),
+                text      = $("#markdown_tpl").html();
+        $("#markdown").html(converter.makeHtml(text));
+    })
+</script>
+{literal}
+<script type="text/plain" id="markdown_tpl">
+---
+方法
+```
+\Qiniu::instance()->upload();
+```
+html代码：
+```
+<iframe name="upload" style="display: none"></iframe>
+<form class="form form-horizontal" id="form" method="post" target="upload" enctype="multipart/form-data" action="{:\\think\\Url::build($Request.action)}">
+	<div class="form-group">
+		<label class="col-lg-2 control-label">图片：</label>
+		<div class="col-lg-5">   
+			<input type="file" class="form-control" placeholder="图片" name="file" datatype="*" nullmsg="请选择上传文件">     
+			<span class="help-block"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-2 col-lg-10">
+			<button type="submit" class="btn btn-primary ">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+			<button type="button" class="btn btn-default "  onclick="javascript:history.back(-1);return false;">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+		</div>
+	</div>
+</form>
+```
+php代码：
+```
+return '<s1cript>parent.layer.alert("仅做演示")</s1cript>'; // 去掉sc中间的1，markdown解析失败
+/*$result = \Qiniu::instance()->upload();
+p($result);*/
+```
+</script>
+{/literal}
+{/block}

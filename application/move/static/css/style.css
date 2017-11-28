@@ -1,0 +1,13 @@
+/**/
+.fa-arrow-right{
+    color: #f6f6f6;
+}
+.info-box{
+    background-color: transparent;
+    color: #f6f6f6;
+}
+
+.box.box-default>.box-header{
+    background-color:rgba(0,0,0,0.35);
+    color: #F7F7F7;
+}

@@ -1,0 +1,32 @@
+<h4 style="padding-top: 0;margin-top: 0">即将升级的扩展</h4>
+<ul class="module-list">
+    <li class="clearfix" style="margin-bottom: 0">
+        <div class="cover-w">
+             <div class="cover-icon"><i class="fa fa-{$goodsInfo.icon}"></i></div>       
+        </div>
+        <div class="content-w">
+            <div class="title">
+                <a href="{:url('admin/Module/edit', array('name' => $goodsInfo['name']))}">{$goodsInfo.alias} <span class="text-muted">{$goodsInfo.name}</span></a>
+                <div class="pull-right"><span class="label label-info">{$goodsInfo.version_info.title}</span>
+                    {empty name="goodsInfo.update_list"}
+                    {else/}
+                        <a style="text-decoration: none"><span class=" label label-success ">最新版{$goodsInfo.update_list.0.title}</span></a>
+                    {/empty}
+                </div>
+            </div>
+            <div>
+                <p class="text-muted text-ellipsis">{$goodsInfo.summary}</p>
+            </div>
+            <div>开发者：<a style="color: #666">{$goodsInfo.developer}</a></div>
+            <div class="clearfix bottom-btns">
+                <div class="pull-right">
+                    {empty name="goodsInfo.token"}
+                        <span class="label label-circle label-danger">本地模块</span>
+                    {else/}
+                        <a target="_blank"  href="{:appstoreU('goods/index/goodsdetail',array('token'=>$goodsInfo['token']))}" class="btn btn-info">去云市场查看</a>
+                    {/empty}
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>

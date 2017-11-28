@@ -1,0 +1,55 @@
+{extend name="public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<div class="page-group">  
+<div class="page page-current">
+  <header class="bar bar-nav">
+    <h1 class="title">应用产品</h1>
+  </header>
+    <div class="bar bar-tab">
+        <a class="tab-item " href="{:url('index')}"> <span class="icon icon-home"></span> <span class="tab-label">首页</span></a>
+        <a class="tab-item active" href="{:url('product')}"> <span class="icon iconfont icon-chanpin1"></span> <span class="tab-label">产品</span></a>
+        <a class="tab-item " href="{:url('plan')}"> <span class="icon iconfont icon-fangan"></span> <span class="tab-label">方案</span></a>
+        <a class="tab-item " href="{:url('service')}"> <span class="icon iconfont icon-fuwu2"></span> <span class="tab-label">服务</span></a>
+    </div>
+    <div class="content">
+    <div class="page-index">
+        {if $list}
+        <div class="card">
+          <div class="card-content">
+            <div class="list-block media-list">
+              <ul>
+                {volist name="list" id="vo"}
+                <li>
+                <a href="{:url('detail',array('id'=>$vo['id']))}" class="item-link item-content">
+                  <div class="item-media"> <img src="{:get_thumb($vo.cover_id,200,200)}" width="44"> </div>
+                  <div class="item-inner">
+                    <div class="item-title-row">
+                      <div class="item-title">{$vo.title}</div>
+                    </div>
+                  </div>
+                 </a>
+                </li>
+                {/volist}
+              </ul>
+              <div class="pagination_body">{$page}</div>
+            </div>
+          </div>
+        </div> 
+       {/if}
+    </div>
+    </div>
+</div>
+</div>
+{/block}
+{block name="script"} 
+<script>
+  //打开自动初始化页面的功能
+  //建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+  $.config = {
+    autoInit: true,
+	router:false
+  }
+</script> 
+{/block}

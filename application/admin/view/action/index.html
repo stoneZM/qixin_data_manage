@@ -1,0 +1,74 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<!--<a class="btn btn-primary" id="action_add" href="{:url('add')}">{:lang('add')}</a>-->
+			<!--<button class="btn btn-success ajax-post" target-form="ids" url="{:url('setstatus',['status'=>1])}" >{:lang('enable')}</button>-->
+			<!--<button class="btn btn-default ajax-post" target-form="ids" url="{:url('setstatus',['status'=>0])}">{:lang('disable')}</button>-->
+			<!--<button class="btn btn-danger ajax-post confirm" target-form="ids" url="{:url('del')}">{:lang('delete')}</button>-->
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<!-- 数据列表 -->
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="row-selected row-selected">
+						<input class="check-all" type="checkbox"/>
+					</th>
+					<th class="">{:lang('id')}</th>
+					<th class="">{:lang('identifying')}</th>
+					<th class="">{:lang('name')}</th>
+					<th class="">{:lang('type')}</th>
+					<th class="">{:lang('description')}</th>
+					<th class="">{:lang('state')}</th>
+					<!--<th class="">{:lang('operation')}</th>-->
+				</tr>
+			</thead>
+			<tbody>
+				{volist name="list" id="vo"}
+					<tr>
+						<td>
+							<input class="ids" type="checkbox" name="id[]" value="{$vo['id']}" />
+						</td>
+						<td>{$vo.id}</td>
+						<td >{$vo.name}</td>
+						<td>
+							<a href="{:url('edit?id='.$vo['id'])}" class="btn-link">{$vo.title}</a>
+						</td>
+						<td>
+							<span>{:get_action_type($vo['type'])}</span>
+						</td>
+						<td>{$vo.remark}</td>
+						<td>{$vo.status_text}</td>
+						<!--<td>-->
+							<!--<a href="{:url('edit?id='.$vo['id'])}">{:lang('edit')}</a>-->
+							<!--{if $vo['status']}-->
+							<!--<a href="{:url('setstatus',array('id'=> $vo['id'],'status'=>0))}" class="ajax-get">{:lang('disable')}</a>-->
+							<!--{else/}-->
+							<!--<a href="{:url('setstatus',array('id'=> $vo['id'],'status'=>1))}" class="ajax-get">{:lang('enable')}</a>-->
+							<!--{/if}-->
+							<!--<a href="{:url('del' , array('id' => $vo['id']))}" class="confirm ajax-get">{:lang('delete')}</a>-->
+						<!--</td>-->
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+		<!-- 分页 -->
+		{$page}
+		<!-- /分页 -->
+	</div>
+</div>
+</section>
+{/block}

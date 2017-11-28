@@ -1,0 +1,432 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+<style>
+    .btn-group .mount-btn:hover,.umount-btn:hover{
+        background-color: #337ab7;
+        border-color: #2e6da4;
+        color: #fff;
+    }
+    .btn-group>.delete-btn:hover{
+        background-color: #dd4b39;
+        border-color: #d73925;
+        color: #fff;
+    }
+    .btn-group>.browse-btn:hover{
+        background-color: #f0ad4e;
+        border-color: #eea236;
+        color: #fff;
+    }
+</style>
+{/block}
+
+{block name="body"}
+<section class="content-header">
+    <h1>{:lang('mount_manage')}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="pull-left">
+                <a class="btn btn-primary" href="javascript:" data_role="add_device" >{:lang('add')}</a>
+            </div>
+        </header>
+        <div class="box-body clearfix">
+            {if count($data)==0}
+                <p class="text-danger" style="text-align: center;">
+                    <i style="font-size:  16px;" class="glyphicon glyphicon-exclamation-sign"></i>
+                    <b style="font-size:  18px;"> &nbsp;没有挂载任务</b>
+                </p>
+            {else/}
+            <div class="table-responsive clearfix">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th><input class="checkbox check-all" type="checkbox"></th>
+                        <th>{:lang('id')}</th>
+                        <th>{:lang('source_ip')}</th>
+                        <th>{:lang('snap')}</th>
+                        <th>{:lang('state')}</th>
+                        <th>{:lang('creation_time')}</th>
+                        <th>{:lang('operation')}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="data" id="item"}
+                    <tr>
+                        <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                        <td class="task-list" data-status="{$item['status']}" data-id="{$item['id'] }">{$item['id']|default=0}</td>
+                        <td >{$item['source_ip']}</td>
+                        <td>{$item['snap_id']}</td>
+                        <td>
+                            {if condition="$item['status'] eq 0"}
+                            <span class="label bg-gray">{:lang('not_mount')}</span>
+                            {elseif condition="$item['status'] eq 1"}
+                            <span class="label bg-green">{:lang('mounted')}</span>
+                            {elseif condition="$item['status'] eq 2"}
+                            <span class="label bg-red">{:lang('mounted_error')}</span>
+                            {else}
+                            <span class="label bg-red">{:lang('fail')}</span>
+                            {/if}
+                        </td>
+                        <td>{$item['create_time']|date='Y-m-d H:i:s',###}</td>
+                        <td>
+                            <div class="btn-group">
+                            <a href="{:url('browse_task?id='.$item['id'])}" class="btn btn-default btn-sm browse-btn">{:lang('browse')}</a>
+                            {if condition="$item['status'] eq 0"}
+                            <a href="{:url('mount_task?id='.$item['id'])}" class="confirm ajax-get btn btn-default btn-sm mount-btn">{:lang('mount')}</a>
+                            {/if}
+                            {if condition="$item['status'] eq 1"}
+                            <a href="{:url('umount_task?id='.$item['id'])}" class="confirm ajax-get btn btn-default btn-sm umount-btn">{:lang('umount')}</a>
+                            {/if}
+                            <a href="{:url('delete_task?id='.$item['id'])}" class="confirm ajax-get btn btn-default btn-sm delete-btn">{:lang('delete')}</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                {$page}
+            </div>
+            {/if}
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="add_device">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form form-horizontal add_task" role="form" method="post" action="{:url('add_task')}">
+                    <div id='conf_step1' name='conf_step1' style="display:block">
+                        <div class="box-header no-padding">步骤 1/2：请选择挂载设备及任务节点</div>
+                        <div class="box-body">
+                            <select id='source_device' name='source_device' class="form-control source_device" style="width:100%;margin-top:20px; display:block">
+                                <option value="0"> 请选择要挂载的设备</option>
+                                {volist name="sourcedevice" id="vo"}
+                                <option value="{$vo['id']}" >{$vo['ip']}({$vo['alias']})</option>
+                                {/volist}
+                            </select>
+                            <div class="source_hdd" style="margin-top:10px"></div>
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button class="have-choose-task btn btn-default" type="button" style="display: none;" onclick="conf_nextto(1,2,'conf_step');">{:lang('next')}</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id='conf_step2' name='conf_step2' style="display:none">
+                    <div class="box-header no-padding">步骤 2/2：请选择要挂载的磁盘快照点</div>
+                    <div class="box-body">
+                        <div class="vmdk-content">
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button id="edit-hidden" type="button" class="btn btn-default step2_last"  onclick="conf_nextto(2,1,'conf_step');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-success ajax-post " target-form="add_task">{:lang('submit')}</button>
+							&nbsp;
+                            <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="" style="display:none">
+                    {volist name="sourcedevice" id="vo"}
+                    <div class="source_hd_{$vo['id']}">
+                        <span>请选择该设备中的任务</span>
+                        <select id='source_device_task' name='device_task' class="form-control target_device" style="width:100%;margin-top:20px; display:block">
+                            {if condition="count($vo.task) eq 0"}
+                                <option value="" >无任务节点可选</option>
+                            {else/}
+                            <option value="" >请选择任务节点</option>
+                            <?php foreach($vo['task'] as $k=>$v): ?>
+                            <option value="{$v['id']}" >{$v['create_time']|date='Y-m-d H:i:s',###}--(快照数量:{$v['snap_count']})</option>
+                            <?php endforeach; ?>
+                            {/if}
+                        </select>
+                    </div>
+                    {/volist}
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+
+<script type="text/javascript">
+    $(function() {
+        $(document).on('click', '[data_role="add_device"]', function (e) {
+
+            e.preventDefault();
+            var $this = $(this);
+            var id = $this.attr('data_id');
+            $("#add_device").modal('show');
+        });
+
+        var sourcdDeviceId = 0;
+        var sourceId = 0;
+        $(".source_device").on("change", function (e) {
+            $('.partition-selected').iCheck('destroy');
+            var source_device_val = $(this).val();
+            sourceId = source_device_val;
+            if(sourcdDeviceId != source_device_val){
+                  $('.target_hd').html('');
+                  $('.vmdk-content').html('');
+            }
+            if(source_device_val ==0){
+                $('.source_hdd').html('');
+            }else{
+                var htmlstring = $('.source_hd_'+source_device_val).html();
+                if(htmlstring == ''){
+                    $('.source_hdd').html('找不到设备信息');
+                }else{
+                    $('.source_hdd').html(htmlstring);
+                }
+            }
+        });
+
+    var preTaskId = 0;
+    $('.have-choose-task').click(function(){
+        var taskId = $('#source_device_task').val();
+        if(preTaskId == taskId){
+            return false;
+        }
+        var htmlStr = '';
+        if(!taskId){
+            htmlStr = '没有选取正确的任务节点,无法选取磁盘';
+        }else{
+            $.ajax({
+                url: '/mount/manage/getVmdk',
+                type: 'get',
+                data: {id:taskId},
+                async: true,
+                dataType:'json',
+                success: function (res){
+                    if(res.code != 1){
+                        htmlStr = res.msg;
+                        $('.vmdk-content').html(htmlStr);
+                     }else{
+                        $('.vmdk-content').html('');
+                        var jsonData = res.data;
+
+                        if(!(jsonData instanceof Array)){
+                            var temp = new Array();
+                            for (var obj in jsonData){
+                                   temp.push(jsonData[obj]);
+                            }
+                            jsonData = temp;
+                        }
+
+                        var snapTypeStr = '';
+                        htmlStr += '<div class="form-group">';
+                        htmlStr += '<label class="col-sm-2 control-label">';
+                        htmlStr += "选择磁盘:";
+                        htmlStr += '</label>'
+                        htmlStr += '<div class="col-sm-10">';
+                        htmlStr += '<div class="checkbox-inline no-padding ">';
+                        htmlStr += '<select name="harddisk_index" class="form-control choose_harddisk"  >';
+                        var selectStr='';
+                        for(var a=0;a<jsonData.length;a++){
+                            if(a==0)
+                                selectStr = 'selected="selected"';
+                            else
+                                selectStr = '';
+                            htmlStr += '<option '+selectStr+' value="'+a+'" >磁盘- '+ a +'</option>'  ;
+                        }
+                        htmlStr += '<select></div></div></div>';
+
+                        htmlStr += '<div class="form-group">';
+                        htmlStr += '<label class="col-sm-2 control-label">';
+                        htmlStr += "选择快照:";
+                        htmlStr += '</label>';
+                        htmlStr += '<div class="col-sm-10">';
+                        htmlStr += '<div class="checkbox-inline no-padding">';
+                        var styleStr = '';
+                        for(var i= 0;i<jsonData.length;i++){
+                            var snaps = jsonData[i];
+                            if(i==0)
+                                styleStr = '';
+                            else
+                                styleStr = 'display: none';
+                            htmlStr += '<select name="snap"  class="form-control snap_inter_type choose_snap"  style="'+styleStr+'" id="harddisk_index_snap_'+i+'" >';
+                            htmlStr += '<option value="">请选择快照节点</option>'
+                            for(var j=0;j<snaps.length;j++){
+                                var obj = snaps[j];
+                                if (obj.virtual_id != 0){
+                                    if(obj.virtual_type == 1){
+                                        snapTypeStr = "( " + "演练机" + ")";
+                                    }
+                                    if(obj.virtual_type === 0){
+                                        snapTypeStr = "( " + "接管机" + ")";
+                                    }
+                                }
+                               htmlStr +=  '<option  value='+obj.id+'>'+formateTime(obj.create_time)+snapTypeStr+'</option>';
+                               snapTypeStr = '';
+                            }
+                            htmlStr += '</select>';
+                            htmlStr += '</div></div></div>';
+                        }
+                        $('.vmdk-content').html(htmlStr);
+                    }
+                }
+            });
+
+        }
+        preTaskId = taskId;
+    });
+
+       $(".vmdk-content").delegate('select.choose_harddisk','change',function(){
+           var harddiskIndex = $('select.choose_harddisk>option:selected').val();
+           var idName = '#harddisk_index_snap_'+harddiskIndex;
+       	$(".choose_snap").hide();
+	    $(idName).show();
+       });
+
+        function formateTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+        }
+
+        $('.have-choose-snap').click(function(){
+
+        var targetDeviceId = $('#target_device').val();
+       if(targetDeviceId == 0){
+           return false;
+       }else{
+           $('#target_device').change();
+
+       }
+
+    });
+
+
+    $("#target_device").on("change", function (e) {
+
+            var snaps = new Array();
+            var disks = new Array();
+            $('.choose_snap').each(function(){
+                var idStr = $(this).val();
+                if(idStr){
+                    snaps.push(idStr.split('_')[0]);
+                    disks.push(idStr.split('_')[1])
+                }
+            });
+
+            var targetId = $(this).val();
+            $.ajax({
+                url: '/mount/manage/getDevice',
+                type: 'get',
+                data: {id:targetId,sourceId:sourceId},
+                async: true,
+                dataType:'json',
+                success: function (res) {
+                    var jsonData = res.data;
+                    if(res.code == 0){
+                        $('.target_hd').html('');
+                        layer.msg(res.msg,{icon: 2, time: 2000});
+                    }else{
+                        var diskInfo = jsonData.harddisk_info;
+                        var diskSize = jsonData.disk_size;
+
+                        $box_html = '';
+                        $box_html += '<div class="row" style="margin-bottom:10px"><div class="col-md-5">';
+                        $box_html += '原机';
+                        $box_html += '</div>';
+                        $box_html += '<div class="col-md-2 text-center">';
+                        $box_html += '';
+                        $box_html += '</div>';
+                        $box_html += '<div class="col-md-5 ">';
+                        $box_html += '目标机';
+                        $box_html += '</div></div>';
+
+                        for(var i=0; i<disks.length;i++){
+
+                            var indexKey = "harddiskindex_"+disks[i];
+                            var size = diskSize[indexKey];
+
+                            $box_html += '<div class="row" style="margin-bottom:10px"><div class="col-md-5">';
+                            $box_html += '<span class="btn  btn-default">磁盘-'+disks[i] +" (" + size + ") "+'</span>';
+                            $box_html += '</div>';
+                            $box_html += '<div class="col-md-2 ">';
+                            $box_html += '<i class="fa fa-arrow-right text-muted" style="font-size:16px;margin-top:8px"></i>';
+                            $box_html += '</div>';
+                            $box_html += '<div class="col-md-5">';
+                            $box_html += '<select name="target_disk_index" class="form-control migration_source_target" data_migration_source="'+'">';
+                            $box_html += '<option value="">请选择</option>';
+                            for(var j=0;j<diskInfo.length;j++){
+                                $box_html += '<option value="'+snaps[i]+':'+diskInfo[j].harddiskindex+'">'+'磁盘-'+diskInfo[j].harddiskindex+" ("+diskInfo[j].totalsize+") "+'</option>';
+                            }
+                            $box_html += ' </select>';
+                            $box_html += '</div></div>';
+                        }
+                        $('.target_hd').html($box_html);
+                    }
+                }
+            });
+        });
+
+    });
+
+
+    //显示下一步的按钮
+    $('.source_hdd').delegate('#source_device_task','change',function(e){
+        var  task_id = $(this).val();
+        if(task_id)
+            $('.have-choose-task').show();
+        else
+            $('.have-choose-task').hide();
+    });
+
+    $('.vmdk-content').delegate('.choose_snap','change',function(){
+
+       $('.choose_snap').each(function(){
+          if($(this).val()){
+              $('.have-choose-snap').show();
+              return false;
+          }else{
+              $('.have-choose-snap').hide();
+          }
+       });
+    });
+
+
+    function conf_nextto(s,t,idPre)
+    {
+        if(s==1)
+        {
+            document.getElementById('partition[]');
+        }
+        if(s)
+        {
+            targetid= idPre+s;
+            if (document.getElementById){
+                target=document.getElementById(targetid);
+                if (target.style.display=="block"){
+                    target.style.display="none";
+                } else {
+                    target.style.display="block";
+                }
+            }
+        }
+        if(t)
+        {
+            targetid= idPre+t;
+            if (document.getElementById){
+                target=document.getElementById(targetid);
+                if (target.style.display=="block"){
+                    target.style.display="none";
+                } else {
+                    target.style.display="block";
+                }
+            }
+        }
+    }
+</script>
+{/block}

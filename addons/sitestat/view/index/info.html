@@ -1,0 +1,62 @@
+<div class="col-lg-12">
+    <div class="box box-solid clearfix">
+        <header class="box-header clearfix">
+            <div class="box-title">{:lang('software_info')}</div>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+        </header>
+        <div class="box-body clearfix">
+            <div class="row">
+            	<div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-purple">
+                            <i class="qinfoicon qinfo-fuwuqi1"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">{:lang('storage_pool')}</span>
+                            <span class="info-box-number">{$info['storage']}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green">
+                            <i class="qinfoicon qinfo-dulifuwuqi"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">{:lang('compute_pool')}</span>
+                            <span class="info-box-number">{$info['compute']}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red">
+                            <i class="qinfoicon qinfo-msnui-server"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">{:lang('device')}</span>
+                            <span class="info-box-number">{$info['device']}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua">
+                            <i class="qinfoicon qinfo-computer"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">{:lang('user')}</span>
+                            <span class="info-box-number">{$info['users']}</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+    
+        </div>
+    </div>
+	
+</div>

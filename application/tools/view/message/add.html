@@ -1,0 +1,272 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/validform/5.3.2/Validform.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<form method="post" id="form" class="form form-horizontal">
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('name')}</label>
+				<div class="col-lg-8">
+                	<input type="text" class="form-control" placeholder="{:lang('name')}" name="title" nullmsg="请填写名称" datatype="s" required="true" errormsg="名称必须是字符串" value="{$data.title}" >
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('mapping_name')}</label>
+				<div class="col-lg-8">
+				  <input type="text" class="form-control" placeholder="字母，例如demo,用于通信连接" name="name" errormsg="4-16位英文字母" required="true" value="{$data.name}" datatype="/^(?!\d+$)[A-z]{4,16}$/" nullmsg="请填写映射名">
+				</div>
+			</div>
+          <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('message_code')}</label>
+				<div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="数字，例如1057" name="typecode" errormsg="4-5位数字" value="{$data.typecode}" datatype="n4-5" nullmsg="请填写消息码">
+				</div>
+		  </div>
+          <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('mapping_class')}</label>
+				<div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="系统映射类名" name="mapping" value="{$data.mapping}" >
+				</div>
+		  </div>
+            
+          <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('type')}</label>
+				<div class="col-lg-8">
+                	<select class="select form-control" name="mtype">
+                    	{volist name="mtype_data" id="mtype_v"}
+                         <option value="{$key}" {if condition="$data.mtype eq $key"} selected {/if}>{$mtype_v}</option>
+                        {/volist}
+                    </select>
+				</div>
+		  </div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('description')}</label>
+				<div class="col-lg-8">
+					{:widget('common/Form/show',array(array('name'=>'description','title'=>'描述','type'=>'textarea'),$data))}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('state')}</label>
+				<div class="col-lg-8">
+					{:widget('common/Form/show',array(array('name'=>'status','title'=>'是否启用','type'=>'radio','option'=>array('1'=>lang('enable'),'0'=>lang('disable'))),$data))}
+				  <div class="help-block"></div>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('send_field')}</label>
+				<div class="col-lg-8">
+					<table class="table table-border table-bordered table-hover skin-minimal text-center">
+                    <thead>
+                    <tr>
+                        <th width="200" title="删除后不可恢复，谨慎操作">
+                            操作<br>
+                            <a href="javascript:;" class="label label-success radius op-add" data-type="write" data-header="1">增加一栏</a>
+                        </th>
+                        <th title="一般为对应数据库字段的名称"><span class="c-red">*</span> 名称</th>
+                        <th title="自动生成编辑页相应的表单控件"><span class="c-red">*</span> 类型</th>
+                        <th title="字段编辑页默认值">默认值</th>
+                      </tr>
+                    </thead>
+                	<tbody id="tbody-write">
+                    <tr>
+                        <td title="删除后不可恢复，谨慎操作">
+                            <a href="javascript:;" class="label label-success radius mr-10 op-add" data-type="write">增加一栏</a>
+                            <a href="javascript:;" class="label label-danger radius op-delete">删除</a>
+                        </td>
+                        <td title="一般为对应数据库字段的名称">
+                            <input type="text" class="form-control write-name" placeholder="字段，字母" name="write[0][name]">
+                        </td>
+                        <td title="自动生成编辑页相应的表单控件">
+                            <div class="select-box">
+                                <select class="select form-control write-type" name="write[0][type]">
+                                    {volist name="field_data" id="field_v"}
+                                     <option value="{$key}">{$field_v}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </td>
+                        <td title="字段编辑页默认值">
+                            <input type="text" class="form-control write-default" placeholder="表单默认值" name="write[0][default]">
+                        </td>
+                    </tr>
+          			</tbody>
+            </table>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('receive_field')}</label>
+				<div class="col-lg-8">
+					<table class="table table-border table-bordered table-hover skin-minimal text-center">
+                    <thead>
+                    <tr>
+                        <th width="200" title="删除后不可恢复，谨慎操作">
+                            操作<br>
+                            <a href="javascript:;" class="label label-success radius op-add" data-type="read" data-header="1">增加一栏</a>
+                        </th>
+                        <th title="一般为对应数据库字段的名称"><span class="c-red">*</span> 名称</th>
+                        <th title="自动生成编辑页相应的表单控件"><span class="c-red">*</span> 类型</th>
+                        <th title="字段编辑页默认值">默认值</th>
+                      </tr>
+                    </thead>
+                	<tbody id="tbody-read">
+                    <tr>
+                        <td title="删除后不可恢复，谨慎操作">
+                            <a href="javascript:;" class="label label-success radius mr-10 op-add" data-type="read">增加一栏</a>
+                            <a href="javascript:;" class="label label-danger radius op-delete">删除</a>
+                        </td>
+                        <td title="一般为对应数据库字段的名称">
+                          <input type="text" class="form-control read-name" placeholder="字段，字母" name="read[0][name]">
+                        </td>
+                        <td title="自动生成编辑页相应的表单控件">
+                            <div class="select-box">
+                              <select class="select form-control read-type" name="read[0][type]">
+                                    {volist name="field_data" id="field_v"}
+                                     <option value="{$key}">{$field_v}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </td>
+                        <td title="字段编辑页默认值">
+                          <input type="text" class="form-control read-default" placeholder="表单默认值" name="read[0][default]">
+                        </td>
+                    </tr>
+          			</tbody>
+            </table>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$data['id']|default=''}">            
+					<button class="btn btn-success submit-btn " type="submit" target-form="form-horizontal">{:lang('submit')}</button>        
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script src="__PUBLIC__/adminlte/plugins/validform/5.3.2/Validform.min.js"></script>
+<script>
+
+	//全选的实现
+	$('input[type="checkbox"].gl_checkbox, input[type="radio"].gl_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	  radioClass: 'iradio_minimal-blue'
+	});
+	
+	
+  $(function () {
+     
+      
+        // 获取模板
+        var template = {}, index = {};
+        template['write'] = $("#tbody-write").html();
+		template['read'] = $("#tbody-read").html();
+        index['write'] = 0;
+		index['read'] = 0;
+        // 初始化表单验证
+        $("#form").Validform({
+            tiptype: 3,
+            ajaxPost: true,
+            showAllError: true,
+            callback: function (ret) {
+				if (ret.code == 1) {
+					if (ret.url) {
+						updateAlert(ret.msg, 'success');
+					} else {
+						updateAlert(ret.msg, 'success');
+					}
+					setTimeout(function() {
+						if (ret.url) {
+							location.href = ret.url;
+						}else {
+							location.reload();
+						}
+					}, 1500);
+				} else {
+					updateAlert(ret.msg, 'error');
+					setTimeout(function() {
+					}, 1500);
+				}
+            }
+        });
+        function form_init() {
+            $('.skin-minimal input').iCheck('destroy');
+            $('.skin-minimal input').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue',
+                increaseArea: '20%'
+            });
+        }
+
+        // 一定要在获取模板后在初始化，否则会出现错误
+        form_init();
+        // 增加一栏
+        $(document).on("click", ".op-add", function () {
+            var type = $(this).attr("data-type");
+            var html = template[type].replace(/(\[\d+\])/g, '[' + (++index[type]) + ']');
+            // 表头菜单，追加到第一个
+            if ($(this)[0].hasAttribute('data-header')) {
+                $("#tbody-" + type).prepend(html);
+            } else {
+                $(this).closest('tr').after(html);
+            }
+            form_init();
+        }).on("click", ".op-delete", function () {
+            // 删除一栏
+            $(this).closest("tr").fadeOut(undefined, undefined, function () {
+                // 使用回调函数，强行移除该DOM
+                $(this).remove();
+            });
+            form_init();
+        });
+		
+		{present name="write_data"}
+			var tableInfo = {$write_data};
+			var objForm = $("#tbody-write");
+			objForm.find('tr').remove();
+			for (var i = 0; i < tableInfo.length; i++) {
+				objForm.append(template['write'].replace(/(\[\d+\])/g, '[' + (++index['write']) + ']'));
+				var objCurrent = objForm.find('tr:last');
+				objCurrent.find('.write-name').val(tableInfo[i]['name']);
+				objCurrent.find('.write-type').val(tableInfo[i]['type']);
+				objCurrent.find('.write-default').val(tableInfo[i]['default']);
+				
+			}
+			form_init();
+		{/present}
+		
+		{present name="read_data"}
+			var tableInfo = {$read_data};
+			var objForm = $("#tbody-read");
+			objForm.find('tr').remove();
+			for (var i = 0; i < tableInfo.length; i++) {
+				objForm.append(template['read'].replace(/(\[\d+\])/g, '[' + (++index['read']) + ']'));
+				var objCurrent = objForm.find('tr:last');
+				objCurrent.find('.read-name').val(tableInfo[i]['name']);
+				objCurrent.find('.read-type').val(tableInfo[i]['type']);
+				objCurrent.find('.read-default').val(tableInfo[i]['default']);
+				
+			}
+			form_init();
+		{/present}		
+		
+		
+    })
+		
+</script>
+{/block}

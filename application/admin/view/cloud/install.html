@@ -1,0 +1,51 @@
+{extend name="common@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+    <section class="content-header">
+      <h1>云市场在线升级<small></small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> 控制台</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix col-lg-6 col-md-12">
+        <div id="message" style="border: 1px solid #ccc;padding:20px; font-size:14px"></div>
+        <div style="margin-top: 10px">
+            <div class="progress progress-striped active hide" style="border-radius: 3px">
+                <div id="progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+                     aria-valuemin="0" aria-valuemax="100" style="width:0">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </section> 
+{/block}
+{block name="script"}
+<script>
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data){
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	var progress = {
+		'show': function () {
+			$('#progress').parent().show();
+		},
+		'setValue': function ($value) {
+			$('#progress').css('width',$value);
+		},
+		'hide': function () {
+			$('#progress').parent().hide();
+		}
+	}
+</script>
+{/block}

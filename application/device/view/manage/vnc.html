@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VNC_{$manager_data.name}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-startup-image" href="__PUBLIC__/vnc/images/screen_320x460.png" />
+    <link rel="apple-touch-icon" href="__PUBLIC__/vnc/images/screen_57x57.png">
+    <link rel="stylesheet" href="__PUBLIC__/vnc/static/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="__PUBLIC__/vnc/static/vncicon/iconfont.css"/>
+    <link rel="stylesheet" href="__PUBLIC__/vnc/app/base.css" />
+    <link rel="alternate stylesheet" href="__PUBLIC__/vnc/app/black.css" TITLE="Black" />
+    <link rel="alternate stylesheet" href="__PUBLIC__/vnc/app/blue.css" TITLE="Blue" />
+    <style>
+        .nav_button{ font-size:20px; color:#FFF; cursor:pointer; padding-left:15px;}
+        .nav_button .glyphicon{ display:inline-block; width:30px; margin-top:15px;}
+        .nav_button .glyphicon.text-glay{ color:#999;}
+        .nav_button_key{ font-size:20px; color:#FFF; cursor:pointer;}
+        .nav_button_key .glyphicon{ display:inline-block; width:30px; margin-top:12px;}
+        .nav_button_key .iconfont{font-size:26px;display:inline-block; width:30px; margin-top:8px;}
+        .nav_button_key .glyphicon.text-glay,.nav_button_key .iconfont.text-glay{ color:#999;}
+    </style>
+
+    <script>
+        //全局内容的定义
+        var _ROOT_ = "__ROOT__";
+        var _PUBLIC_ = "__PUBLIC__";
+        var _URL_ = "__URL__";
+//        var MID = "{:is_login()}";
+        var MID = "4";
+        var MODULE_NAME="<php>echo MODULE_NAME;</php>";
+        var ACTION_NAME="<php>echo ACTION_NAME;</php>";
+        var CONTROLLER_NAME ="<php>echo CONTROLLER_NAME;</php>";
+    </script>
+
+
+    <script>
+        //全局内容的定义
+//        var _HOST_ = "{$serverhost}";
+//        var _POST_ = "{$serverport}";
+//        var _TOKEN_ = "{$token}";
+//        var _PASSWORD_ = "{$password}";
+        var _HOST_ = "{$vnc_host}";
+        var _POST_ = "{$serverport}";
+        var _TOKEN_ = "{$token}";
+        var _PASSWORD_ = "123456";
+    </script>
+
+    <!--
+    <script type='text/javascript'
+        src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    -->
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" id="vnc_name">{$manager_data.name}</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">模拟键盘 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li onclick='sendCtrlAltDel();'><a href='javascript:'>Ctrl+Alt+Del</a></li>
+                        <li class="divider"></li>
+                        <li onclick='sendCtrlAltFN(0);'><a href='javascript:'>Ctrl+Alt+F1</a></li>
+                        <li onclick='sendCtrlAltFN(1);'><a href='javascript:'>Ctrl+Alt+F2</a></li>
+                        <li onclick='sendCtrlAltFN(2);'><a href='javascript:'>Ctrl+Alt+F3</a></li>
+                        <li onclick='sendCtrlAltFN(3);'><a href='javascript:'>Ctrl+Alt+F4</a></li>
+                        <li onclick='sendCtrlAltFN(4);'><a href='javascript:'>Ctrl+Alt+F5</a></li>
+                        <li onclick='sendCtrlAltFN(5);'><a href='javascript:'>Ctrl+Alt+F6</a></li>
+                        <li onclick='sendCtrlAltFN(6);'><a href='javascript:'>Ctrl+Alt+F7</a></li>
+                        <li onclick='sendCtrlAltFN(7);'><a href='javascript:'>Ctrl+Alt+F8</a></li>
+                        <li onclick='sendCtrlAltFN(8);'><a href='javascript:'>Ctrl+Alt+F9</a></li>
+                        <li onclick='sendCtrlAltFN(9);'><a href='javascript:'>Ctrl+Alt+F10</a></li>
+                        <li onclick='sendCtrlAltFN(10);'><a href='javascript:'>Ctrl+Alt+F11</a></li>
+                        <li onclick='sendCtrlAltFN(11);'><a href='javascript:'>Ctrl+Alt+F12</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="nav_button" style="">
+                        <i id="fullscreenButton" class="glyphicon glyphicon-resize-full" title="全屏"></i>
+                        <i id="clipboardButton" style="display:none" class="glyphicon glyphicon-list-alt" title="粘贴板"></i>
+                        <i id="settingsButton" style="display:none" class="glyphicon glyphicon-cog" title="设置"></i>
+                        <i id="connectButton" style="display:none" class="glyphicon glyphicon-link" title="链接"></i>
+                        <i id="xvpButton" style="display:none" class="glyphicon glyphicon-sound-dolby" title="xvp模式"></i>
+                    </span>
+                    <span class="nav_button_key" style="">
+
+                    <i id="noVNC_view_drag_button" class="iconfont icon-yidong" title="移动/拖动视图"></i>
+                    <span id="noVNC_mobile_buttons">
+                    	<span style="position:relative">
+                            <i id="showKeyboard" class="iconfont icon-jianpan1" title="显示键盘"></i>
+                            <textarea id="keyboardinput" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" mozactionhint="Enter"></textarea>
+                        </span>
+                 		<i id="noVNC_mouse_button0" class="iconfont icon-mouse" title="没有鼠标按钮"></i>
+                        <i id="noVNC_mouse_button1" class="iconfont icon-mouse1" title="左键"></i>
+                        <i id="noVNC_mouse_button2" class="iconfont icon-mouse2" title="中键"></i>
+                        <i id="noVNC_mouse_button4" class="iconfont icon-mouse3" title="右键"></i>
+
+                        <span id="noVNC_extra_keys">
+                            <i id="showExtraKeysButton" class="iconfont icon-shoushi" title="Extra keys"></i>
+                            <i id="toggleCtrlButton" class="iconfont icon-ctrl" title="Ctrl"></i>
+                            <i id="toggleAltButton" class="iconfont icon-alt" title="alt"></i>
+                            <i id="sendTabButton" class="iconfont icon-tab3" title="tab"></i>
+                            <i id="sendEscButton" class="iconfont icon-esc" title="esc"></i>
+                        </span>
+                    </span>
+
+                    </span>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- End of noVNC-control-bar -->
+<div id="noVNC-control-bar" class="noVNC_status_normal"><div id="noVNC_status"></div></div>
+<!-- Popup Status -->
+<div id="noVNC_popup_status" class=""></div>
+<!-- Clipboard Panel -->
+<!-- Settings Panel -->
+<div id="noVNC_settings" class="triangle-right top">
+        <span id="noVNC_settings_menu">
+            <ul>
+                <li><input id="noVNC_encrypt" type="checkbox"> 加密</li>
+                <li><input id="noVNC_true_color" type="checkbox" checked> 真彩色</li>
+                <li><input id="noVNC_cursor" type="checkbox"> 本地光标</li>
+                <li><input id="noVNC_clip" type="checkbox"> 剪辑窗口</li>
+                <li><input id="noVNC_shared" type="checkbox"> 共享模式</li>
+                <li><input id="noVNC_view_only" type="checkbox"> 只查看</li>
+                <hr>
+                <li>路　　径：<input id="noVNC_path" type="input" value="websockify"> </li>
+                <li>缩放模式：<select id="noVNC_resize" name="vncResize">
+                    <option value="off">None</option>
+                    <option value="scale">Local Scaling</option>
+                    <option value="downscale">Local Downscaling</option>
+                    <option value="remote">Remote Resizing</option>
+                </select>
+                </li>
+                <li>Repeater ID：<input id="noVNC_repeaterID" type="input" value=""></li>
+                <hr>
+                <!-- Stylesheet selection dropdown -->
+                <li>样　　式：<select id="noVNC_stylesheet" name="vncStyle">
+                    <option value="default">default</option>
+                </select>
+                </li>
+
+                <!-- Logging selection dropdown -->
+                <li>日志输出：<select id="noVNC_logging" name="vncLogging">
+                </select>
+                </li>
+                <hr>
+                <li><input type="button" class="btn btn-primary btn-sm" id="noVNC_apply" value="应用"></li>
+            </ul>
+        </span>
+</div>
+<div id="noVNC_clipboard" class="triangle-right top">
+    <textarea id="noVNC_clipboard_text" rows=5></textarea>
+    <br />
+    <input id="noVNC_clipboard_clear_button" class="btn btn-primary btn-sm" type="button" value="清除">
+</div>
+<div id="noVNC_controls" style="display:none;" class="triangle-right top"> <!-- zhaoyg add style="display:none;" -->
+    <ul>
+        <li><label><strong>主机: </strong><input id="noVNC_host" value="" /></label></li>
+        <li><label><strong>端口: </strong><input id="noVNC_port" value="" /></label></li>
+        <li><label><strong>密码: </strong><input id="noVNC_password" type="password" value="" /></label></li>
+        <li><label><strong>Token: </strong><input id="noVNC_token" value="" /></label></li>
+        <li><input id="noVNC_connect_button" class="btn btn-primary btn-sm" type="button" value="连接"></li>
+    </ul>
+</div>
+
+<!-- XVP Shutdown/Reboot Panel -->
+<div id="noVNC_xvp" class="triangle-right top">
+        <span id="noVNC_xvp_menu">
+            <input type="button" id="xvpShutdownButton" class="btn btn-primary btn-sm" value="关机" />
+            <input type="button" id="xvpRebootButton" class="btn btn-primary btn-sm" value="重启" />
+            <input type="button" id="xvpResetButton" class="btn btn-primary btn-sm" value="重置" />
+        </span>
+</div>
+<div id='main_container' class="">
+    <h1 id="noVNC_logo"><span>Qinfo</span>vnc</h1>
+    <div id="noVNC_container">
+        <canvas id="noVNC_canvas" width="640" height="480">Canvas not supported.</canvas>
+    </div>
+</div>
+<script src="__PUBLIC__/vnc/static/jquery-2.2.3.min.js"></script>
+<script src="__PUBLIC__/vnc/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/vnc/app/util.js"></script>
+<script src="__PUBLIC__/vnc/app/ui.js"></script>
+
+<script>
+    $(document).ready(function(){
+        var intervaladmin = ''
+
+        var check_admin =function(){
+//            $.ajax({
+//                url: '/admin/login',
+//                type: 'GET',
+//                data: {},
+//                async: true,
+//                dataType:'json',
+//                success: function (json) {
+//                    if(json.code == 1){
+//                        clearInterval(intervaladmin);
+//                        if(json.url){
+//                            location.href = json.url;
+//                        }
+//                    }
+//                }
+//            });
+//            clearInterval(intervaladmin);
+        }
+
+        intervaladmin=setInterval(check_admin,2000);
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<textarea name="{$field}" id="{$field}" style="width: 100%;">{$value}</textarea>
+<!-- 样式文件 -->
+<link rel="stylesheet" href="__PUBLIC__/plugs/umeditor/themes/default/css/umeditor.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.js"></script>
+<script type="text/javascript">
+    $(function(){
+        window.um = UM.getEditor('{$field}', {
+        	imageUrl: "{:url('admin/upload/editor')}",
+			imagePath:'',
+			autoHeightEnabled:false
+        });
+    });
+</script>

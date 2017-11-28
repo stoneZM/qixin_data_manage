@@ -1,0 +1,182 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/board/board.min.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{if condition="ACTION_NAME eq 'add'"}{:lang('add')}{else/}{:lang('edit')}{/if}{:lang('model')}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<form id="form" action="{:url('update')}" method="post" class="form form-horizontal">
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">{:lang('basics')}</a></li>
+					<li><a href="#tab2" data-toggle="tab">{:lang('design')}</a></li>
+					<li><a href="#tab3" data-toggle="tab">{:lang('advanced')}</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab1">
+						<!-- 基础 -->
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('identifying')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control disabled" name="name" value="{$info.name}" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('name')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control " name="title" value="{$info['title']}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('type')}</label>
+							<div class="col-lg-3 col-sm-10">
+								<select name="extend" class="form-control disabled" readonly disabled>
+									<option value="0" {if condition="$info['extend'] eq '0'"}selected{/if}>{:lang('please_select')}</option>
+									<option value="1" {if condition="$info['extend'] eq '1'"}selected{/if}>{:lang('Independent_model')}</option>
+									<option value="2" {if condition="$info['extend'] eq '2'"}selected{/if}>{:lang('Document_model')}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('Member_display')}</label>
+							<div class="col-lg-10">
+								<select name="is_user_show" class="form-control" style="width:auto">
+									<option value="1" {if $info['is_user_show'] ==1}selected="selected"{/if}>{:lang('yes')}</option>
+									<option value="0" {if $info['is_user_show'] ==0}selected="selected"{/if}>{:lang('no')}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('icon')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control " name="icon" value="{$info['icon']}">
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab2">
+
+	                    <div class="form-group">
+	                        <label class="col-lg-2 control-label">{:lang('alias')}</label>
+	                        <div class="col-lg-6 col-sm-10">
+	                            <textarea name="attribute_alias" class="form-control">{$info.attribute_alias}</textarea>
+	                        </div>
+	                    </div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('grouping')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="field_group" value="{$info.field_group}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('sort')}</label>
+							<div class="col-lg-10 boards" id="field_group_sort">
+							{volist name=":parse_field_attr($info['field_group'])" id="vo"}
+								<div class="board panel panel-info">
+									<div class="panel-heading">{$vo}</div>
+									<div class="panel-body">
+										<div class="board-list" data-group="{$key}">
+										{foreach name="fields" item="field" key="k"}
+											{if (($field['group'] == -1) or ($field['group'] eq $key))}
+												<div class="board-item">
+													<span data="{$field['id']}">{$field['title']} [{$field['name']}]</span>
+													<input type="hidden" name="field_sort[{$key}][]" value="{$field['id']}"/>
+												</div>
+												{php}
+												unset($fields[$k]);
+												{/php}
+											{/if}
+										{/foreach}
+										</div>
+									</div>
+								</div>
+							{/volist}
+							</div>
+						
+						</div>
+
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('List_definition')}</label>
+							<div class="col-lg-6 col-sm-10">
+									<textarea name="list_grid" class="form-control">{$info.list_grid}</textarea>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('Default_search_field')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="search_key" value="{$info.search_key}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('Advanced_search_field')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="search_list" value="{$info.search_list}">
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane " id="tab3">
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('list_template')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="template_list" value="{$info['template_list']|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('add_template')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="template_add" value="{$info['template_add']|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('edit_template')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="template_edit" value="{$info['template_edit']|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('list_row')}</label>
+							<div class="col-lg-6 col-sm-10">
+								<input type="text" class="form-control" name="list_row" value="{$info['list_row']|default=''}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info['id']}">
+					<button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">{:lang('submit')}</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/js/droppable.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/board/board.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.form-group #field_sort').boards();
+	$('.form-group #field_group_sort').boards({
+		drop: function(e){
+			var group = e.target.closest('.board').find('.board-list').attr('data-group');
+			e.element.find('input').attr('name','field_sort[' + group + '][]')
+		}
+	})
+})
+</script>
+{/block}
+

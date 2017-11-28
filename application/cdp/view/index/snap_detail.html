@@ -1,0 +1,548 @@
+{extend name="common@public/base"/}
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/bootstrap-slider/bootstrap-slider.css">
+<link rel="stylesheet" href="__CSS__/snap.css">
+
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title} <small style="font-size: 10px;color:#d2cccc;" class=""><b>{$current_time}</b></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="">
+
+            <a class="btn btn-primary" href="{:url('index/detail',array('id'=>$back_id))}" >&nbsp;&nbsp;{:lang('back')} &nbsp;&nbsp; </a>
+            <!--<a class="btn btn-default" href="{:url('/cdp/index/index')}" >&nbsp;&nbsp;{:lang('首页')}&nbsp;&nbsp;</a>-->
+
+            <div class="btn-group pull-right" role="group" aria-label="...">
+                {if $other_date['pre_disable']}
+                <a  href="javascript:" class="btn btn-default " disabled="" >
+                {else/}
+                <a  href="{:url('cdp/index/snap_detail',array('task_id'=>$task_id,'time'=>$other_date['pre']))}" class="btn btn-default " >
+                {/if}
+                    <i class="glyphicon glyphicon-menu-left"></i>
+                   <b>{$other_date['pre']}</b>
+                </a>
+
+                    {if $other_date['next_disable']}
+                <a href="javascript:" class="btn btn-default " disabled=""  >
+                    {else/}
+                    <a href="{:url('cdp/index/snap_detail',array('task_id'=>$task_id,'time'=>$other_date['next']))}" class="btn btn-default " >
+                    {/if}
+                    <b>{$other_date['next']}</b>
+                    <i class="glyphicon glyphicon-menu-right "></i>
+                </a>
+            </div>
+		</div>
+    </header>
+
+    {if count($snap_list)==0}
+        <div class="box-body clearfix">
+                <p class=" text-danger" style="text-align: center;font-size: 15px">
+                    <i class="glyphicon glyphicon-exclamation-sign"></i>
+                    <b>暂无快照点</b>
+                </p>
+        </div>
+        {else/}
+
+        <div class="box-body clearfix">
+            {if  condition="$soft_type eq 0"}
+            {include file="index/snap_detail_liter"}
+            {elseif condition="$soft_type eq 1"}
+            {include file="index/snap_detail_base"}
+            {elseif condition="$soft_type eq 2"}
+            {include file="index/snap_detail_high"}
+            {/if}
+        </div>
+
+    {/if}
+
+
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade"   tabindex="-1" role="dialog" aria-labelledby="add_virtual" id="add_virtual">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="modal_hidden">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>{:lang('create_virtual')}</h4>
+            </div>
+            <form class="form form-horizontal instead_host add_virtual_form" role="form" method="post" action="{:url('cdp/index/add_virtual')}">
+                <input type="hidden" name="snap_group_id" id="snap_group_id">
+                <input type="hidden" name="keli_id" id="keli_id">
+                <input type="hidden" name="device_id" value="{$back_id}">
+                <input type="hidden" name='task_id' value="{$task_id}"> 
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('snap')}</label>
+                        <div class="col-sm-10">
+                            <strong><div id='skvcreatetimeS1' class="form-control-static"></div></strong>
+                        </div>
+                    </div>
+
+                    {if condition='$soft_type neq 0'}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('start_type')}</label>
+                        <div class="col-sm-10">
+                            <div class="">
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='vir_type' value="1" checked>{:lang('exercise')}</div>
+                                <div class="checkbox-inline no-padding"><input class="vir_type gl_checkbox" type="radio" name='vir_type' value="0" >{:lang('take_over')}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {else/}
+                    <input  type="hidden" name='vir_type' value="1" checked>
+                    {/if}
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('host_name')}</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input id='skvhostnameS1' name='host_name' class="form-control input-sm" />
+                                <span class="input-group-addon get_serialnumber label-warning">
+                                    <span style="cursor:pointer"  class="glyphicon glyphicon-refresh" id="host_name-refresh" ></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('compute_snap')}</label>
+                        <div class="col-sm-6">
+                            <select id='computing' name='comput_id' class="form-control select2" style="width:100%">
+                                {volist name="computing_list" id="vo_comp"}
+                                        <option value="{$vo_comp['id']}" bridge='{$vo_comp["compute_info"]}'>{$vo_comp['name']}({$vo_comp['ip']}) </option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">CPU</label>
+                        <div class="col-sm-8">
+                            <input id="skvhostcpuS1" name="cpu_kernel" type="text" value="1" class="slider form-control" data-slider-min="1" data-slider-max="{$max_cpu}" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:40px;">
+                        <label class="col-sm-2 control-label">{:lang('memory')}</label>
+                        <div class="col-sm-8">
+                            <input id="skvhostmemoryS1" name="memory" type="text" value="524288" class="slider form-control" data-slider-min="524288" data-slider-max="{$total_mem}" data-slider-step="524288" data-slider-value="524288" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('network_adapter')}</label>
+                        <div class="col-sm-10" id="net_html">
+
+                            {volist name="hardware_info.netcards" id='item' key='k'}
+                            <div  class="row network" style="margin-bottom:5px; padding-left:15px" id="data_net_index_{$k-1}">
+                                <div class="col-sm-2 no-padding text-center net-num" style="line-height:32px;border:1px #ccc solid;border-right:0"> 网卡{$k} </div>
+                                <div class="col-sm-3 no-padding">
+                                    <input  name="netdata[{$k-1}][ip]" type="text" value="{$item['ip']}" class="form-control net-ip" index="{$k-1}">
+                                </div>
+                                <div class="col-sm-4 no-padding">
+                                    <input name="netdata[{$k-1}][mac]" type="text" value="{$item['mac']}" dataindex="{$k-1}" data_role_mac="" class="form-control net_mac">
+                                </div>
+                                <div class="col-sm-2 no-padding">
+                                    <select name="netdata[{$k-1}][type]" class="modelselect form-control net_mac_model">
+                                        <option value="NAT">NAT</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <i class="glyphicon glyphicon-trash" data_role="trash_net" data_role_index="{$k-1}"></i>
+                                </div>
+                                <div class="col-sm-12 no-padding">
+                                    <span style="font-size:12px;color:#F00" id="tooltip_1"></span>
+                                </div>
+                            </div>
+                            {/volist}
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-1 control-label"></label>
+                        <div class="col-sm-10"><div class="btn btn-success" id="add_net">{:lang('add_network')}</div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-success ajax-post add_virtual_submitBtn" target-form="instead_host">{:lang('submit')}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                </div>
+                <input hidden="hidden"  name='system_type'  value="{$client_system}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--添加颗粒-->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add_keli"  id="add_keli">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="modal_hidden">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>{:lang('add_keli')}</h4>
+            </div>
+            <form class="form form-horizontal add_keli" role="form" method="post" action="{:url('cdp/index/add_keli')}">
+                <input type="hidden" name="snap_group_id" id="keli_group" >
+                <input type="hidden" name="device_id" value="{$back_id}">
+                <input type="hidden" name='task_id' value="{$task_id}">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{:lang('choose_node_time')}:</label>
+                        <div class="col-sm-10">
+
+                         {volist name='snap_list' id='vo'}
+                            {if !empty($vo['begin_time']) }
+                            <div class="node-time-content group_id_{$vo['group_id']}"style="display: none;margin-top:8px">
+                                <input  class="choose_keli_time" class="group_id_{$vo['group_id']}" name="keli_time_{$vo['group_id']}" type="text" value="1" class="slider form-control" data-slider-min="{$vo['begin_time']}" data-slider-max="{$vo['end_time']}" data-slider-step="1" data-slider-value="{$vo['begin_time']}" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" data-slider-id="red">
+                            </div>
+                            {/if}
+                        {/volist}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success ajax-post submit" target-form="add_keli">{:lang('submit')}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                </div>
+                <input hidden="hidden"  name='system_type'  value="{$client_system}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</section>
+{/block}
+{block name="script"}
+<script>
+
+    /*创建虚拟机*/
+    $('[data_role="add_virtual"]').click(function (e) {
+
+            e.preventDefault();
+            var _this = $(this);
+            var createTime = _this.attr('create_time');
+
+
+            var groupId = _this.attr('snap_group_id') ? _this.attr('snap_group_id'):-1;
+            var keliId = _this.attr('keli-id') ? _this.attr('keli-id'):-1
+
+            $('#snap_group_id').val(groupId);
+            $('#keli_id').val(keliId);
+            $('#skvcreatetimeS1').html(createTime);
+//            $("#add_virtual").show();
+    });
+
+
+   $('[data-dismiss="modal"]').click(function(e){
+       e.preventDefault;
+       $("#add_virtual").hide();
+       $('#add_keli').hide();
+   });
+
+   var bridge = '';
+   $("#computing").change(function(){
+
+       var selectOp = $("#computing option:selected");
+       var bridges = selectOp.attr("bridge");
+       var baseInfo = '';
+       if(bridges){
+           bridge = JSON.parse(bridges).bridges;
+           baseInfo = JSON.parse(bridges).base_info;
+       }else{
+           bridge = new Array();
+       }
+
+       changeCpuAndMem(baseInfo['max_cpu'],baseInfo['total_mem']);
+
+       if(selectedvalue == 0){
+           var new_net_html = '';
+           new_net_html += '<option value="NAT">NAT</option>';
+           if(bridge){
+               var length = bridge.length;
+               for(var i=0;i<length;i++){
+                   new_net_html += '<option value="'+bridge[i].uuid+'" class="model_br">'+bridge[i].uuid+'</option>';
+               }
+           }
+           $(".modelselect").html(new_net_html);
+       }
+   });
+
+
+    //选取不同的节点有不同的cpu
+    function changeCpuAndMem(cpu,mem){
+
+        $("#skvhostcpuS1").slider('setAttribute', 'max', cpu);
+        $("#skvhostcpuS1").slider('refresh');
+        $("#skvhostmemoryS1").slider('setAttribute', 'max', mem);
+        $("#skvhostmemoryS1").slider('refresh');
+    }
+
+
+
+    var soft_type = "{$soft_type}";
+    var add_net_index = $("#net_html").children("div.network").length;
+    var device_id = "{$back_id}";
+    $('#add_net').on('click', function (event) {
+
+        var cardIndex = getNetCardsIndex();
+        var mac_addr = '';
+
+        $.ajax({
+            url: '/device/manage/generate_mac_addr',
+            type: 'get',
+            data: {type:add_net_index,device_id:device_id,index:cardIndex},
+            async: true,
+            dataType:'json',
+            success: function (res) {
+                var mac_addr = res['mac_addr'];
+                var ip = res['ip'];
+                var index = res['index'];
+                var vir_type_val  = '';
+
+                $("input[name='vir_type']:radio").each(function(){
+                    if(true == $(this).is(':checked')){
+                        vir_type_val  = $(this).val();
+                    }
+                });
+
+                var add_html_model = ''
+                var add_html = ''
+                add_html_model += '<option value=NAT>NAT</option>';
+
+                if (vir_type_val == 1 || soft_type==0) {
+
+                } else {
+                    if(bridge){
+                        var length = bridge.length;
+                        for(var i=0;i<length;i++){
+                            add_html_model += '<option value="'+ bridge[i].uuid +'" class="model_br">'+bridge[i].uuid+'</option>';
+                        }
+                    }
+                }
+                add_html += '<div class="row network" style="margin-bottom:5px; padding-left:15px" id="data_net_index_'+add_net_index+'">';
+                add_html += '<div class="col-sm-2 no-padding text-center net-num" style="line-height:32px;border:1px #ccc solid;border-right:0"> {:lang("net_work")}'+ (add_net_index+1) +' </div>';
+//                add_html += '<div class="col-sm-3 no-padding"><select name="netdata['+add_net_index+'][nic_type]" type="text" value="" class="form-control"><option value="default">default</option><option value="rtl8139">rtl8139</option><option value="e1000">e1000</option><option value="pcnet">pcnet</option><option value="ne2k_pci">ne2k_pci</option><option value="virtio">virtio</option></select></div>';
+                add_html += '<div class="col-sm-3 no-padding"><input index="'+index+'" name="netdata['+add_net_index+'][ip]" type="text" value="'+ip+'" class="form-control net-ip"></div>';
+                add_html += '<div class="col-sm-4 no-padding"><input name="netdata['+add_net_index+'][mac]" type="text" value="'+mac_addr+'" dataindex="'+ (add_net_index+1) +'"   data_role_mac="" class="form-control net_mac"></div>';
+                add_html += '<div class="col-sm-2 no-padding">';
+                add_html += '<select name="netdata['+add_net_index+'][type]" class="modelselect form-control net_mac_model">';
+                add_html += add_html_model;
+                add_html += '</select>';
+                add_html += '</div>';
+                add_html += '<div class="col-sm-1"><i class="glyphicon glyphicon-trash" data_role="trash_net" data_role_index="'+add_net_index+'" ></i></div>';
+                add_html += '<div class="col-sm-12 no-padding"><span style="font-size:12px;color:#F00"  id="tooltip_'+(add_net_index+1)+'"></div>';
+                add_html += '</div>';
+                add_net_index ++;
+                $("#net_html").append(add_html);
+            }
+            })
+    });
+
+    // 获取网卡的坐标
+    function getNetCardsIndex(){
+
+        var indexStr = '';
+        $(".net-ip").each(function(){
+            var _this = $(this);
+            indexStr += _this.attr('index') + ",";
+        })
+        indexStr = indexStr.substring(0,indexStr.length-1);
+        return indexStr;
+    }
+
+
+    $(document).on("click",'[data_role="trash_net"]',function(e){
+        var $this = $(this);
+        var data_index = $this.attr('data_role_index');
+        $('#data_net_index_'+ data_index).remove();
+        changeNetNum();
+        add_net_index =  $("#net_html").children("div.network").length;
+    });
+
+    /**
+     *  改变网卡的数字
+     */
+    function changeNetNum(){
+
+        var count = 1;
+        var netStr = '';
+        $(".net-num").each(function(){
+            netStr = "网卡"+count;
+            $(this).html(netStr);
+            count++;
+        })
+    }
+
+    $(document).on("blur",'.net_mac',function(e){
+
+        var $this = $(this);
+        var data_def_var = $this.attr('data_role_mac');
+        var data_index = $this.attr('dataindex');
+        var data_var = $this.val();
+        if(data_def_var==''){
+            $('#tooltip_'+data_index).html('');
+        }else{
+            if(data_def_var !== data_var){
+                if(data_var == ''){
+//                    mac地址为空,表示添加新网卡设备,需要进入系统配置网卡信息
+                    $('#tooltip_'+data_index).html('');
+                }else{
+//                    mac地址修改就是删除旧网卡设备，添加新网卡设备，需要进入系统配置网卡信息
+                    $('#tooltip_'+data_index).html('');
+                }
+            }
+        }
+    });
+
+    var selectedvalue = 1;
+    $('.vir_type').on('ifClicked', function (event) {
+
+        if ($(this).attr("checked",true)) {
+             $(this).iCheck('uncheck');//如果已选择，可以用iCheck取消选择
+         } else {
+             $(this).iCheck('check');//如果没选择，可以用iCheck美化选择
+         }
+
+        if(!bridge){
+            $("#computing").trigger("change");
+        }
+
+        selectedvalue  = $(this).val();
+        if (selectedvalue == 1) {
+            $(".modelselect").html('<option value=NAT>NAT</option>');
+        } else {
+            var new_net_html = '';
+            new_net_html += '<option value="NAT">NAT</option>';
+            if(bridge){
+                var length = bridge.length;
+                for(var i=0;i<length;i++){
+                    new_net_html += '<option value="'+ bridge[i].uuid +'" class="model_br">'+bridge[i].uuid+'</option>';
+                }
+            }
+            $(".modelselect").html(new_net_html);
+        }
+    });
+
+    $(".select2").select2({
+        minimumResultsForSearch: -1
+    });
+
+    $("#skvhostcpuS1").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return 'CPU: ' + value +'个';
+        }
+    });
+
+    $("#skvhostmemoryS1,#skvhostmaxmemoryS1").slider({
+        tooltip: 'always',
+        value: 1,
+        formatter: function(value){
+            return '内存: ' + value/(1024*1024) +' G';
+        }
+    });
+
+    //生成主机名称
+        $('#host_name-refresh').click(function(){
+              var time = new Date().getTime();
+
+              var time = new Date(time);
+              var y = time.getFullYear();
+              var m = time.getMonth()+1;
+              if (m<10) m = "0"+m;
+              var d = time.getDate();
+              if (d<10) d = "0"+d;
+              var h = time.getHours();
+              var mm = time.getMinutes();
+              var s = time.getSeconds();
+              var name = "Server-"+y+m+d+"-"+h+mm+s;
+               $('#skvhostnameS1').val(name);
+        });
+
+    $(".modal_hidden").click(function(e){
+        e.preventDefault();
+        $("#add_virtual").hide();
+    });
+
+    $("#host_name-refresh").trigger("click");
+
+
+
+    $('.create_keli').mouseover(function(){
+        $(this).css({'background-color':'gray',color:'white'});
+    });
+    $('.create_keli').mouseout(function(){
+        $(this).css({'background-color':'lightgray',color:'black'});
+    });
+//    生成颗粒
+    $(".create_keli").click(function(e){
+        e.preventDefault;
+        $('.node-time-content').hide();
+        var group_id = $(this).attr('group_id');
+        $('#keli_group').val(group_id);
+        var className = '.group_id_'+group_id;
+        $(className).show();
+//        $('#add_keli').show();
+    });
+
+    $(".choose_keli_time").slider({
+        tooltip: 'always',
+        value:1,
+        formatter: function(value) {
+            return '时间: ' + formatDateTime(value);
+        }
+    });
+
+  $('.not-vailable').click(function(){
+     layer.msg('颗粒正在生成 . . .');
+  });
+
+    function formatDateTime(timeStamp) {
+        var date = new Date();
+        date.setTime(timeStamp * 1000);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? ('0' + m) : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        second = second < 10 ? ('0' + second) : second;
+        return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+    };
+
+    function formatDate(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    }
+  $(".add_virtual_submitBtn").click(function(){
+        if(soft_type==0)
+            return true;
+        else
+            friendlyTip("正在创建虚拟机,请稍后...",'创建失败',5000,2000);
+  });
+</script>
+{/block}

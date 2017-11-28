@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<title>{$meta_title}- {:config('systemconfig.site_title') ?: config('site_name')}</title>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="__PUBLIC__/js/html5shiv.min.js"></script>
+<script src="__PUBLIC__/js/ie8polyfill.min.js"></script>
+<![endif]-->
+
+	<link rel="stylesheet" href="__PUBLIC__/css/nifty.min.css">
+	<link rel="stylesheet" href="__CSS__/login.css">
+
+	<link href="__PUBLIC__/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/font-awesome.css"/>
+
+	<link rel="stylesheet" type="text/css" href="__CSS__/style.css"/>
+	<link rel="stylesheet" type="text/css" href="__CSS__/animal.css">
+
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css"/>
+
+
+</head>
+<body>
+<div class="notify top-right " data-notification-status="success" >
+	&nbsp;&nbsp;&nbsp; <span style="font-size: 16px">登录成功</span>&nbsp;&nbsp;&nbsp;
+</div>
+<div class="container">
+<div id="contPar"  class="contPar hidden-sm hidden-xs col-md-8">
+	<div id="page1"  style="z-index:1;">
+		<div class="title0" >{:config('systemconfig.site_title') ?: config('site_title')}</div>
+		<div class="title1">云计算、迁移、容灾、备份、IAAS</div>
+		<div class="imgGroug" >
+			<ul>
+				<img alt="疾速" class="img0 png" src="__IMG__/page1_0.png">
+				<img alt="稳定" class="img1 png" src="__IMG__/page1_1.png">
+				<img alt="安全" class="img2 png" src="__IMG__/page1_2.png">
+			</ul>
+		</div>
+		<img alt="" class="img3 png" src="__IMG__/page1_3.jpg" >
+	</div>
+</div>
+
+<div class="col-sm-12  col-md-3 col-xs-12  col-lg-3 text-center">
+
+	<div class="box box-primary tyg-div-form" style="min-width:330px;!important;max-width: 350px !important;">
+		<div class="box-header" >
+			<h2  class="text-center" style="padding: 20px 0 10px">
+				<b>登录</b>
+			</h2>
+		</div>
+		<div class="box-body" >
+				<div id="login-box-inner">
+			<form role="form" id="itemBox" method="post">
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon">
+						 <i class="fa fa-user"></i>
+					</div>
+					<input class="form-control" id="username" name="username" type="text" placeholder="{:lang('username')}">
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon">
+						<i class="fa fa-key"></i>
+					</div>
+					<input type="password" id="password" name="password" class="form-control" placeholder="{:lang('password')}">
+				</div>
+				<!-- /.input group -->
+			</div>
+			<!-- /.form group -->
+
+
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon">
+						<i class="fa fa-qrcode"></i>
+					</div>
+					<input type="text" id="verify" name="verify" class="form-control" placeholder="{:lang('verify_code')}">
+					<span class="input-group-addon reloadverify">
+						<img src="{:url('admin/index/verify')}" alt="{:lang('verify_code')}" height="40" class="verifyimg">
+					</span>
+				</div>
+				<!-- /.input group -->
+			</div>
+			<!-- /.form group -->
+			<div class="row">
+				<div class="col-xs-12  text-center">
+					<button type="submit" id="login-btn">
+													<span  class="hidden login-span">
+														<i class="fa fa-loading"></i>
+														{:lang('logins')} ...
+													</span>
+						<span class="show sign-span">{:lang('sign_in')}</span>
+					</button>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="" style="margin-top: 20px">
+				<div class="col-xs-12">
+					<div style="float: left;">
+						<i style="font-size: 15px;font-weight: bold;;color: #243259;" class="fa fa-fw fa-linux"></i>
+						<a class="btn-link" href="/data/service_soft/client_linux.zip">Linux客户端</a>
+					</div>
+
+					<div style="float: right;">
+						<i style="font-size: 15px;color: #243259;" class="fa fa-fw fa-windows"></i>
+						<a class="btn-link" href="/data/service_soft/client_windows.exe" style="margin-left: 3px">Windows客户端</a>
+					</div>
+
+				</div>
+			</div>
+		</form>
+		</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+</div>
+</div>
+</body>
+<script src="__PUBLIC__/js/login/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/login/com.js"></script>
+<script src="__PUBLIC__/js/base64.js"></script>
+<script type="text/javascript">
+	$(function(){
+
+		/* 登陆表单获取焦点变色 */
+		$(".login-form").on("focus", "input", function(){
+			alert(3);
+			$(this).closest('.item').addClass('focus');
+		}).on("blur","input",function(){
+			$(this).closest('.item').removeClass('focus');
+		});
+		//表单提交
+		$(document).ajaxStart(function(){
+			$('#login-btn').attr('disabled',true);
+			$(".login-span").removeClass('hidden');
+			$(".sign-span").removeClass('show').addClass('hidden');
+		}).ajaxStop(function(){
+//			$("button:submit").removeClass("log-in").attr("disabled", false);
+		});
+		var b = new Base64();
+		$("#login-btn").click(function(e){
+			e.preventDefault();
+			$(".notify").removeClass('do-show');
+			var self = $(this);
+			var data = {
+				username : $("#username").val(),
+				password : b.encode($("#password").val()),
+				verify : $("#verify").val()
+			};
+			$.post(self.attr("action"), data, success, "json");
+			return false;
+			function success(data){
+
+				if(data.code){
+
+					$(".notify").attr('data-notification-status','success');
+					$(".notify>span").html('     登录成功     ');
+					$(".notify").addClass('do-show');
+					setTimeout(function(){
+						window.location.href = data.url;
+					},2000);
+
+				} else {
+
+					$('#login-btn').removeAttr('disabled');
+					$(".notify").attr('data-notification-status','error');
+					$(".notify>span").html(data.msg);
+					$(".notify").addClass("do-show");
+
+					$(".sign-span").removeClass('hidden');
+					$(".login-span").removeClass('show').addClass('hidden');
+
+					$("#itemBox").find("#verify").val('');
+					if(data.msg=="验证码错误" || data.msg=="Verification code error"){
+						$("#itemBox").find("#verify").focus();
+					}
+					//刷新验证码
+					$(".reloadverify").click();
+
+				}
+			}
+		});
+
+		//初始化选中用户名输入框
+		$("#itemBox").find("input[name=username]").focus();
+		//刷新验证码
+		var verifyimg = $(".verifyimg").attr("src");
+
+		$(".reloadverify").click(function(){
+			if( verifyimg.indexOf('?')>0){
+				$(".verifyimg").attr("src", verifyimg+'&random='+Math.random());
+			}else{
+				$(".verifyimg").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
+			}
+		});
+		//placeholder兼容性
+		//如果支持
+		function isPlaceholer(){
+			var input = document.createElement('input');
+			return "placeholder" in input;
+		}
+		//如果不支持
+		if(!isPlaceholer()){
+			$(".placeholder_copy").css({display:'block'})
+			$("#itemBox input").keydown(function(){
+				$(this).parents(".item").next(".placeholder_copy").css({display:'none'})
+			})
+			$("#itemBox input").blur(function(){
+				if($(this).val()==""){
+					$(this).parents(".item").next(".placeholder_copy").css({display:'block'})
+				}
+			})
+		}
+	});
+</script>
+
+<script>
+	function checkBrowser() {
+		//var appName = navigator.appName; //浏览器的正式名称
+		var appVersion = navigator.appVersion; //浏览器的版本号
+		var isIE =  navigator.userAgent.toLowerCase().indexOf("msie");
+		if(isIE>=0){
+			var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+			reIE.test(appVersion);
+			var fIEVersion = parseFloat(RegExp["$1"]);
+			if(fIEVersion<9){
+				$('.notify,.contPar').hide();
+				$(".tyg-div-form").css('margin-top',0);
+			}
+		}
+	}
+
+	checkBrowser();
+</script>
+</html>

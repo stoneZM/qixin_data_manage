@@ -1,0 +1,158 @@
+{extend name="common@public/base"/}
+{block name="body"}
+    <section class="content-header">
+      <h1>第四步.导出相关数据表<small>（请先在数据库建立相对应的表）</small></h1>
+      <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+            {volist name="__menu__['parent']" id="pitem"}
+                <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+            {/volist}
+      </ol>
+    </section>
+    <section class="content">
+    <div class="box box-solid clearfix">
+    <div class="box-body clearfix">
+        <div class="with-padding">
+            <div class="clearfix">
+                <div class="alert alert-info col-xs-6">
+                    当前打包模块，<strong>{$module.alias}-{:session('module')}</strong>
+                </div>
+            </div>
+            <form id="form_main" action="{:url('module5')}" method="post">
+            	<div class="clearfix">
+                    <div class="lead">数据表</div>
+                    {empty name="all_table" value=""}
+                    	<div class="alert alert-success col-xs-6">未检测到任何的数据表</div>
+                    {else/}
+                        <div class="col-xs-9">
+                            {volist name="all_table" id="vo"}
+                            <div class="col-xs-3"><input type="checkbox"  {$vo.checked} class="all_checkbox" name="default[]" value="{$vo.name}"><span class="text-primary" data-toggle="tooltip" data-placement="right" data-original-title="{$vo.comment}"> {$vo.name}</span>（{$vo.rows}）</div>
+                            {/volist}
+                        </div>
+                    {/empty}
+                </div>
+            
+            
+                <div class="clearfix">
+                    <div class="lead">关联数据表</div>
+                    {empty name="tables" value=""}
+                    	<div class="alert alert-success col-xs-6">未检测到任何的和模块相关的数据表，如果确定不需要数据表，可直接跳过本步骤</div>
+             		{/empty}
+                    <div class="clearfix"></div>
+                        <div class="col-xs-3">
+                            <blockquote style="font-size:14px" id="link_table">
+                                {volist name="tables" id="vo"}
+                                    <div><span class="text-primary" data-toggle="tooltip" data-placement="right" data-original-title="{$vo.comment}">【{$i}】{$vo.name} </span>&nbsp;（{$vo.rows}）</div>
+                                {/volist}
+                            </blockquote>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="lead">导出的引导脚本预览</div>
+                            <textarea name="sql_tables" class="form-control" style="height: 200px">{$sql_tables|htmlspecialchars}</textarea>
+                        </div>
+                   
+                </div>
+    
+                <div class="clearfix">
+                    <div class="lead">插入默认数据</div>
+                    <div>以下表内有数据，如果勾选，会打包进去，安装之后即存在</div>
+                    {empty name="has_data" value=""}
+                        <div class="alert alert-success col-xs-6">未检测到任何关联表内有数据，如果不需要默认数据，可直接跳过本步骤</div>
+                    {/empty}
+                    	<div class="clearfix"></div>
+                        <div class="col-xs-3">
+                            <blockquote style="font-size:14px" id="install_table">
+                                {volist name="has_data" id="vo"}
+                                    <div><input name="tables[]" data-role="check_table" class="auth_checkbox" type="checkbox" checked value="{$vo.name}">
+                                        <span class="text-primary">【{$i}】{$vo.name} </span> &nbsp;（{$vo.rows}）</div>
+                                {/volist}
+                            </blockquote>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="lead">导出的引导脚本预览</div>
+                            <textarea name="sql_rows" class="form-control" style="height: 200px">{$sql_rows|htmlspecialchars}</textarea>
+                        </div>
+                    
+                </div>
+                <div class="clearfix">
+                    <div class="lead">数据清理语句</div>
+                    {empty name="has_data" value=""}
+                        <div class="alert alert-success col-xs-6">未检测到任何关联表内有数据，如果不需要默认数据，可直接跳过本步骤</div>
+                    {/empty}
+                    	<div class="clearfix"></div>
+                        <div class="col-xs-3">
+                            <p>右侧为系统自动导出的清理语句，如果您需要其他的清理语句，可自行修改</p>
+                        </div>
+                        <div class="col-xs-4">
+                        <div class="lead">导出的引导脚本预览</div>
+                        <textarea name="sql_drop_table" class="form-control" style="height: 200px">{$sql_drop_tables}</textarea>
+                        </div>
+                </div>
+    
+    
+                <div class="with-padding">
+                    <a class="btn  btn-default" href="{:url('module3')}">上一步</a>
+                    <a class="btn btn-default" href="{:url('module4')}"><i class="icon-refresh"></i> 重新检测</a>
+                    {neq name="havent_created" value=""}
+                        {php}$str='disabled="disabled"';{/php}
+                    {/neq}
+                    <input type="submit" id="next_step" style="width: 300px" title="{$title}" {$str} class="btn btn-success" value="下一步">
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    </section> 
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+	
+	$('input[type="checkbox"].all_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	});
+	
+	function form_init() {
+		$('input[type="checkbox"].auth_checkbox').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		});
+		$('.auth_checkbox').on('ifChecked ifUnchecked', function(event){
+			$.post('/tools/devtool/backup_rows',$('#form_main').serialize(),function(msg){
+				$('[name=sql_rows]').val(msg)
+			})
+		});
+	}
+	form_init();
+
+	
+	
+	$('.all_checkbox').on('ifChecked ifUnchecked', function(event){
+		$.post('/tools/devtool/backup_tables',$('#form_main').serialize(),function(msg){
+			
+			$('[name=sql_tables]').val(msg.tables_sql);
+			$('[name=sql_rows]').val(msg.insert_sql);
+			$('[name=sql_drop_table]').val(msg.drop_table_sql);
+			
+			link_html='';
+			install_html='';
+			
+			if(msg.tablestructure){
+				 $.each(msg.tablestructure, function(itemindex, items){
+				   itemindex++;	 
+				   link_html += '<div><span class="text-primary" data-toggle="tooltip" data-placement="right" data-original-title="' + items['comment'] + '">【' + itemindex + '】' + items['name'] + ' </span>&nbsp;（' + items['rows'] + '）</div>';
+				   install_html += '<div><input name="tables[]" data-role="check_table" class="auth_checkbox" type="checkbox" checked value="' + items['name'] + '"><span class="text-primary">【' + itemindex + '】' + items['name'] + ' </span> &nbsp;（' + items['rows'] + '）</div>';	 		 
+				 });
+				$('#link_table').html(link_html);
+				$('#install_table').html(install_html);
+				form_init();
+			}else{
+				$('#link_table').html('');
+				$('#install_table').html('');
+			}
+		})
+	});
+})
+                         
+</script>
+{/block}

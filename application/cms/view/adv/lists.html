@@ -1,0 +1,58 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<a class="btn btn-success" href="{:url('addad?id='.$id)}">{:lang('add')}</a>
+			<a class="btn btn-primary" href="{:url('index')}">{:lang('advertising_position')}</a>
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<!-- 表格列表 -->
+		<div class="table-responsive clearfix">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="30"><input class="checkbox check-all" type="checkbox"></th>
+						<th width="60">{:lang('id')}</th>
+						<th width="280">{:lang('title')}</th>
+						<th width="280">{:lang('creation_time')}</th>
+						<th width="280">{:lang('update_time')}</th>
+						<th>{:lang('operation')}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{volist name="list" id="item"}
+					<tr>
+						<td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item.id}"></td>
+						<td>{$item['id']}</td>
+						<td>{$item['title']}</td>
+						<td>{$item['create_time']|date='Y-m-d H:i',###}</td>
+						<td>{$item['update_time']|date='Y-m-d H:i',###}</td>
+						<td>
+							<a href="{:url('editad?id='.$item['id'])}">{:lang('edit')}</a>
+							<a href="{:url('delad?id='.$item['id'])}" class="confirm ajax-get">{:lang('delete')}</a>
+						</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+		</div>
+		<!-- /表格列表 -->
+	</div>
+</div>
+</section>
+{/block}

@@ -1,0 +1,247 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/device.css">
+<style>
+    .legendLabel{color:#FFF;}
+    .list-group-item:first-child{border-radius:0}
+</style>
+{/block}
+{block name="body"}
+
+
+
+<script>
+    <!--
+    function change_divs(what, val) {
+        if (val == 1)
+            style = 'table-row';
+        else
+            style = 'none';
+
+        name = 'setup_'+what;
+        d = document.getElementById(name);
+        if (d != null)
+            d.style.display = style;
+    }
+
+    function vm_disk_change(val) {
+        if (val == 0) {
+            document.getElementById('vm_disk_existing').style.display = 'inline';
+            document.getElementById('vm_disk_create').style.display = 'none';
+        } else {
+            document.getElementById('vm_disk_existing').style.display = 'none';
+            document.getElementById('vm_disk_create').style.display = 'inline';
+        }
+    }
+
+    function generate_mac_addr() {
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+            xmlhttp = new XMLHttpRequest();
+        else
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+        xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                document.getElementById('nic_mac_addr').value = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET", '/virt/index.php?page=new-vm&get_mac=1',true);
+        xmlhttp.send();
+    }
+    -->
+</script>
+
+<div id="content">
+
+    <div class="section">Create a new VM</div>
+
+    <form method="POST" class="form-horizontal">
+
+        <table id="form-table">
+            <tr>
+                <td align="right">Name: </td>
+                <td><input type="text" name="name" /></td>
+            </tr>
+
+            <tr>
+                <td align="right">Install image: </td>
+                <td>
+                    <select name="install_img">
+                        <option value=""></option></select>
+                </td>
+
+            <tr>
+                <td align="right">vCPUs: </td>
+                <td>
+                    <select name="cpu_count" >
+                        <?php for($i=1 ;$i<$maxcpu+1;$i++)
+                        echo "<option value=".$i.">$i</option>";
+                        ?>
+                    </select>
+                </td>
+
+            <tr>
+                <td align="right">Features:</td>
+                <td>
+                    <input class="checkbox" type="checkbox" value="1" name="feature_apic" checked="checked" /> APIC<br />
+                    <input class="checkbox" type="checkbox" value="1" name="feature_acpi" checked="checked" /> ACPI<br />
+                    <input class="checkbox" type="checkbox" value="1" name="feature_pae" checked="checked" /> PAE<br />
+                    <input class="checkbox" type="checkbox" value="1" name="feature_hap" /> HAP
+                </td>
+            </tr>
+
+            <tr>
+                <td align="right">Memory (MiB):</td>
+                <td><input type="text" name="memory" value="512" /></td>
+            </tr>
+
+            <tr>
+                <td align="right">Max. allocation (MiB):</td>
+                <td><input type="text" name="maxmem" value="512" /></td>
+            </tr>
+
+            <tr>
+                <td align="right">Clock offset:</td>
+                <td>
+                    <select name="clock_offset">
+                        <option value="utc">UTC</option>
+                        <option value="localtime">localtime</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="right">Setup network:</td>
+                <td>
+                    <select name="setup_nic" onchange="change_divs('network', this.value)">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr id="setup_network" style="display: none">
+                <td>&nbsp;</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td align="right">MAC Address:</td>
+                            <td>
+                                <input type="text" name="nic_mac" value="52:54:00:88:43:97" id="nic_mac_addr" />
+                                <input type="button" onclick="generate_mac_addr()" value="Generate new MAC address">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">NIC Type:</td>
+                            <td>
+                                <select name="nic_type">';
+                                    <option value="default">default</option>
+                                    <option value="rtl8139">rtl8139</option>
+                                    <option value="e1000">e1000</option>
+                                    <option value="pcnet">pcnet</option>
+                                    <option value="ne2k_pci">ne2k_pci</option>
+                                    <option value="virtio">virtio</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">Network:</td>
+                            <td>
+                                <select name="nic_net">';
+                                    <option value="default">default</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="right">Setup disk:</td>
+                <td>
+                    <select name="setup_disk" onchange="change_divs('disk', this.value)">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr id="setup_disk" style="display: none">
+                <td>&nbsp;</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td align="right">VM Disk: </td>
+                            <td>
+                                <select name="new_vm_disk" onchange="vm_disk_change(this.value)">
+                                    <option value="0">Use existing disk image</option>
+                                    <option value="1">Create new disk image</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+			<span id="vm_disk_existing">
+			Disk image:
+			</span>
+			<span id="vm_disk_create" style="display: none">
+			New disk size (MiB):
+			</span>
+                            </td>
+                            <td><input type="text" name="img_data" /></td>
+                        </tr>
+                        <tr>
+                            <td align="right">Disk location: </td>
+                            <td>
+                                <select name="disk_bus">
+                                    <option value="ide">IDE Bus</option>
+                                    <option value="scsi">SCSI Bus</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">Driver type: </td>
+                            <td>
+                                <select name="disk_driver">
+                                    <option value="raw">raw</option>
+                                    <option value="qcow">qcow</option>
+                                    <option value="qcow2">qcow2</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">Domain device: </td>
+                            <td>hda</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">Set as persistent:</td>
+                <td>
+                    <select name="setup_persistent">
+                        <option value="0">No</option>
+                        <option value="1" selected="selected">Yes</option>
+                    </select>
+                </td>
+            </tr>
+
+
+<tr align="center">
+    <td colspan="2">
+        <!--<input type="submit" value=" Create VM " />-->
+        <button type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal">{:lang('submit')}</button>
+    </td>
+</tr>
+
+<input type="hidden" name="sent" value="1" />
+        </table>
+    </form>
+</div>
+
+
+
+{/block}
+{block name="script"}
+{/block}

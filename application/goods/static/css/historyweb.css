@@ -1,0 +1,99 @@
+.h-box {
+  min-width: 960px;
+
+  min-height: 595px;
+}
+.big-button {
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  height: 70px;
+  line-height: 70px;
+  background: #3c8dbc;
+}
+.big-button i {
+  float: left;
+  color: #fff;
+  font-size: 40px;
+  line-height: 70px;
+  margin-left: 15px;
+}
+.download-table {
+  background: #fff;
+  margin: 0;
+}
+.download-table .id,
+.download-table .address,
+.download-table .date,
+.download-table .log {
+  padding: 0;
+}
+.download-table .id .title,
+.download-table .address .title,
+.download-table .date .title,
+.download-table .log .title {
+  height: 75px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  text-align: center;
+  color: #616161;
+  font-size: 18px;
+  line-height: 75px;
+}
+.download-table .id .one,
+.download-table .address .one,
+.download-table .date .one,
+.download-table .log .one,
+.download-table .id .two,
+.download-table .address .two,
+.download-table .date .two,
+.download-table .log .two {
+  height: 177px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  text-align: center;
+  color: #616161;
+  font-size: 18px;
+  line-height: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.download-table .log .one,
+.download-table .log .two {
+  line-height: 27px !important;
+  padding: 4px 0;
+  font-size: 15px;
+  text-align: left;
+  padding-left: 10px;
+  position: relative;
+}
+.download-table .log .more {
+  font-size: 15px;
+  color: #3c8dbc;
+  right: 10px;
+  bottom: 5px;
+  position: absolute;
+}
+.address .one,
+.address .two {
+  line-height: normal !important;
+  padding: 40px 90px;
+}
+.address .one .button1,
+.address .two .button1,
+.address .one .button2,
+.address .two .button2 {
+  height: 32px;
+  width: 95px;
+  background: #3c8dbc;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  line-height: 32px;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+.address .one .button2,
+.address .two .button2 {
+  margin-top: 15px;
+}

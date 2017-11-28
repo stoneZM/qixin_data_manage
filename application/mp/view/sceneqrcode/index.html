@@ -1,0 +1,82 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="{:url('index')}" >{:lang('sceneqrcode_manage')}</a></li>
+    <li class=""><a href="{:url('statistics')}" >{:lang('sweep_statistics')}</a></li>
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-header">
+                  <div class="device_message pull-left">
+                    <a class="btn btn-primary" href="{:url('add')}" >{:lang('add_sceneqrcode')}</a>
+                 </div>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive clearfix">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><input class="checkbox check-all" type="checkbox"></th>
+                                    <th>{:lang('scene_name')}</th>
+                                    <th>{:lang('related_keywords')}</th>
+                                    <th>{:lang('code_type')}</th>
+                                    <th>{:lang('expiration_time')}</th>
+                                    <th>{:lang('scene_id')}</th>
+                                    <th>{:lang('scene_string')}</th>
+                                    <th>{:lang('qr_code')}</th>
+                                    <th>{:lang('create_time')}</th>
+                                    <th>{:lang('sweep_code')}</th>
+                                    <th>{:lang('sweep_number')}</th>
+                                    <th>{:lang('operation')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volist name="list" id="item"}
+                                <tr>
+                                    <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                                    <td>{$item['scene_name']}</td>
+                                    <td>{$item['keyword']}</td>
+                                    <td>{$item['scene_type']}</td>
+                                    <td>{$item['expire']}</td>
+                                    <td>{$item['scene_id']}</td>
+                                    <td>{$item['scene_str']}</td>
+                                    <td>{$item['short_url']}</td>
+                                    <td>{$item['ctime']|date='Y-m-d H:i:s',###}</td>
+                                    <td>{$item['scan_count']}</td>
+                                    <td>{$item['scan_times']}</td>
+                                    <td>
+                                        <a href="{:url('statistics?qrcode_id='.$item['id'])}" class="">{:lang('查看扫码结果')}</a>
+                                    </td>
+                                </tr>
+                                {/volist}
+                            </tbody>
+                        </table>
+                        {$page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+
+{/block}

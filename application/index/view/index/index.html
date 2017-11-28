@@ -1,0 +1,110 @@
+{extend name="goods@public/base"/}
+
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/static_home.css">
+{/block}
+{block name="body"}
+
+    <div class="banner">
+        <div class="container banner-box">
+            <div class="col-xs-6 info-wrap">
+                <div class="btn-group">
+                    <a href="http://www.qinfo360.com/" target="_blank" data-hover="产品首页" class="sh-btn index-btn">产品首页</a>
+                    <a href="{:url('goods/index/downloads')}" target="_blank" data-hover="下载安装" class="sh-btn online-btn">下载安装</a>
+                    <a href="{:url('goods/index/feed')}" target="_blank" data-hover="线上体验" class="sh-btn online-btn">线上体验</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-wrap">
+        <div class="container new-ui-wrap">
+            <div class="col-xs-8 ui-img"></div>
+            <div class="col-xs-4 ui-info">
+                <h3>全新的UI设计</h3>
+                <p>谁说重应用不能小清新？</p>
+                <p>V3采用蓝色配色方案，</p>
+                <p>简洁的界面，轻灵的色彩，</p>
+                <p>返璞归真，给你一种全新的视觉体验。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="backstage-wrap">
+        <div class="container new-backstage-wrap">
+            <div class="col-xs-4 backstage-info ui-info">
+                <h3>在线云市场</h3>
+                <p>全新云架构，</p>
+                   <p> 尊崇“删繁就简”的理念，将一切操作回归简单，<br>
+                    <p>大幅度提升用户功能安装操作。</p>
+            </div>
+            <div class="col-xs-8 backstage-img"></div>
+
+        </div>
+    </div>
+
+    <div class="data-wrap ui-wrap">
+        <div class="container new-data-wrap">
+            <div class="col-xs-8 data-img"></div>
+            <div class="col-xs-4 ui-info" style="padding-left: 25px">
+                <h3>数据统计</h3>
+                <p>系统后台可查看运营数据，并支持数据筛选和</p>
+                <p>导出，便于数据分析，在线人数、留存率、流</p>
+                <p>失率等运营数据辅助网站运营。</p>
+            </div>
+        </div>
+    </div>
+    <div class="client-wrap">
+        <div class="container client-box">
+            <h1>为什么都选择Q-INFO</h1>
+            <div class="row client">
+                <div class="col-xs-3">
+                    <div class="content">
+                        <p class="p-bold">专业的设备管理</p>
+                        <p style="text-indent: 2em">可无限管理客户端设备，无操作系统限制。</p>
+                        <p style="text-indent: 2em">设备智能管家，查看设备信息，再一不用一台一台的查了，工作简单化。</p>
+                        <p style="text-indent: 2em">SNMP系统监控管理，让你时时了解客户机的状态，不在为宕机不知道而发愁。</p>
+                        <div class="hide-box"><a href="#" target="_blank"><i class="os-icon-link"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="content">
+                        <p class="p-bold">强大的云存储</p>
+                        <p style="text-indent: 2em">支持本地网络存储</p>
+                        <p style="text-indent: 2em">支持七牛云存储</p>
+                        <p style="text-indent: 2em">支持阿里云存储</p>
+                        <div class="hide-box"><a href="#" target="_blank"><i class="os-icon-link"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="content">
+                        <p class="p-bold">数据保障细颗粒</p>
+                        <p style="text-indent: 2em">自定义获取数据颗粒度大小</p>
+                        <p style="text-indent: 2em">支持多种业务模式</p>
+                        <p style="text-indent: 2em">支持业务接管，简单配置，秒级接管</p>
+                        <div class="hide-box"><a href="#" target="_blank"><i class="os-icon-link"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="content">
+                        <p class="p-bold">强大的扩展功能</p>
+                        <p style="text-indent: 2em">模块化开发，系统更新更方便</p>
+                        <p style="text-indent: 2em">可根据自己的业务，开发第三方模块（如：OA、Erp）。</p>
+                        <p style="text-indent: 2em">在线云升级，更轻松的进行版本管理</p>
+                        <div class="hide-box"><a href="#" target="_blank"><i class="os-icon-link"></i></a></div>
+                    </div>
+                </div>
+            </div>
+            <a href="http://www.qinfo360.com/" class="ghost-button" target="_blank">
+                <span class="line line-top"></span>
+                <span class="line line-left"></span>
+                <span class="line line-right"></span>
+                <span class="line line-bottom"></span>
+                了解更多
+            </a>
+        </div>
+    </div>
+{/block}
+
+{block name="script"}
+{/block}

@@ -1,0 +1,68 @@
+{extend name="public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__CSS__/oscloud.css">
+<link href="__STATIC__/ext/foucs/foucs.css" rel="stylesheet" type="text/css"/>
+<link href="__STATIC__/css/historyweb.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="body"}
+<div id="main-container" class="container">
+<div class="row">
+  <div class="common-block oscloud"style="padding-top: 20px;margin-top: 30px" >
+    <div class="h-box"><a href="{:url('downloads')}"><div class="big-button"><i class="iconfont icon-fanhui"></i>Web源码历史下载页面</div></a>
+      <div class="row download-table">
+        <div class="id col-xs-3">
+          <div class="title">版本号</div>
+        </div>
+        <div class="date col-xs-3">
+          <div class="title">发布日期</div>
+        </div>
+        <div class="log col-xs-3">
+          <div class="title">更新日志</div>
+        </div>
+        <div class="address col-xs-3">
+          <div class="title">下载地址</div>
+        </div>
+      </div>
+      
+      {volist name="version_info" id="vo"}    
+      <div class="row download-table">
+        <div class="id col-xs-3">
+          <div class="one">{$vo['name']}{$vo['title']}</div>
+        </div>
+        <div class="date col-xs-3">
+          <div class="one">{$vo['create_time']|date='Y年m月d日',###}</div>
+        </div>
+        <div class="log col-xs-3">
+          <div class="one">
+            <p></p>
+      		{volist name="vo.log" id="log"} 
+            {$log}<br>
+            {/volist} 
+          </div>
+        </div>
+        <div class="address col-xs-3">
+          <div class="one">
+          	{if $vo.install}
+          	<a href="{:url('goods/index/link',array('id'=>$vo.install))}"  target="_blank">
+            <div class="button1">完整安装包</div>
+            {/if}
+            {if $vo.upgrade}
+            </a> <a href="{:url('goods/index/link',array('id'=>$vo.upgrade))}"  target="_blank">
+            <div class="button1">升级包</div>
+            </a>
+           {/if} 
+            
+          </div>
+        </div>
+      </div>
+      {/volist}
+      
+      
+      
+      
+    </div>
+  </div>
+</div>
+{/block}
+{block name="script"}
+{/block}

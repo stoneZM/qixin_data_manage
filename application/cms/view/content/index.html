@@ -1,0 +1,102 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<a class="btn btn-primary" href="{:url('cms/content/add?model_id='.$model_id)}">{:lang('add')}</a>
+			<button class="btn btn-danger ajax-post confirm" url="{:url('cms/content/del?model_id='.$model_id)}" target-form="ids">{:lang('delete')}</button>
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<div class="row">
+			<form method="get">
+				<div class="col-sm-12 col-md-4 col-lg-3">
+					<input type="text" class="form-control" name="keyword" value="{$keyword|default=''}" placeholder="{:lang('Please_enter_a_keyword')}">
+				</div>
+				{if isset($cate_list)}
+				<div class="col-sm-12 col-md-4 col-lg-3">
+					<select name="category" id="category" class="form-control">
+						<option value="">{:lang('Please_select_the_column')}</option>
+						{volist name="cate_list" id="item"}
+						<option value="{$item['id']}" {if isset($category) && $item['id'] == $category}selected{/if}>{$item['title_show']}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				<div class="col-sm-12 col-md-4">
+					<button class="btn btn-primary" type="submit">{:lang('search')}</button>
+				</div>
+			</form>
+		</div>
+		<div class="table-responsive clearfix">
+
+			<div class="table-responsive clearfix">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th width="30"><input class="checkbox check-all" type="checkbox"></th>
+							{volist name="grid['grids']" id="item"}
+							<th>{$item['title']}</th>
+							{/volist}
+							<th>{:lang('operation')}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{if condition="empty($list)"}
+						{php}
+						$cow = count($grid['grids'])+2;
+						{/php}
+						<tr>
+							<td colspan="{$cow}" align="center">{:lang('no_content')}</td>
+						</tr>
+						{else/}
+						{volist name="list" id="item"}
+						<tr>
+							<td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+							{volist name="grid['grids']" id="vo"}
+							{if isset($vo['format'])}
+							<td>{$item[$vo['field'][0]]|$vo['format']}</td>
+							{else/}
+							<td>{$item[$vo['field'][0]]}</td>
+							{/if}
+							{/volist}
+							<td>
+								{if isset($item['is_top'])}
+								{if $item['is_top']}
+								<a href="{:url('cms/content/settop',array('id'=>$item['id'],'model_id'=>$model_id,'is_top'=>'0'))}" class="ajax-get">{:lang('cancel_top')}</a>
+								{else/}
+								<a href="{:url('cms/content/settop',array('id'=>$item['id'],'model_id'=>$model_id,'is_top'=>'1'))}" class="ajax-get">{:lang('top')}</a>
+								{/if}
+								{/if}
+								{if isset($item['status'])}
+								{if $item['status']}
+								<a href="{:url('cms/content/status',array('id'=>$item['id'],'model_id'=>$model_id,'status'=>'0'))}" class="ajax-get">{:lang('cancel_review')}</a>
+								{else/}
+								<a href="{:url('cms/content/status',array('id'=>$item['id'],'model_id'=>$model_id,'status'=>'1'))}" class="ajax-get">{:lang('review')}</a>
+								{/if}
+								{/if}
+								<a href="{:url('cms/content/edit',array('id'=>$item['id'],'model_id'=>$model_id))}" >{:lang('edit')}</a>
+								<a href="{:url('cms/content/del',array('id'=>$item['id'],'model_id'=>$model_id))}" class="ajax-get confirm">{:lang('delete')}</a>
+							</td>
+						</tr>
+						{/volist}
+						{/if}
+					</tbody>
+				</table>
+			</div>
+			{$page}
+		</div>
+	</div>
+</div>
+</section>
+{/block}

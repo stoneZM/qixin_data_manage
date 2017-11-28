@@ -1,0 +1,120 @@
+{extend name="common@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-solid clearfix">
+        <div class="box-body clearfix">
+
+            {if condition="!empty($id)"}
+                <form method="post" class="form-horizontal" action="{:url('edit')}">
+            {else}
+                <form method="post" class="form-horizontal">
+            {/if}
+
+                <input type="hidden" name="uuid" value="{$device['unique_id']}" >
+                <input type="hidden" name="type" value="1">
+                <!--<div class="form-group">-->
+                    <!--<label class="col-lg-2 control-label">设备类型</label>-->
+                    <!--<div class="col-lg-4">-->
+                            <!--<div class="checkbox-inline no-padding"><input class="device_type gl_checkbox" type="radio" name='type' value="1" {if $device['type']==1}checked{/if}>数据接收设备</div>-->
+                            <!--<div class="checkbox-inline no-padding"><input class="device_type gl_checkbox" type="radio" name='type' value="2" {if $device['type']==2}checked{/if}>信任设备</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">{:lang('alias')}：</label>
+                    <div class="col-lg-4">
+                        <input type="text" name="alias" class="form-control " value="{$device['alias']}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">设备{:lang('ip')}：</label>
+                    <div class="col-lg-4">
+                        <input type="text" name="ip" class="form-control " value="{$device['ip']}"/>
+                    </div>
+                </div>
+
+                <div class="form-group device-port">
+                    <label class="col-lg-2 control-label">{:lang('port')}：</label>
+                    <div class="col-lg-4">
+                        <input type="text" name="port" class="form-control " value="{$device['port']}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">用户名:</label>
+                    <div class="col-lg-4">
+                        <input placeholder="" type="text" name="user_name" class="form-control " value="{$device['user_name']}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">密码:</label>
+                    <div class="col-lg-4">
+                        <input placeholder="" type="text" name="passwd" class="form-control " value="{$device['passwd']}"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">{:lang('status')}：</label>
+                    <div class="col-lg-4">
+                            <div class="checkbox-inline no-padding"><input class="device_status gl_checkbox" type="radio" name='status' value="0" {if $device['status']==0}checked{/if}>{:lang('disable')}</div>
+                            <div class="checkbox-inline no-padding"><input class="device_status gl_checkbox" type="radio" name='status' value="1" {if $device['status']==1}checked{/if}>{:lang('enable')}</div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <input type="hidden" name="id" value="{$info['id']|default=''}">
+                        <button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="form-horizontal">{:lang('submit')}</button>
+                        <button class="btn btn-default btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+{/block}
+{block name="script"}
+<script>
+
+
+
+    $(function () {
+        var storage_type = "{$info.type}";
+        function set_storage_type(){
+            if(storage_type == 1){
+                $('.type_net').show();
+                $('.type_cloud').hide();
+            }else if(storage_type == 2 || storage_type == 3 || storage_type == 4){
+                $('.type_net').hide();
+                $('.type_cloud').show();
+            }
+        }
+        set_storage_type();
+        $(document).on("change",'#storage_type',function(e){
+
+            var $this = $(this);
+            storage_type = $this.val();
+            set_storage_type();
+        });
+    });
+
+
+
+</script>
+{/block}

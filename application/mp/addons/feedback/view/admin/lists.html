@@ -1,0 +1,78 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    {volist name="mpnav" id="nav"}
+    <li class="{$nav.class}"><a href="{$nav.url}" >{$nav.title}</a></li>
+    {/volist}
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+            	<ul class="nav nav-tabs">
+                {volist name="subnav" id="subnav"}
+                <li class="{$subnav.class}"><a href="{$subnav.url}" >{$subnav.title}</a></li>
+                {/volist}
+                </ul>
+                <div class="box-body">  
+                  	<div class="table-responsive clearfix">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><input class="checkbox check-all" type="checkbox"></th>
+                                    <th>反馈者头像</th>
+                                    <th>反馈者姓名</th>
+                                    <th>反馈内容</th>
+                                    <th>反馈时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volist name="list" id="item"}
+                                <tr>
+                                    <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['id']}"></td>
+                                    <td>{$item['openid_head']}</td>
+                                    <td>{$item['openid_nickname']}</td>
+                                    <td>{$item['content']}</td>
+                                    <td>{$item['create_time']|date='Y-m-d H:i:s',###}
+                                    </td>
+                                </tr>
+                                {/volist}
+                            </tbody>
+                        </table>
+                        {$page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script>
+
+	//全选的实现
+	$('input[type="checkbox"].gl_checkbox, input[type="radio"].gl_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	  radioClass: 'iradio_minimal-blue'
+	});
+</script>
+{/block}

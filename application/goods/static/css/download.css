@@ -1,0 +1,674 @@
+.banner {
+  background-size: 100% 100%;
+  height: 60px;
+  position: relative;
+}
+.banner .tab-wrap {
+  position: absolute;
+  height: 69px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.banner .tab-wrap .download-tabs {
+  height: 69px;
+  width: 535px;
+  margin: 0 auto;
+  border-bottom: none;
+}
+.banner .tab-wrap .download-tabs .tab-left {
+  float: left;
+  height: 69px;
+}
+.banner .tab-wrap .download-tabs .tab-left .dropdown-toggle {
+  margin-top: 11px;
+  cursor: pointer;
+}
+.banner .tab-wrap .download-tabs .tab-left .dropdown-toggle .icon-angle-down {
+  font-size: 30px;
+  vertical-align: text-top;
+}
+.banner .tab-wrap .download-tabs .tab-left .sanjiao {
+  margin: 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 13px solid transparent;
+}
+.banner .tab-wrap .download-tabs .tab-left-1 {
+  height: 69px;
+  cursor: pointer;
+}
+.banner .tab-wrap .download-tabs .tab-left-1 a {
+  margin-top: 11px;
+}
+.banner .tab-wrap .download-tabs .tab-left-1 .sanjiao {
+  margin: 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 13px solid transparent;
+}
+.banner .tab-wrap .download-tabs .tab-right {
+  height: 69px;
+  cursor: pointer;
+}
+.banner .tab-wrap .download-tabs .tab-right a {
+  margin-top: 11px;
+}
+.banner .tab-wrap .download-tabs .tab-right .sanjiao {
+  margin: 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 13px solid transparent;
+}
+
+
+
+
+
+
+.container #tab1 .free-vission{ padding:20px;
+	
+}
+.container #tab1 .free-vission .free-head,
+.container #tab2 .free-vission .free-head,
+.container #tab3 .free-vission .free-head,{
+  height: 46px;
+  border-bottom: 1px solid #ececed;
+}
+.container #tab1 .free-vission .free-head .free-title,
+.container #tab2 .free-vission .free-head .free-title,
+.container #tab3 .free-vission .free-head .free-title  {
+  height: 46px;
+  width: 168px;
+  border-bottom: 1px solid #3c8dbc;
+  color: #5f5f5f;
+  font-size: 22px;
+}
+.container #tab1 .free-vission .message .id,
+.container #tab2 .free-vission .message .id,
+.container #tab3 .free-vission .message .id {
+  color: #767676;
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 40px;
+}
+.container #tab1 .free-vission .message .id .id-1,
+.container #tab2 .free-vission .message .id .id-1 {
+  color: #3c8dbc;
+  font-weight: normal;
+}
+.container #tab1 .free-vission .message .id .id-2,
+.container #tab2 .free-vission .message .id .id-2 {
+  margin-left: 26px;
+  color: #3c8dbc;
+  font-weight: normal;
+}
+.container #tab1 .free-vission .message .huanjin,
+.container #tab2 .free-vission .message .huanjin {
+  color: #767676;
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+.container #tab1 .free-vission .message .huanjin .huanjin-1,
+.container #tab2 .free-vission .message .huanjin .huanjin-1 {
+  color: #3c8dbc;
+  font-weight: normal;
+}
+.container #tab1 .free-vission .message .huanjin .huanjin-2,
+.container #tab2 .free-vission .message .huanjin .huanjin-2 {
+  color: #3c8dbc;
+  font-weight: normal;
+  display: block;
+  margin-left: 87px;
+}
+.container #tab1 .free-vission .message .huanjin .huanjin-3,
+.container #tab2 .free-vission .message .huanjin .huanjin-3 {
+  color: #3c8dbc;
+  font-weight: normal;
+  display: block;
+  margin-left: 87px;
+}
+.container #tab1 .free-vission .message .yun,
+.container #tab2 .free-vission .message .yun {
+  color: #767676;
+  font-size: 19px;
+  margin-top: 15px;
+}
+.container #tab1 .free-vission .message .yun span,
+.container #tab2 .free-vission .message .yun span {
+  color: red;
+}
+.container #tab1 .free-vission .message .cdn,
+.container #tab2 .free-vission .message .cdn {
+  color: #767676;
+  font-size: 19px;
+  margin-top: 15px;
+}
+.container #tab1 .free-vission .message .xy,
+.container #tab2 .free-vission .message .xy {
+  color: #767676;
+  font-size: 18px;
+  margin-top: 15px;
+}
+.container #tab1 .free-vission .message .instal,
+.container #tab2 .free-vission .message .instal {
+  font-size: 19px;
+  margin-top: 35px;
+  height: 50px;
+}
+.container #tab1 .free-vission .message .instal .pak,
+.container #tab2 .free-vission .message .instal .pak {
+  color: #767676;
+  font-weight: bold;
+  width: 105px;
+  height: 48px;
+  line-height: 48px;
+  float: left;
+}
+.container #tab1 .free-vission .message .instal .local,
+.container #tab2 .free-vission .message .instal .local {
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 46px;
+  float: left;
+}
+.container #tab1 .free-vission .message .instal .baidu,
+.container #tab2 .free-vission .message .instal .baidu {
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 46px;
+  float: left;
+  margin-left: 35px;
+}
+.container #tab1 .free-vission .message .ym-download,
+.container #tab2 .free-vission .message .ym-download {
+  font-size: 20px;
+  margin-top: 45px;
+  height: 50px;
+}
+.container #tab1 .free-vission .message .ym-download .xiazai,
+.container #tab2 .free-vission .message .ym-download .xiazai {
+  color: #767676;
+  font-weight: bold;
+  width: 100px;
+  height: 48px;
+  line-height: 48px;
+  float: left;
+}
+.container #tab1 .free-vission .message .ym-download .guwen,
+.container #tab2 .free-vission .message .ym-download .guwen {
+  width: 228px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 46px;
+  float: left;
+  margin-left: 30px;
+}
+.container #tab1 .free-vission .video .video-head,
+.container #tab2 .free-vission .video .video-head {
+  float: right;
+  height: 30px;
+  margin-top: 40px;
+  margin-right: 30px;
+  width: 423px;
+  margin-bottom: 25px;
+}
+.container #tab1 .free-vission .video .video-head .video-title,
+.container #tab2 .free-vission .video .video-head .video-title {
+  float: left;
+  color: #767676;
+  font-size: 20px;
+}
+.container #tab1 .free-vission .video .video-head .more,
+.container #tab2 .free-vission .video .video-head .more {
+  float: right;
+  font-size: 20px;
+  color: #3c8dbc;
+}
+.container #tab1 .free-vission .video img,
+.container #tab2 .free-vission .video img {
+  float: right;
+  margin-right: 30px;
+}
+.container #tab1 .free-vission .video-box,
+.container #tab2 .free-vission .video-box {
+  position: fixed;
+  top: 50%;
+  margin-top: -250px;
+  left: 50%;
+  margin-left: -400px;
+  height: 283px;
+  display: none;
+  z-index: 10;
+}
+.container #tab1 .free-vission .video-box .close,
+.container #tab2 .free-vission .video-box .close {
+  width: 40px;
+  height: 40px;
+  color: #999;
+  background-color: #000;
+  position: absolute;
+  top: 0;
+  right: -40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 30px;
+  opacity: 1;
+  display: none;
+}
+.container #tab1 .free-vission .menban,
+.container #tab2 .free-vission .menban {
+  z-index: 998;
+  opacity: 0.5;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.container #tab1 .free-vission .free-bottom,
+.container #tab2 .free-vission .free-bottom {
+  height: 70px;
+  margin: 0 62px;
+  border-bottom: 1px solid #ececed;
+}
+.container #tab1 .log .log-left .log-title,
+.container #tab2 .log .log-left .log-title {
+  color: #767676;
+  font-size: 20px;
+  margin-top: 40px;
+  font-weight: bold;
+}
+.container #tab1 .log .log-left .log-content,
+.container #tab2 .log .log-left .log-content {
+  color: #3E3E3E;
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 22px;
+}
+.container #tab1 .log .log-left .log-content a,
+.container #tab2 .log .log-left .log-content a {
+  color: #0a67fb;
+}
+.container #tab1 .log .log-left .show,
+.container #tab2 .log .log-left .show {
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 48px;
+  float: left;
+  margin-top: 50px;
+  margin-bottom: 45px;
+  font-size: 20px;
+}
+.container #tab1 .log .log-left .history,
+.container #tab2 .log .log-left .history {
+
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 48px;
+  float: left;
+  margin-top: 50px;
+  margin-bottom: 45px;
+  font-size: 20px;
+}
+.container #tab1 .log .log-right img,
+.container #tab2 .log .log-right img {
+  float: right;
+  margin-top: 45px;
+  margin-right: 40px;
+}
+.container #tab2 .wrap-title {
+  width: 100%;
+  border-bottom: 1px solid #ececed;
+}
+.container #tab2 .wrap-title .app-title {
+  margin: 0 auto;
+  border-bottom: 1px solid #3c8dbc;
+  margin-top: 40px;
+  padding-bottom: 18px;
+  color: #5f5f5f;
+  font-size: 22px;
+  text-align: center;
+  width: 345px;
+}
+.container #tab2 .vission {
+  color: #767676;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 18px;
+}
+.container #tab2 .vission span {
+  color: #3c8dbc;
+}
+.container #tab2 .dianji {
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.container #tab2 .dianji .osapp {
+  color: #3c8dbc;
+  font-size: 18px;
+  text-align: center;
+  display: inline-block;
+}
+.container #tab2 .dianji .zixun {
+  display: inline-block;
+  width: 147px;
+  height: 33px;
+  background: #3c8dbc;
+  color: #fff;
+  text-align: center;
+  line-height: 33px;
+  margin-left: 13px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.container #tab2 .wrap-os-app {
+	padding:0 20px;
+  margin-top: 34px;
+}
+.container #tab2 .wrap-os-app .ios,
+.container #tab2 .wrap-os-app .android {
+  height: 250px;
+
+  padding: 23px 27px 28px;
+  background: #f4f3f1;
+  margin:0 10px
+}
+.container #tab2 .wrap-os-app .ios .d-head,
+.container #tab2 .wrap-os-app .android .d-head {
+  color: #333;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+.container #tab2 .wrap-os-app .ios .d-head .iconfont,
+.container #tab2 .wrap-os-app .android .d-head .iconfont {
+  font-size: 28px;
+  padding-right: 10px;
+}
+.container #tab2 .wrap-os-app .ios .d-text,
+.container #tab2 .wrap-os-app .android .d-text {
+  color: #848382;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 17px;
+}
+.container #tab2 .wrap-os-app .ios img,
+.container #tab2 .wrap-os-app .android img {
+  width: 114px;
+  margin: 0 auto;
+  margin-top: 30px;
+  display: block;
+}
+.container #tab2 .wrap-os-app .ios .appstore,
+.container #tab2 .wrap-os-app .android .appstore {
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 146px;
+  height: 40px;
+  background: #3c8dbc;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.container #tab2 .wrap-os-app .android {
+  margin-left: 75px;
+}
+.container #tab2 .app-bottom {
+  width: 100%;
+  height: 46px;
+  border-bottom: 1px solid #ececed;
+}
+.container #tab2 .log .log-left .log-title {
+  color: #767676;
+  font-size: 20px;
+  margin-top: 40px;
+  font-weight: bold;
+}
+.container #tab2 .log .log-left .log-content {
+  color: #3E3E3E;
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 45px;
+}
+.container #tab2 .log .log-left .log-content a {
+  color: #0a67fb;
+}
+.container #tab2 .log .log-left .show {
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 48px;
+  float: left;
+  margin-top: 50px;
+  margin-bottom: 45px;
+  font-size: 20px;
+}
+.container #tab2 .log .log-left .history {
+  margin-left: 32px;
+  width: 147px;
+  height: 48px;
+  background: #3c8dbc;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: normal;
+  text-align: center;
+  line-height: 48px;
+  float: left;
+  margin-top: 50px;
+  margin-bottom: 45px;
+  font-size: 20px;
+}
+.container #tab2 .log .log-right img {
+  float: right;
+  margin-top: 97px;
+  margin-right: 40px;
+}
+
+.container #tab3 .vission {
+  color: #767676;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 18px;
+}
+.container #tab3 .vission span {
+  color: #3c8dbc;
+}
+
+
+
+.container #tab3 .wrap-title {
+  width: 100%;
+  border-bottom: 1px solid #ececed;
+}
+.container #tab3 .wrap-title .app-title {
+  margin: 0 auto;
+  border-bottom: 1px solid #3c8dbc;
+  margin-top: 40px;
+  padding-bottom: 18px;
+  color: #5f5f5f;
+  font-size: 22px;
+  text-align: center;
+  width: 345px;
+}
+
+.container #tab3 .wrap-os-app {
+	padding:0 20px;
+  margin-top: 34px;
+}
+.container #tab3 .wrap-os-app .ios,
+.container #tab3 .wrap-os-app .android {
+  height: 250px;
+
+  padding: 23px 190px 28px;
+  background: #f4f3f1;
+  margin:0 10px
+}
+.container #tab3 .wrap-os-app .ios .d-head,
+.container #tab3 .wrap-os-app .android .d-head {
+  color: #333;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+.container #tab3 .wrap-os-app .ios .d-head .iconfont,
+.container #tab3 .wrap-os-app .android .d-head .iconfont {
+  font-size: 28px;
+  padding-right: 10px;
+}
+.container #tab3 .wrap-os-app .ios .d-text,
+.container #tab3 .wrap-os-app .android .d-text {
+  color: #848382;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 17px;
+}
+.container #tab3 .wrap-os-app .ios img,
+.container #tab3 .wrap-os-app .android img {
+  width: 114px;
+  margin: 0 auto;
+  margin-top: 30px;
+  display: block;
+}
+.container #tab3 .wrap-os-app .ios .appstore,
+.container #tab3 .wrap-os-app .android .appstore {
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 146px;
+  height: 40px;
+  background: #3c8dbc;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.container #tab3 .wrap-os-app .android {
+  margin-left: 75px;
+}
+.container #tab3 .app-bottom {
+  width: 100%;
+  height: 46px;
+  border-bottom: 1px solid #ececed;
+}
+
+
+
+
+#tab4 h5 {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+}
+#tab4 h5:after {
+  content: "";
+  width: 302px;
+  border: 1px solid #1abc9c;
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -151px;
+  bottom: 0;
+}
+#tab4 .explain {
+  padding: 5px 20px;
+}
+#tab4 .explain p {
+  line-height: 25px;
+}
+#tab4 .explain p span {
+  color: red;
+}
+#tab4 .toolWrap { margin:0 20px}
+#tab4 .toolWrap .tools {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+#tab4 .toolWrap .tools .info {
+  height: 105px;
+  padding: 0 10px;
+  position: relative;
+}
+#tab4 .toolWrap .tools .info .name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#tab4 .toolWrap .tools .info .btn {
+    margin: 0 auto;
+    background: #3c8dbc;
+    color: #fff;
+    text-align: center;
+
+    border-radius: 3px;
+    font-size: 14px;
+}
+#tab4 .toolWrap .tools .info .version {
+  position: absolute;
+  bottom: 0;
+}
+.wait {
+  padding: 30px 0;
+}
+.wait p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+

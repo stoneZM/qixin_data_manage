@@ -1,0 +1,140 @@
+{volist name='snap_list' id='vo' key=>'key'}
+
+{if condition="$vo.type eq 0 " }
+<div class="relative">
+    <div class="div-relative">
+        <div class="div-relative-title">
+            {if condition='$origin_can_del eq 1'}
+            <a href="{:url('cdp/index/snap_del',array('task_id'=>$vo['task_id'],'sub_task_id'=>$vo['sub_task_id']))}" class="ajax-get confirm" title="{$vo.vir_title}">
+                <span class="badge">删除</span>
+            </a>
+            {else/}
+            <div class="label label-info">{$vo['create_time']|date="Y-m-d",###}</br>{$vo['create_time']|date="H:i:s",###}</div>
+            {/if}
+        </div>
+        <div class="div-relative-body">
+            <div class="div-relative-cursorX"  data_modal="#myModal__0">
+                <div class="div-relative-img">
+                    <i class="qinfoicon qinfo-kelong"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+
+
+
+{if condition="$vo.type eq 1 or $vo.type eq 2 or $vo.type eq 4" }
+
+
+<div class="relative" >
+
+    <div class="div-relative-forward need-hide-forward">
+        <i class="glyphicon glyphicon-forward"></i>
+    </div>
+
+    <div class="div-relative">
+        <div class="div-relative-title" >
+            {if condition="$vo.vir_type eq 0"}
+            <a href="{:url('device/manage/virtual_detail',array('id'=>$vo['virtual_id']))}" title="{$vo.vir_title}">
+                <span class="badge">R</span>
+            </a>
+            {/if}
+            {if condition="$vo.vir_type eq 1"}
+            <a href="{:url('device/manage/virtual_detail',array('id'=>$vo['virtual_id']))}" title="{$vo.vir_title}">
+                <span class="badge">T</span>
+            </a>
+            {/if}
+        </div>
+        {if condition="$vo.vir_type neq -1"}
+        <div class="div-relative-cursorX" data_modal="#myModal__0">
+            {else/}
+            {if condition="$vo.have_os eq 1"}
+            <div class="div-relative-cursor" data_role="add_virtual"  data_modal="#myModal__0"  create_time="{$vo['create_time']|date='Y-m-d H:i:s',###}" snap_group_id="{$vo['group_id']}" >
+                {else/}
+                <div class="div-relative-cursorX" data_modal="#myModal__0">
+                    {/if}
+                    {/if}
+
+                    <div class="div-relative-body">
+                        <?php $disk_html = '' ;?>
+                        <?php foreach ($vo['disk'] as $item) {
+
+                     $html_os='';
+                     if($item['have_os'] == 1 ){
+                              $html_os =(lang('system_disk'));
+                            }
+                     $disk_html .= "<div class='' align='left' style='line-height:22px'>".lang('disk')." : ".$item['harddisk_id'].$html_os;
+                        $disk_html .= "</div>";
+                    }
+                    ?>
+                    <div class="div-relative-cursorX"   data-toggle="tooltip"  data-html="true"  data-original-title="{$disk_html}"  data-placement="bottom" data_role="instead_hostX"  data_modal="#myModal__0">
+                        <div class="div-relative-img">
+                            {if $vo.type==1}
+                            <i class="qinfoicon qinfo-kuaizhao1"></i>
+                            {/if}
+                            {if $vo.type==2}
+                            <i class="qinfoicon qinfo-dangqianchengshi"></i>
+                            {/if}
+                            {if $vo.type==4}
+                            <i class="qinfoicon qinfo-kuaizhao"></i>
+                            {/if}
+                            {if condition="$vo.vir_type eq -1 && $vo.have_os eq 1" }
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {/if}
+                        </div>
+                        <div class="div-relative-time">{$vo['create_time']|date='H:i:s',###}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {if condition="$vo.have_os eq 1 && $vo.available eq 1"}
+        <span group_id="{$vo.group_id}" class="create_keli" >生成颗粒</span>
+        {/if}
+    </div>
+
+    {/if}
+
+
+    <!--合并快照正在进行...-->
+    {if condition="$vo.type eq 3" }
+    <div class="relative" >
+
+        <div class="div-relative-forward need-hide-forward">
+            <i class="glyphicon glyphicon-forward"></i>
+        </div>
+
+        <div class="div-relative">
+            <div class="div-relative-title" >
+                <span class="badge" style="background-color: #5CB85C;color: #FFFFFF">合并中...</span>
+            </div>
+
+            <div class="div-relative-cursorX" data_modal="#myModal__0">
+                <div class="div-relative-body">
+                    <?php $disk_html = '' ;?>
+                    <?php foreach ($vo['disk'] as $item) {
+
+                                                             $html_os='';
+                                                             if($item['have_os'] == 1 ){
+                                                                      $html_os =(lang('system_disk'));
+                                                                    }
+                                                             $disk_html .= "<div class='' align='left' style='line-height:22px'>".lang('disk')." : ".$item['harddisk_id'].$html_os;
+                    $disk_html .= "</div>";
+                }
+                ?>
+                <div class="div-relative-cursorX"   data-toggle="tooltip"  data-html="true"  data-original-title="{$disk_html}"  data-placement="bottom" data_role="instead_hostX"  data_modal="#myModal__0">
+                    <div class="div-relative-img">
+                        <i class="qinfoicon qinfo-kuaizhao2"></i>
+                    </div>
+                    <div class="div-relative-time">{$vo['create_time']|date='H:i:s',###}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+
+
+{/volist}

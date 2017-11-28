@@ -1,0 +1,130 @@
+{extend name="public/base"/}
+{block name="body"}
+<h2 class="text-center">
+	创建账号信息
+</h2>
+<form method="post" target="_self">
+	<div class="create-database">
+		<h2>
+			管理帐号信息
+		</h2>
+		<table class="table-hover table">
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="text" value="admin" readonly>
+					</input>
+				</td>
+				<td>
+					<span>
+						用户名(
+						<span class="text-danger">
+							英文+数字，严禁中文与特殊字符
+						</span>
+						)
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="password" value="">
+					</input>
+				</td>
+				<td>
+					<span>
+						密码
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="password" value="">
+					</input>
+				</td>
+				<td>
+					<span>
+						确认密码
+					</span>
+				</td>
+			</tr>
+		</table>
+		<div>
+		</div>
+	</div>
+    <div class="create-database">
+		<h2>
+			三全帐号信息
+		</h2>
+		<table class="table-hover table">
+        	<tr>
+            	<th width="30%">
+					用户身份（登录账号）
+				</th>
+				<th width="30%">
+					登录密码
+				</th>
+				<th>
+					为保障系统安全，请重设三全账号密码
+				</th>
+			</tr>
+			<tr>
+            	<td>
+					<span>
+						安全管理员(<span class="text-danger">securityadmin</span>)
+					</span>
+				</td>
+				<td>
+					<input class="form-control" name="threeadmin[]" type="password" value="123456" >
+					</input>
+				</td>
+                <td>
+                默认：123456
+                </td>
+			</tr>
+            <tr>
+            	<td>
+					<span>
+						用户管理员(<span class="text-danger">useradmin</span>)
+					</span>
+				</td>
+				<td>
+					<input class="form-control" name="threeadmin[]" type="password" value="123456" >
+					</input>
+				</td>
+                <td>
+                默认：123456
+                </td>
+			</tr>
+            <tr>
+            	<td>
+					<span>
+						审计管理员(<span class="text-danger">auditoradmin</span>)
+					</span>
+				</td>
+				<td>
+					<input class="form-control" name="threeadmin[]" type="password" value="123456" >
+					</input>
+				</td>
+                <td>
+                默认：123456
+                </td>
+			</tr>
+            
+			
+			
+			
+		</table>
+		<div>
+		</div>
+	</div>
+</form>
+{/block}
+{block name="footer"}
+<div class="text-center">
+	<button class="btn btn-primary" id="submit" onclick="$('form').submit();return false;" type="button">
+		下一步
+	</button>
+	<a class="btn btn-default" href="{:url('install/index/check')}">
+		上一步
+	</a>
+</div>
+{/block}

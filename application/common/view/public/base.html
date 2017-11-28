@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>{$meta_title}- {:config('systemconfig.site_title') ?: config('site_title')}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+{if $storage_warning_code == 0}
+<link rel="stylesheet" href="__PUBLIC__/css/nifty.min.css">
+{/if}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/dist/css/AdminLTE.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/dist/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/qinfoicon/iconfont.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/hui-iconfont/iconfont.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/iCheck/all.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/datepicker/datepicker3.css">
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/daterangepicker/daterangepicker.css">
+<!--<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/bootstrap-slider/bootstrap-slider.css">-->
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/showloading/css/showloading.css">
+<style>
+    *{
+        background-color: transparent;
+    }
+
+    tr:hover .progress{
+        background-color: #eee;
+    }
+    .table-striped>tbody>tr:nth-of-type(odd) .progress{
+        background-color: #eee;
+    }
+
+    .sidebar-menu li>a:hover,.navbar-nav li a:hover,.navbar-nav li a:visited{
+        background-color: rgba(0,0,0,0.3);
+        color: #fff;
+        font-size: 1.01em;
+    }
+    .navbar-nav li a>i{
+        color: #dddddd;
+    }
+
+    body#loading{
+        background:  #332644 url('__PUBLIC__/images/background/blue.jpg');
+        background-repeat:no-repeat;
+    }
+
+    .main-header span,.main-sidebar *{
+        color: #FEFFFF;
+    }
+    section.content-header, .breadcrumb>li>a{
+        color: #fff;
+    }
+
+    footer.main-footer, div.content-wrapper{
+        /*background-color: transparent;*/
+        background-color: rgba(255,255,255,0.1);
+    }
+    footer.main-footer *{
+        color: #fff;
+    }
+    div.modal-content,div.modal-header{
+        background: #287582 url('__PUBLIC__/images/background/skin-blue.png');
+        border-radius: 2px;
+        color: #fff;
+    }
+
+    
+    .modal-body .box-header,.modal-header .close{
+        color: #fff;
+    }
+
+
+
+    div.content-wrapper{
+        border-radius: 2px;
+    }
+    div.box,div.nav-tabs-custom,ul.nav-tabs,.nav-tabs-custom>.tab-content{
+        background-color: rgba(255,255,255,0.2);
+    }
+
+
+
+    /*日志*/
+    .timeline>li>.timeline-item{
+        background-color: transparent;
+    }
+
+    .timeline-item .timeline-body,.timeline>li>.timeline-item>.time{
+        color: #e2e0e0;
+    }
+/*表格*/
+    table.table {
+        background-color: rgba(0,0,0,0.35);
+        display: table;
+        text-shadow: 0 0 1px rgba(255,255,255,0.2) ;
+        color: #fff;
+    }
+    .table th{
+        background:rgba(0,0,0,0.35);
+        color: #fff;
+    }
+    table .detail-info .status-1{
+        color: #fff;
+    }
+    .table.header{
+        border-bottom: 0;
+    }
+    .table>thead>tr>th{
+        border-bottom: 0;
+    }
+
+   table.table-hover tr:hover{
+        background-color: rgba(0,0,0,0.1);
+    }
+
+    .table>thead>tr>th,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>tbody>tr>td,
+    .table>tfoot>tr>td{
+        border-top:  1px solid #ddd;
+    }
+    table .btn-link{
+        color: #0dea67;
+    }
+    table .btn-link.status-0{
+       color:  #c7c7c7   ; !important;
+    }
+    table .btn-link:hover, table .btn-link:active  table .btn-link:visited{
+        color: #00f564;
+    }
+   table th{
+        text-align: center;
+    }
+    table tr{
+        text-align: center;
+    }
+
+
+/*按钮*/
+    .box.box-solid>.box-header .btn.btn-default{
+        background:#fff
+    }
+    /*页签*/
+    .nav-tabs-custom>.nav-tabs>li.active>a, .nav-tabs-custom>.nav-tabs>li.active:hover>a{
+
+        background-color: rgba(0,0,0,0.1);
+        color: #fff;
+        font-size: 1.01em;
+    }
+    .nav-tabs-custom>.nav-tabs>li:hover>a:hover{
+        color: #777;
+    }
+    .nav-tabs-custom>.nav-tabs>li.active>a{
+        border-right-color:rgba(0,0,0,0.1);
+        border-left-color:rgba(0,0,0,0.1);
+    }
+
+    .nav-tabs-custom>.nav-tabs>li.active{
+        border-top-color: rgba(0,0,0,0.1);
+    }
+
+
+    
+    
+</style>
+<style>
+        .navbar-custom-menu .user-menu .dropdown-menu{
+            background-color: #22466a;
+            color: #fff;
+        }
+
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+            background-color: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 1.01em;
+        }
+        li.user-footer a{
+            background-color: #61909e;
+            color: #fff;
+        }
+       li.user-footer a:hover, li.user-footer a:visited{
+            background-color: #61909e;
+           font-size: 1em;
+           color: #fff;
+        }
+
+    </style>
+
+{block name="style"}{/block}
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico">
+<script src="__PUBLIC__/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!--[if lt IE 9]>
+<script src="__PUBLIC__/adminlte/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="__PUBLIC__/adminlte/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+	var BASE_URL = "{:config('base_url')}"; //根目录地址
+	var base_lang = "{:config('default_lang')}"; //语言包
+</script>
+</head>
+
+{if $storage_warning_code == 0}
+<div class="notify top-right do-show" data-notification-status="{$warning_level}" >
+    <b>警 告!</b>
+    &nbsp;
+    {$warning_msg} &nbsp; &nbsp; &nbsp;
+</div>
+{/if}
+
+
+<body class="hold-transition sidebar-mini" id="loading" >
+<div class="wrapper">
+
+  <header class="main-header">
+
+    <!-- Logo -->
+      <a href="/Index/index" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>{:config('systemconfig.site_alias') ?: config('site_alias')}</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>{:config('systemconfig.site_title') ?: config('site_title')}</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+
+
+        <!-- Sidebar toggle button-->
+      <div class="navbar-left">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">Toggle navigation</span></a>
+      </div>
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{$admin_user['avatar']}" class="user-image" alt="User Image">
+                        <span class="hidden-xs">
+                            {$admin_user['username']}
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu" style="width: 200px">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="{$admin_user['avatar']}" class="img-circle" style="width: 60px;height: 60px" alt="User Image">
+                            <p style="margin-bottom: 0">
+                                <small>
+                                    登录时间
+                                </small>
+                                {$admin_user['last_login_time']}
+                            </p>
+                        </li>
+                        <!-- Menu Body -->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                    <a href="{:url('admin/user/editpwd')}" class="btn  ">{:lang('edit_password')}</a>
+                                <a href="{:url('admin/user/avatar')}" class="btn ">{:lang('edit_avatar')}</a>
+                            </div>
+                            <div class="col-sm-12" style="margin:5px 0;padding: 0  10px 0 0" >
+                                <a  href="javascript:"  data_role="user_logout" class="btn   col-sm-12">{:lang('sign_out')}</a></div>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="javascript:" data_role="user_logout">
+                        <i class="glyphicon glyphicon-log-out" style="font-size: 1.2em"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+       <!--/.nav-collapse -->
+       <div class="nav-collapse collapse in" >
+        <ul class="nav navbar-nav">
+            {volist name="__menu__['main']" id="item"}
+            <li class="{$item['style']}">
+            <a href="{$item['url']|url}">
+                <i class="fa fa-{$item['icon']|default='file'}"></i>
+                <span>{$item['title']}</span>
+            </a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    </nav>
+  </header>
+  <aside class="main-sidebar">
+    <section class="sidebar">
+
+      <ul class="sidebar-menu">
+      {volist name="__menu__['child']" id="nav"}
+       <li class="treeview active">
+           <a href="#" class="">
+               <i class="fa fa-{$nav[0]['icon']|default='file'}"></i>
+               <span>{$key}</span>
+               <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+               </span>
+           </a>
+       <ul class="treeview-menu">
+        {volist name="nav" id="item"}
+            <li class="{$item['style']}">
+                <a href="{$item['url']|url}">
+                    &nbsp;  <i class="glyphicon glyphicon-hand-right"></i>
+                    &nbsp;
+                    <span>{$item['title']}</span></a>
+            </li>
+        {/volist}
+        </ul>
+         </li>
+      {/volist}
+      {if isset($extend_menu)}
+        {volist name="extend_menu" id="sub"}
+            <li class="treeview active"><a href="#" class=""><i class="fa fa-{$nav[0]['icon']|default='file'}"></i><span>{$key}</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+            <ul class="treeview-menu">
+            {volist name="sub" id="item"}
+            <li class="{$item['style']}">
+                <a href="{$item['url']|url}">
+                    <i class="fa fa-circle-o"></i>
+                    <span>{$item['title']}</span></a>
+            </li>
+            {/volist}
+            </ul>
+            </li>
+        {/volist}
+      {/if}
+        <li class="header">{:lang('help')}</li>
+        <!--<li><a href="javascript:"><i class="fa fa-circle-o text-red"></i> <span>使用手册</span></a></li>
+        <li><a href="javascript:"><i class="fa fa-circle-o text-yellow"></i> <span>常见问题</span></a></li>-->
+        <li><a href="{:url('/admin/license')}"><i class="fa fa-circle-o text-aqua"></i> <span>{:lang('software_license')}</span></a></li>
+
+      {if $license_info['is_valid']!=-1}
+
+          <li class="text-gray license_sidebar" style="padding-left:20px">{:lang('version')}：<span class="label pull-right bg-red" style="padding-right:10px">{if $license_info['type'] == 1}{:lang('trial_version')}{else/}{:lang('official_version')}{/if}</span></li>
+          <li class="text-gray license_sidebar" style="padding-left:20px">{:lang('type')}：<span class="label pull-right bg-green" style="padding-right:10px">{:lang($license_info['version_type'])}</span></li>
+          <li class="text-gray license_sidebar" style="padding-left:20px">{if $license_info['type'] == 1}{:lang('expiration_time')}： <span class="pull-right" style="padding-right:10px"><small>{$license_info['expiration_time']|date='Y-m-d H:i:s',###}</small></span>{else/}{:lang('service_time')}：<span class="pull-right" style="padding-right:10px"><small>{$license_info['end_time']|date='Y-m-d H:i:s',###}</small></span>{/if}
+      {/if}
+
+        {if $license_info['type'] == 2 && $licence_flag }
+        <li class="text-center license_sidebar"><img style="width:180px;" src="{$license_info['img_url']}"></li>
+        {/if}
+      </ul>
+    </section>
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+        {block name="body"}{/block}
+    </div>
+
+  <!-- /.content-wrapper -->
+  <footer class="main-footer" >
+    <div class="pull-right hidden-xs">
+      <i class="fa fa-quote-left"></i> <b>Version</b> {$Think.QINFOCMS_VERSION}
+    </div>
+    <strong>{:config('systemconfig.site_copyright') ?: config('site_copyright')}</strong>
+  </footer>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li class="active"><a href="#control-sidebar-nav" data-toggle="tab"><i class="fa fa-navicon"></i></a></li>
+      <!--<li class=""><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>-->
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane active" id="control-sidebar-nav">
+      <ul class="nav navbar-bar">
+            {volist name="__menu__['main']" id="item"}
+            <li class="{$item['style']}">
+            <a href="{$item['url']|url}">
+                <i class="fa fa-{$item['icon']|default='file'}"></i>
+                <span>{$item['title']}</span>
+            </a>
+            </li>
+            {/volist}
+        </ul>
+      </div>
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">最近的活动</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-user bg-yellow"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">新版本到来</h4>
+
+                <p>Version 2.3.6</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+        <h3 class="control-sidebar-heading">任务进度</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                第一小组
+                <span class="label label-danger pull-right">70%</span>
+              </h4>
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                第二小组
+                <span class="label label-success pull-right">95%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                第三小组
+                <span class="label label-warning pull-right">50%</span>
+              </h4>
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <h4 class="control-sidebar-subheading">
+                第四小组
+                <span class="label label-primary pull-right">68%</span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Stats tab content -->
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+</div>
+
+<script src="__PUBLIC__/adminlte/bootstrap/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/bootstrap-slider/bootstrap-slider.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/iCheck/icheck.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/select2/select2.full.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/moment/2.11.2/moment.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/fastclick/fastclick.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/template/template.js"></script>
+<script src="__PUBLIC__/adminlte/dist/js/app.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/hopscotch/hopscotch.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/messager/messager.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/layer/2.4/layer.js"></script>
+<script src="__PUBLIC__/adminlte/dist/js/pace.min.js"></script>
+<script src="__PUBLIC__/adminlte/plugins/showloading/js/jquery.showLoading.min.js"></script>
+<script src="__PUBLIC__/adminlte/dist/lang/{:config('default_lang')}.js"></script>
+<script type="text/javascript">
+(function(){
+	var QinfoCMS = window.Qinfo = {
+		"ROOT"   : "__ROOT__", //当前网站地址
+		"APP"    : "__APP__", //当前项目地址
+		"PUBLIC" : "__PUBLIC__", //项目公共目录地址
+		"DEEP"   : "{:config('URL_PATHINFO_DEPR')}", //PATHINFO分割符
+		"MODEL"  : ["{:config('URL_MODEL')}", "{:config('URL_CASE_INSENSITIVE')}", "{:config('URL_HTML_SUFFIX')}"],
+		"VAR"    : ["{:config('VAR_MODULE')}", "{:config('VAR_CONTROLLER')}", "{:config('VAR_ACTION')}"],
+		"MID" : "{:is_login()}", //项目公共目录地址
+	}
+})();
+</script>
+<script src="__PUBLIC__/adminlte/dist/js/core.js"></script>
+<script type="application/javascript">
+
+     $(".warning-alert-box").attr('display')=="display"?$(".warning-alert-box").show():'';
+
+    function friendlyTip(msg,errorMsg,time,errorTime) {
+
+        var oldTime = Date.parse(new Date());
+        time = time ? time : 6000;
+        errorTime = errorTime ? errorTime : 2000;
+
+        layer.msg(msg, {
+            icon: 16,
+            time: time
+        }, function () {
+            var newTime = Date.parse(new Date());
+            if ((newTime - oldTime) < (time - 0.001)) {
+                return false;
+            } else {
+                layer.msg(errorMsg, {icon: 5, time: errorTime}, function () {
+                    location.reload();
+                });
+            }
+        })
+    }
+
+    $('button.close').click(function(e){
+        e.preventDefault();
+        $(this).parent().slideUp(500);
+    });
+
+</script>
+
+<script>
+    <!--自动退出-->
+    var lockTime = "{$admin_user['lock_time']}";
+    lockTime = parseInt(lockTime);
+    var staticTime = 0;
+    function lockTimeAdd() {
+        staticTime++;
+        if(staticTime>(lockTime*60)){
+            $.ajax({
+                url:'{:url("/admin/logout")}',
+                type: 'get',
+                async: true,
+                success:function (res) {
+                    if(res.code){
+                        layer.msg('超时自动退出!');
+                        window.location.href = "{:url('/admin/login')}";
+                    }
+                }
+            })  
+        }
+    }
+    setInterval(lockTimeAdd,1000);
+    
+   
+</script>
+
+
+{block name="script"}{/block}
+</body>
+</html>

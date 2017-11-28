@@ -1,0 +1,277 @@
+
+<!--添加任务模态框-->
+<div class="modal fade" id="add_task" tabindex="-1" role="dialog" aria-labelledby="add_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> <span id="task_title">{:lang('add_task')}</span></h4>
+            </div>
+            <form class="form form-horizontal cdp_add_form" role="form" method="post" action="{:url('cdp/index/task_add')}">
+                <input type="hidden" name='device_id' value="{$device_data['id']}">
+                <input type="hidden" name='device_status' value="{$device_data['status']}">
+                <input type="hidden" name='harddisk_info' value='{$device_data["harddisk_info"]}'>
+
+                <div class="modal-body">
+                    <div id='conf_step1' name='conf_step1' style="display:block">
+                        <div class="box-header no-padding">{:lang('recover_disk')}</div>
+                        <div class="box-body">
+                            {volist name="harddisk_list" id="vo0"}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('disk')}-{$vo0['harddiskindex']}</label>
+                                <div class="col-sm-10">
+                                    {volist name="vo0.partitions" id="vo"}
+                                    {if condition="$vo.filesystem neq 'Linux LVM' "}
+                                    <div style="margin-bottom:5px;">
+                                        <input type="checkbox"   name="partition[]" class="ids row-selected"  value="{$vo['harddiskindex']}_{$vo['partitionindex']},{$vo['harddiskindex']},{$vo['partitionindex']},{$vo['totalsize']},{$vo['driverletter']}">
+                                        <span style="font-size:12px"><strong>{:lang('partition')}：{$vo['driverletter']}</strong>（{$vo['totalsize']|format_bytes}）</span>
+                                    </div>
+                                    {/if}
+                                    {/volist}
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-default"  onclick="conf_nextto(1,2,'conf_step');">{:lang('next')}</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                        </div>
+                    </div>
+                    <div id='conf_step2' name='conf_step2' style="display:none">
+                        <div class="box-header no-padding">{:lang('merge_strategy')}</div>
+                        <div class="box-body">
+
+                            <div class="form-group" id="diskclone_storage">
+                                <label class="col-sm-2 control-label">{:lang('storage_path')}</label>
+                                <div class="col-sm-10" >
+                                    <select  name='storage_id' id="storage_id" class="form-control select2" style="width:100%;">
+                                        {volist name="storage_path_list" id="vo"}
+                                        <option disabled="disabled">{$vo['name']}</option>
+                                        {volist name="vo.storage_path" id="path"}
+                                        <option value="{$vo['id']}_{$path['id']}">{$path['path']}</option>
+                                        {/volist}
+                                        {/volist}
+                                        </if>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('synchar_duration')}</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  name="synchr_time" id="synchr_time" value="30" class="form-control" style="width:20%; display:inline-block" valign="center">
+                                    <select id="synchr_interval_type" id="synchr_interval_type" name="synchr_interval_type" class="form-control select2" style="width:20%;display:inline-block;"  >
+                                        <option  value="sec" >{:lang('second')}</option>
+                                        <option  value="min" selected="selected" >{:lang('min')}</option>
+                                        <option  value="hour" >{:lang('hour')}</option>
+                                        <option  value="day" >{:lang('day')}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('snap_duration')}</label>
+                                <div class="col-sm-10">
+                                    <div class="checkbox-inline no-padding">
+                                        <input type="text" id="snap_time" value="2" name="snap_time" class="form-control" style="width:25%; display:inline-block;">
+                                        <select  name='snap_inter_type'  id="snap_inter_type" class="form-control snap_inter_type" style="width:25%;display: inline-block" >
+                                            <!--<option  value="sec" >{:lang('second')}</option>-->
+                                            <option  value="min" >{:lang('min')}</option>
+                                            <option  value="hour" >{:lang('hour')}</option>
+                                            <option  value="day" selected="selected">{:lang('day')}</option>
+                                        </select>
+                                        <label style="font-size:12px" class="limit-tip">  ({:lang("need_gt_rsync_time")})</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('stop_duration')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="begin" name="begin" class="form-control" style="width:20%; display:inline-block" placeholder="00:00" value=""> {:lang('to')}
+                                    <input type="text" id="end" name="end"  class="form-control" placeholder="01:00" style="width:20%; display:inline-block" value="" >
+                                    <label style="font-size:12px" class="limit-tip">  ({:lang('not_stop')})</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button id="edit-hidden" type="button" class="btn btn-default step2_last"  onclick="conf_nextto(2,1,'conf_step');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default"  onclick="conf_nextto(2,3,'conf_step');">{:lang('next')}</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                        </div>
+                    </div>
+
+                    <div id='conf_step3' name='conf_step3'  style="display:none">
+                        <div class="box-header no-padding">{:lang('snap_strategy')}</div>
+                        <div class="box-body">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('backup_speed')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="backup_speed" name="backup_speed" class="form-control" style="width:20%; display:inline-block" value=0>
+                                    KB/S ({:lang('not_limit_speed')})
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('merge_duration')}</label>
+                                <div class="col-sm-10">
+                                    <div class="" style="">
+                                        <!--<input type="text" id="snap_num"  name="snap_num" class="form-control" style="width:20%; display:inline-block" value=64> {:lang('num')}-->
+                                        <select id='snap_num' name='snap_num' class="form-control select2" style="width:20%;display: inline-block">
+                                            {for start="8" step="8" end="72"}
+                                                 <option value="{$i}">{$i}</option>
+                                            {/for}
+                                        </select> {:lang('num')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="">
+                                <label class="col-sm-2 control-label">{:lang('save_snap')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  name="sub_snap_num" id="snap_merge_time" class="form-control" style="width:20%; display:inline-block" value=3> {:lang('num')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-default" onClick="conf_nextto(3,2,'conf_step');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-success ajax-post auto_add_task add-cdp-task" target-form="cdp_add_form">{:lang('submit')}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--编辑任务模态框-->
+<div class="modal fade" id="edit_task" tabindex="-1" role="dialog" aria-labelledby="edit_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> <span id="edit_task_title">{:lang('edit_task')}</span></h4>
+            </div>
+            <form class="form form-horizontal cdp_edit_form" role="form" method="post" action="{:url('cdp/index/task_edit')}">
+                <input id="edit_task_id" type="hidden" name='task_id' value="">
+                <div class="modal-body">
+                    <div id='edit_conf_step2' name='edit_conf_step2' style="display: none;">
+                        <div class="box-header no-padding">{:lang('merge_strategy')}</div>
+                        <div class="box-body">
+                            <div class="form-group" id="edit_diskclone_storage">
+                                <label class="col-sm-2 control-label">{:lang('storage_path')}</label>
+                                <div class="col-sm-10" >
+                                    <select  name='storage_id' id="edit_storage_id" disabled="disabled" class="form-control select2" style="width:100%;">
+                                        {volist name="storage_path_list" id="vo"}
+                                        <option disabled="disabled">{$vo['name']}</option>
+                                        {volist name="vo.storage_path" id="path"}
+                                        <option value="{$vo['id']}_{$path['id']}">{$path['path']}</option>
+                                        {/volist}
+                                        {/volist}
+                                        </if>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('synchar_duration')}</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  name="synchr_time" id="edit_synchr_time" class="form-control" style="width:20%; display:inline-block" valign="center">
+                                    <select id="edit_synchr_interval_type"  name="synchr_interval_type" class="form-control select2" style="width:20%;display:inline-block;"  >
+                                        <option  value="sec" >{:lang('second')}</option>
+                                        <option  value="min" >{:lang('min')}</option>
+                                        <option  value="hour" >{:lang('hour')}</option>
+                                        <option  value="day" >{:lang('day')}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('snap_duration')}</label>
+                                <div class="col-sm-10">
+                                    <div class="checkbox-inline no-padding">
+                                        <input type="text" id="edit_snap_time" name="snap_time" class="form-control" style="width:25%; display:inline-block">
+                                        <select  name='snap_inter_type' id="edit_snap_inter_type" class="form-control snap_inter_type" style="width:25%;display: inline-block" >
+                                            <!--<option  value="sec" >{:lang('second')}</option>-->
+                                            <option  value="min" >{:lang('min')}</option>
+                                            <option  value="hour" >{:lang('hour')}</option>
+                                            <option  value="day" >{:lang('day')}</option>
+                                        </select>
+                                       <label style="color: gray;font-size:12px">  ({:lang("need_gt_rsync_time")})</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('stop_duration')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="edit_begin" name="begin" class="form-control" style="width:20%; display:inline-block" placeholder="00:00" > {:lang('to')}
+                                    <input type="text" id="edit_end" name="end"  class="form-control" placeholder="01:00" style="width:20%; display:inline-block"  >
+                                    <label style="color: gray;font-size:12px">  ({:lang('not_stop')})</label>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <!--<button id="edit_edit-hidden" type="button" class="btn btn-default step2_last"  onclick="conf_nextto(2,1,'edit_conf_step');">{:lang('pre_step')}</button>-->
+                            <!--&nbsp;-->
+                            <button type="button" class="btn btn-default"  onclick="conf_nextto(2,3,'edit_conf_step');">{:lang('next')}</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default"  data-dismiss="modal">{:lang('cancel')}</button>
+                        </div>
+                    </div>
+
+                    <div id='edit_conf_step3' name='conf_step3'  style="display:none">
+                        <div class="box-header no-padding">{:lang('snap_strategy')}</div>
+                        <div class="box-body">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('backup_speed')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="edit_backup_speed" name="backup_speed" class="form-control" style="width:20%; display:inline-block" >
+                                    KB/S ({:lang('not_limit_speed')})
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{:lang('merge_duration')}</label>
+                                <div class="col-sm-10">
+                                    <div class="" style="">
+                                        <!--<input type="text" id="edit_snap_num"  name="snap_num" class="form-control" style="width:20%; display:inline-block" >{:lang('num')}-->
+                                        <select id='edit_snap_num' name='snap_num' class="form-control select2" style="width:20%;display: inline-block">
+                                            {for start="8" step="8" end="72"}
+                                            <option value="{$i}">{$i}</option>
+                                            {/for}
+                                        </select> {:lang('num')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="">
+                                <label class="col-sm-2 control-label">{:lang('save_snap')}</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  name="sub_snap_num" id="edit_snap_merge_time" class="form-control" style="width:20%; display:inline-block" > {:lang('num')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style=" padding:10px 0 0 0">
+                            <button type="button" class="btn btn-default" onClick="conf_nextto(3,2,'edit_conf_step');">{:lang('pre_step')}</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-success ajax-post edit-cdp-task" target-form="cdp_edit_form">{:lang('submit')}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

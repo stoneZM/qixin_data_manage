@@ -1,0 +1,190 @@
+{extend name="common@public/base"/}
+{block name="body"}
+<section class="content-header">
+  <h1>{:isset($info['id'])?lang('edit'):lang('add')}{:lang('type')}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<form action="{:url()}" method="post" class="form form-horizontal">
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#tab-base" data-toggle="tab">{:lang('basics')}</a>
+					</li>
+					<li><a href="#tab-better" data-toggle="tab">{:lang('advanced')}</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab-base">
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('category_parent')}</label>
+							<div class="col-lg-8">
+								<input type="hidden" name="pid" value="{$category['id']|default=0}">
+								<input type="text" class="form-control" disabled="disabled" value="{$category['title']|default=lang('nothing')}"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('name')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="title" class="form-control" value="{$info.title|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('identifying')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="name" class="form-control" value="{$info.name|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('grouping')}</label>
+							<div class="col-lg-8">
+								<textarea name="groups" class="form-control">{$info.groups|default=''}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('release')}</label>
+							<div class="col-lg-8">
+								<label class="radio-inline" style="padding-left:0"><input class="radio_release" type="radio" name="allow_publish" value="0">{:lang('not_allow')}</label>
+								<label class="radio-inline" style="padding-left:0"><input class="radio_release" type="radio" name="allow_publish" value="1" checked>{:lang('allow_background')}</label>
+								<label class="radio-inline" style="padding-left:0"><input class="radio_release" type="radio" name="allow_publish" value="2" >{:lang('allow_all')}</label>
+								<span class="help-block">（{:lang('whether_to_allow_the_release_of_content')}）</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">
+								{:lang('whether_the_audit')}
+							</label>
+							<div class="col-lg-8">
+								<label class="radio-inline" style="padding-left:0"><input class="radio_release"  type="radio" name="check" value="0" checked>{:lang('no')}</label>
+								<label class="radio-inline" style="padding-left:0"><input class="radio_release"  type="radio" name="check" value="1">{:lang('yes')}</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('icon')}</label>
+							<div class="col-lg-8">
+								{:widget('common/Form/show',array(array('name'=>'icon','type'=>'image'),$info))}
+							</div>
+						</div>
+						
+					</div>
+					<div class="tab-pane" id="tab-better">
+
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('visibility')}</label>
+							<div class="col-lg-3">
+								<select name="display" class="form-control">
+									<option value="1">{:lang('all_visible')}</option>
+									<option value="0">{:lang('invisible')}</option>
+									<option value="2">{:lang('administrator_visible')}</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('sort')}</label>
+							<div class="col-lg-2">
+								<input type="text" name="sort" class="form-control" value="{$info.sort|default=0}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('list_row')}</label>
+							<div class="col-lg-5">
+								<input type="text" name="list_row" class="form-control" value="{$info.list_row|default=10}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('list_row')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="meta_title" class="form-control" value="{$info.meta_title|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('keyword')}</label>
+							<div class="col-lg-8">
+								<textarea class="form-control" name="keywords">{$info.keywords|default=''}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('description')}</label>
+							<div class="col-lg-8">
+								<textarea class="form-control" name="description">{$info.description|default=''}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('channel_template')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="template_index" class="form-control" value="{$info.template_index|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('list_template')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="template_lists" class="form-control" value="{$info.template_lists|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('details_template')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="template_detail" class="form-control" value="{$info.template_detail|default=''}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">{:lang('edit_template')}</label>
+							<div class="col-lg-8">
+								<input type="text" name="template_edit" class="form-control" value="{$info.template_edit|default=''}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info['id']|default=''}">
+					<button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">{:lang('submit')}</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script type="text/javascript">
+	{present name="info['id']"}
+	Qinfo.setValue("allow_publish", {$info.allow_publish|default=1});
+	Qinfo.setValue("check", {$info.check|default=0});
+	Qinfo.setValue("model[]", {$info.model|json_encode} || [1]);
+	Qinfo.setValue("model_sub[]", {$info.model_sub|json_encode} || [1]);
+	Qinfo.setValue("type[]", {$info.type|json_encode} || [2]);
+	Qinfo.setValue("display", {$info.display|default=1});
+	Qinfo.setValue("reply", {$info.reply|default=0});
+	Qinfo.setValue("reply_model[]", {$info.reply_model|json_encode} || [1]);
+	{/present}
+	$(function(){
+		$("input[name=reply]").change(function(){
+			var $reply = $(".form-group.reply");
+			parseInt(this.value) ? $reply.show() : $reply.hide();
+		}).filter(":checked").change();
+	});
+	
+$(function() {
+	//全选的实现
+	$('input[type="radio"].radio_release').iCheck({
+	  radioClass: 'iradio_minimal-blue'
+	});
+})
+
+</script>
+{/block}

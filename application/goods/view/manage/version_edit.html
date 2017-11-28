@@ -1,0 +1,137 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<!-- datepicker end -->
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+		<!-- 修改密码表单 -->
+		<form method="post" class="form-horizontal">
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('version_number')}：</label>
+				<div class="col-lg-6 col-sm-10">
+					<input type="text" name="title" class="form-control " autocomplete="off" value="{$data.title}"/>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('update_log')}：</label>
+				<div class="col-lg-6 col-sm-10">
+					<textarea type="text" name="log" rows="8" class="form-control " autocomplete="off" />{$data.log}</textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('file')}：</label>
+				<div class="col-lg-6 col-sm-10">
+                	<div class="picker-box">
+                        <div id="picker_file_id" class="picker_button">{:lang('upload_file')}</div>
+                        {if isset($data['file_id']) && $data['file_id']}
+                        <input type="hidden" name="file_id" id="field_file_id" value="{$data.file_id}">
+                        {else/}
+                        <input type="hidden" name="file_id" id="field_file_id" value="">
+                        {/if}
+                        <div id="fileList_file_id" class="upload-file-list-info" style="width:280px;">
+                            {if $data['file_id']}
+                            {php}
+                            $images = get_goods_file($data['file_id']);
+                            {/php}
+                            <li class="affix-list-item" id="WU_FILE_0">
+                                <div class="upload-file-info">
+                                    <span class="webuploader-pick-file-close" data-queued-id="WU_FILE_0" data-id="{$data.file_id}" data-fileurl="{$images['path']}"><i class="close"></i></span>
+                                    <span class="fname"></span>
+                                    <span class="fsize">{:lang('upload_time')}:{$images['create_time']|date='Y-m-d H:i:s',###}</span>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="filebox info-box-text">
+                                    <i class="fa fa-file-o" style="font-size:18px"></i>：<span title="{$images['name']}">{$images['name']}</span>
+                                </div>
+                            </li>
+                            {/if}
+                        </div>
+                    </div>
+				</div>
+			</div>
+            
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('explain')}：</label>
+				<div class="col-lg-6 col-sm-10">
+
+					<textarea name="explain" id="explain" style="width: 100%; height:300px">{$data['explain']}</textarea>
+					<!-- 样式文件 -->
+					<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/wangeditor/css/wangEditor.css">
+					<script type="text/javascript" src="__PUBLIC__/adminlte/plugins/wangeditor/js/wangEditor.js"></script>
+					<script type="text/javascript">
+						var weditor_explain = new wangEditor('explain');
+						// 上传图片
+						weditor_explain.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+							if (item === 'insertcode' || item === 'fullscreen' || item === 'emotion') {
+								return null;
+							}
+							return item;
+						});
+						weditor_explain.config.uploadImgFileName = 'upfile'
+						weditor_explain.config.uploadImgUrl = "{:url('admin/upload/weditor')}";
+						weditor_explain.config.zindex = 4;
+						weditor_explain.create();
+					</script>
+				</div>
+			</div>
+            
+            
+            <div class="form-group">
+				<label class="col-lg-2 control-label">{:lang('state')}：</label>
+				<div class="col-lg-6 col-sm-10">
+					<select type="text" name="status" class="form-control" />
+                    	<option value="0" {if condition="$data['status'] eq 0"} selected {/if} >{:lang('disable')}</option>
+                    	<option value="1" {if condition="$data['status'] eq 1"} selected {/if} >{:lang('enable')}</option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+                	<input type="hidden" name="id" value="{$data['id']|default=''}">
+                    <input type="hidden" name="goods_id" value="{$goods_id|default=''}">   
+					<button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="form-horizontal">{:lang('submit')}</button>
+					<button class="btn btn-default btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+
+{block name="script"}
+<script src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script type="text/javascript">
+uploadsize =  100;
+$(function(){
+	$("#picker_file_id").QinfoUploader({
+			fileNumLimit:1,
+			uploadEvents: {
+				uploadComplete:function(file){}
+			},
+			listName : 'fileList_file_id',
+			hiddenName: 'field_file_id',
+			hiddenValType:1,
+			fileSingleSizeLimit:uploadsize*1024*1024,
+			closeX:true
+		},
+		{
+			fileType: 'service',
+			filename : 'cloud',
+		});
+});
+</script>
+{/block}

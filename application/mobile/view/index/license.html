@@ -1,0 +1,217 @@
+{extend name="public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<div class="page">
+  <header class="bar bar-nav">
+    <a class="icon icon-left pull-left" href="{:url('service')}"></a>
+    <h1 class="title">授权查询</h1>
+  </header>
+  <div class="content">
+  
+  {if $license_data}
+  <div class="card">
+    <div class="card-content">
+        <div class="list-block">
+            <ul>
+              <li class="item-content">
+                <div>CD-key</div>
+                <div class="item-inner">{$license_data.cdkey}</div>
+              </li>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">注册时间</div>
+                  <div class="item-after">{$license_data.use_time|date='Y-m-d',###}</div>
+                </div>
+              </li>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">类型</div>
+                  <div class="item-after">{if $license_data.type eq 2}正式版{else}试用版{/if}</div>
+                </div>
+              </li>
+              
+              {if $license_data.type eq 1}
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">过期时间</div>
+                  <div class="item-after">{$license_data['expiration_time']|date='Y-m-d',###}</div>
+                </div>
+              </li>
+              {else/}
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">售后支持</div>
+                  <div class="item-after">{$license_data['start_time']|date='Y/m/d',###}-{$license_data['end_time']|date='Y/m/d',###}</div>
+                </div>
+              </li>
+              {/if}
+            </ul>
+        </div>
+     </div>
+  </div>      
+  <div class="card">
+    <div class="card-content">   
+        <div class="buttons-tab fixed-tab">
+        	<a href="#tab1" class="tab-link active button">授权信息</a>
+            <a href="#tab2" class="tab-link button">注册信息</a>
+        </div>
+    	<div class="tabs" style="background:#FFF">
+          <div id="tab1" class="tab active mudule_content">
+          	<div class="card">
+              <div class="card-header"><strong>可用模块</strong></div>
+              <div class="card-content">
+              <div class="card-content-inner">
+                {volist name="$config_info.module" id="module"}
+               	<span class="button button-fill" style="display:inline-block; margin-bottom:5px">{$module|ucfirst}</span>
+                {/volist}
+              </div>  
+              </div>
+              <div class="card-header"><strong>授权点</strong></div>
+              <div class="card-content">
+                <div class="list-block">
+                  <ul>
+                  {volist name="$storage_list" id="storage"}
+                    <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">{$storage.name}</div>
+                          <div class="item-after">{$storage.size}</div>
+                        </div>
+                    </li>
+                  {/volist}
+                  {if $config_info.compute_size}
+                  <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">计算池</div>
+                          <div class="item-after">{$config_info.compute_size}个</div>
+                        </div>
+                    </li>
+                  {/if}
+                  {if $config_info.cdp_size}
+                  <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">CDP</div>
+                          <div class="item-after">{$config_info.cdp_size}个</div>
+                        </div>
+                    </li>
+                  {/if}
+                  {if $config_info.sb_size}
+                  <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">SB</div>
+                          <div class="item-after">{$config_info.sb_size}个</div>
+                        </div>
+                    </li>
+                  {/if}
+                  {if $config_info.mv_size}
+                  <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">MV</div>
+                          <div class="item-after">{$config_info.mv_size}个</div>
+                        </div>
+                    </li>
+                  {/if}
+                  
+                  
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab2" class="tab">
+           <div class="list-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">注册机构</div>
+                      <div class="item-after">{$use_info.reg_agency}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">注册电话</div>
+                      <div class="item-after">{$use_info.reg_phone}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">注册邮箱</div>
+                      <div class="item-after">{$use_info.reg_email}</div>
+                    </div>
+                  </li>
+                 
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">联系人</div>
+                      <div class="item-after">{$use_info.reg_contacts}</div>
+                    </div>
+                  </li>
+                 
+                </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  {else/}
+    <div class="list-block">
+        <ul>
+          <li>
+            <div class="item-content">
+                <div class="item-media"><i class="icon iconfont icon-shouquan2"></i></div>
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="text" name="cdkey" id="cdkey" placeholder="CD-KEY">
+                  </div>
+                </div>
+              </div>
+          </li>
+        </ul>
+    </div>    
+     <div class="content-block">
+      <div class="row">
+        <div class="col-100"><a href="#" class="button button-big button-fill button-success" id="save_and_back">提交</a></div>
+      </div>
+    </div>   
+  {/if}
+  </div>
+</div>
+{/block}
+{block name="script"} 
+<script>
+//打开自动初始化页面的功能
+//建议不要打开自动初始化，而是自己调用 $.init 方法完成初始化
+$.config = {
+	autoInit: true,
+	router:false
+}
+  
+$("#save_and_back").on("click",function(e){
+	e.preventDefault();
+	var cdkey = $("#cdkey").val();
+	if(!cdkey){
+		// $.alert('这是一段提示消息');
+		$.toast('请输入CD-KEY', 2000, 'success top');
+	}
+	
+	window.location.href="/license/cdkey/"+cdkey;
+});  
+  
+/*wx.ready(function(){
+    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+  	wx.scanQRCode({
+		desc: 'scanQRCode desc',
+		needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+		scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+		success: function (res) {
+		   // 回调
+		},
+		error: function(res){
+			if(res.errMsg.indexOf('function_not_exist') > 0){
+				alert('版本过低请升级')
+			}
+		}
+	});
+}); */
+</script> 
+{/block}

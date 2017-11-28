@@ -1,0 +1,12 @@
+.device_message { font-size:1em}
+#device_list .qinfoicon{ font-size:45px;margin-left:5px}
+#device_list  .product-list-in-box>.item{ border:1px solid #f4f4f4;}
+#device_list  .products-list>.item{ padding:10px}
+.warning_text{color:#F90;}
+.error_text{color:#C00;}
+.online_text{color:#060;}
+.offline_text{color:#666;}
+
+
+.info-box-text{ text-transform:none}
+

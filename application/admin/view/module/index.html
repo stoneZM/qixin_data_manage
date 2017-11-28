@@ -1,0 +1,188 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<style>
+.module-list {
+  padding-left: 0;
+}
+.module-list li {
+  border: 1px solid #eee;
+  background: #dad8d840;
+  margin-right: 25px;
+  margin-bottom: 20px;
+  display: inline-block;
+  padding: 10px;
+  width: 475px;
+  list-style: none;
+}
+.module-list li .cover-w {
+  width: 120px;
+  margin-right: 15px;
+  float: left;
+}
+.module-list li .cover-w .cover {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+}
+.module-list li .cover-w .cover-icon {
+  width: 120px;
+  height: 120px;
+  text-align: center;
+  background: #999;
+  border-radius: 6px;
+  display: inline-block;
+}
+.module-list li .cover-w .cover-icon i {
+  font-size: 64px;
+  line-height: 120px;
+  color: white;
+}
+.module-list li .content-w {
+  width: 318px;
+  float: left;
+  margin-left: 0!important;
+}
+.module-list li .content-w .title {
+  margin-bottom: 6px;
+}
+.module-list li .content-w .title a {
+  font-size: 16px;
+  color: #333;
+}
+.module-list li .content-w .bottom-btns {
+  margin-top: 10px;
+}
+
+</style>
+
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<a href="{:url('index',array('refresh'=>2))}" class="btn btn-success"> {:lang('check_for_updates')}</a>
+            <a href="{:url('index',array('refresh'=>1))}" class="btn btn-danger"> {:lang('reset_all')}</a>
+            
+            <a href="{:url('import_module')}" class="btn btn-danger"> {:lang('import') .lang('module')}</a>
+		</div>
+	</header>
+	<div class="box-body clearfix">
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+                <li id="type_all"><a href="{:url('index',array('type'=>'all'))}">{:lang('all')}</a></li>
+                <li id="type_installed"><a href="{:url('index',array('type'=>'installed'))}">{:lang('installed')}</a></li>
+                <li id="type_uninstalled"><a href="{:url('index',array('type'=>'uninstalled'))}">{:lang('not_installed')}</a></li>
+                <li id="type_core"><a href="{:url('index',array('type'=>'core'))}">{:lang('system_module')}</a></li>
+                <script>
+                $('#type_{$type}').addClass('active');
+               </script>
+			</ul>
+			<div class="tab-content">
+				<ul class="module-list">
+                    {volist name="modules" id="vo"}
+
+                        <li class="clearfix">
+                            <div class="cover-w">
+                                <div class="cover-icon">
+                                    <i class="fa fa-{$vo.icon}"></i>
+                                </div>
+                            </div>
+                            <div class="content-w" style=" margin-left: 0!important;background-color: transparent!important;">
+                                <div class="title">
+                                    <a href="{:url('edit?', array('name' => $vo['name']))}">{$vo.alias}</a>
+                                    <div class="pull-right">
+                                        {empty name="vo.token"}
+                                            <span class="label label-info">{$vo.version}</span>
+                                        {else/}
+                                        	{empty name="vo.version_info.title"}
+                                            <span class="label label-info">{$vo.version}</span>
+                                            {else/}
+                                             <span class="label label-info">{$vo.version_info.title}</span>
+                                            {/empty}
+                                        {/empty}
+                                        {empty name="vo.update_list"}
+                                           {else/}
+                                            <a style="text-decoration: none" href="javascript:void(0)" data-role="update_btn"  data-title="{:lang('new_version_can_be_updated')}" onclick="layer_open('{:lang('full_screen')}', '{:url('Cloud/getVersionList',array('token'=>$vo['token']))}', {w:'50%',h:'50%'});"><span class=" label label-success ">{:lang('new_version')}{$vo.update_list.0.title}</span></a>
+                                            <script>$(function () {
+                                                $('[data-role="update_btn"]').tooltip('show');
+                                            });
+                                            </script>
+                                        {/empty}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-ellipsis">{$vo.summary}</p>
+                                </div>
+                                <div>{:lang('type')}: 
+                                {if condition="$vo['is_com'] eq 1"}
+                                	{:lang('charge')}
+                                {else/}
+									{:lang('free')}
+                                {/if}
+                                </div>
+                                <div class="clearfix bottom-btns">
+                                <div class="pull-left">
+                                    <a class="btn btn-default"
+                                       href="{:url('edit?', array('name' => $vo['name']))}">{:lang('edit')}</a>
+                                    {if condition="$vo['can_uninstall'] "}
+                                        {if condition="$vo['is_setup']"}
+                                            <a class="btn btn-danger"
+                                               href="{:url('uninstall', array('id' => $vo['id']))}">{:lang('uninstall')}</a> 
+                                           {empty name="vo.update_list"}
+                                                <a class="btn btn-danger"
+                                                       href="{:url('manual_upgrade', array('id' => $vo['id']))}">{:lang('manual_upgrade')}</a>
+                                                {else/}
+                                                <a class="btn btn-success"
+                                                   href="{:url('Cloud/updateGoods',array('token'=>$vo['token']))}">{:lang('update')}</a>
+                                            {/empty}
+                                        {else/}
+                                            <a class="btn btn-info"
+                                               href="{:url('install', array('name' => $vo['name']))}">{:lang('install')}</a>
+                                            <a class="btn btn-info confirm ajax-get" href="{:url('del', array('id' => $vo['id']))}">{:lang('delete')}</a>   
+                                               
+                                        {/if}
+                                    {/if}
+                                </div>
+                                <div class="pull-right">
+                                    {empty name="vo.token"}
+                                        <span class="label label-circle label-danger">{:lang('local_module')}</span>
+                                    {else/}
+                                        {empty name="vo.version_info.title"}
+                                        <span class="label label-circle label-danger">{:lang('local_module')}</span>
+                                        {else/}
+                                        <span class="label label-circle label-success">{:lang('cloud_module')}</span>
+                                        {/empty}
+                                    {/empty}
+                                </div>
+                            </div>
+                            </div>
+                        </li>
+                    {/volist}
+                </ul>
+			</div>
+		</div>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__PUBLIC__/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$.fn.editable.defaults.mode = 'popup';
+	$.fn.editableform.buttons = '<button type="submit" class="btn btn-success editable-submit btn-mini"><i class="fa fa-check-square-o fa-white"></i></button>' +
+	'<button type="button" class="btn editable-cancel btn-mini"><i class="fa fa-times"></i></button>';
+	$('.editable').editable();
+})
+</script>
+{/block}

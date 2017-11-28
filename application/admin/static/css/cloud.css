@@ -1,0 +1,47 @@
+.module-list {
+  padding-left: 0;
+}
+.module-list li {
+  border: 1px solid #eee;
+  background: #fbfbfb;
+  display: block;
+  padding: 10px;
+  list-style: none;
+}
+.module-list li .cover-w {
+  margin-right: 15px;
+  float: left;
+}
+.module-list li .cover-w .cover {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+}
+.module-list li .cover-w .cover-icon {
+  width: 120px;
+  height: 120px;
+  text-align: center;
+  background: #999;
+  border-radius: 6px;
+  display: inline-block;
+}
+.module-list li .cover-w .cover-icon i {
+  font-size: 64px;
+  line-height: 120px;
+  color: white;
+}
+.module-list li .content-w {
+
+
+  margin-left: 0!important;
+}
+.module-list li .content-w .title {
+  margin-bottom: 6px;
+}
+.module-list li .content-w .title a {
+  font-size: 16px;
+  color: #333;
+}
+.module-list li .content-w .bottom-btns {
+  margin-top: 10px;
+}

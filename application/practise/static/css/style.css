@@ -1,0 +1,20 @@
+.status-1{
+    color: #0af77f;
+}
+.status-0{
+    color:  #c7c7c7;
+}
+
+.choose-day{
+    font-size: 12px;
+    font-weight: bold;
+}
+.btn-group>.btn:hover{
+    background-color: #337ab7;
+    border-color: #245580;
+    color: #fff;
+}
+.list-group-item{
+    border: 0 solid #fff;
+    background-color: transparent;
+}

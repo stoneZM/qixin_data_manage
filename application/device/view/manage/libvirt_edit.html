@@ -1,0 +1,485 @@
+{extend name="common@public/base"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<style type="text/css">
+    #vm-name {
+        text-align: center;
+
+    }
+    h3 {
+        text-align: right;
+    }
+    #menu {
+        background-color: lightblue;
+        padding: 10px;
+        text-align: center;
+    }
+
+    #menu a {
+        font-size: 20px;
+        padding: 10px;
+        color: blue;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    #main-menu a {
+        font-size: 20px;
+        padding: 10px;
+        color: blue;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .div-content #form-table input {
+        width: 200px;
+    }
+    .div-content #form-table .checkbox {
+        width: 20px;
+    }
+    .div-content #form-table select {
+        width: 200px;
+    }
+    .content .section {
+        padding: 10px;
+        padding-left: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        font-style: italic;
+        background-color: lightgray;
+    }
+    .div-content .item .value {
+        float: left;
+    }
+    .div-content .item .label {
+        width: 150px;
+        padding-right: 10px;
+        text-align: right;
+        float: left;
+        font-weight: bold;
+    }
+    .div-content .item .nl {
+        clear: both;
+    }
+    .div-content .label{
+        color: #888888;
+    }
+</style>
+
+<section class="content-header">
+    <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+    <h2 id="vm-name">Virtual machine {$domName}</h2>
+    <h3 id="back"><a href="/device/manage/libvirt">返回首页</a></h3>
+    <!-- MENU -->
+    <div id="menu">
+          <a href='javascript:void(0)' name="processor">Processor</a>
+        | <a href="javascript:void(0)" name="memory">Memory</a>
+        | <a href="javascript:void(0)" name="boot">Boot options</a>
+        | <a href="javascript:void(0)" name="network">Network devices</a>
+        | <a href="javascript:void(0)" name="disk">Disk devices</a>
+
+    </div>
+    <!-- CONTENTS -->
+        <script language="javascript">
+            var change_el;
+            function setElement(t, x) {
+                if (t == 'change')
+                    change_el = x.name;
+            }
+            function check() {
+                if (change_el == 'ch-apply')
+                    return (confirm('Do you really want to apply your changes?'));
+                if (change_el == 'ch-discard')
+                    return (confirm('Do you really want to discard your changes?'));
+            }
+        </script>
+
+    <!--改变cpu-->
+    <div class="section">Host CPU information </div>
+    <div id="processor" class="div-content" >
+        <form method="POST" class="form-horizontal">
+            <!-- HOST SECTION -->
+            <div class="item">
+                <div class="label">CPUs/cores:</div>
+                <div class="value">{$cpu} vCPUs</div>
+                <div class="nl" />
+            </div>
+            <div >
+                <div class="label">Max. per guest:</div>
+                <div class="value"> {$max}  vCPUs</div>
+                <div class="nl" />
+            </div>
+            <!-- MACHINE SECTION -->
+            <div class="item">
+                <div class="label">vCPUs:</div>
+                <div class="value">
+                    <select name="cpu_count" >
+                        <?php for($i=1 ;$i<$max+1;$i++)
+                            if($cpu==$i)
+                            echo "<option selected='selected' value=".$i.">$i</option>";
+                            else
+                              echo "<option value=".$i.">$i</option>";
+                        ?>
+                    </select>
+                </div>
+                <div class="nl" />
+            </div>
+            <!-- ACTIONS SECTION -->
+            <div class="item">
+                <div class="label">change</div>
+                <div class="value">
+                    <input value="cpu" name="type" hidden="hidden">
+                    <input value="{$cpu}" name="old_cpu_count" hidden="hidden">
+                    <input type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal" />
+                    <!--<button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="form-horizontal">{:lang('submit')}</button>-->
+                </div>
+                <div class="nl" />
+            </div>
+        </form>
+    </div>
+
+    <!--改变内存-->
+    <div id="memory" class="div-content" >
+        <form  method="POST" onsubmit="return check();">
+            <!-- HOST SECTION -->
+            <div class="section">Host memory information</div>
+            <div class="item">
+                <div class="label">Total memory:</div>
+                <div class="value">1840 MiB</div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">Current allocation:</div>
+                <div class="value">
+                    <input type="text" name="memory" value="{$curMem}" />
+                </div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">Max. allocation:</div>
+                <div class="value">
+                    <input type="text" name="maxmem" value="{$maxMem}" />
+                </div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">Changes:</div>
+                <div class="value">
+                    <input hidden="hidden" name="type" value="memory">
+                    <input type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal" />
+                </div>
+                <div class="nl" />
+            </div>
+        </form>
+    </div>
+
+
+    <!--改变boot-->
+    <div id="boot" class="div-content" >
+        <form  method="POST" class="form-horizontal">
+            <!-- HOST SECTION -->
+            <div class="section">Virtual machine boot options</div>
+            <div class="item">
+                <div class="label">First boot device:{$bd_1st}</div>
+                <div class="value">
+                    <select name="bd_1st">
+                        <option value="hd" <?php echo (($bd_1st == 'hd') ? 'selected="selected"' : '') ?>>Hard-drive</option>
+                        <option value="cdrom" <?php echo (($bd_1st == 'cdrom') ? 'selected="selected"' : '') ?>>CD-ROM</option>
+                        <option value="fd" <?php echo (($bd_1st == 'fd') ? 'selected="selected"' : '') ?>>Floppy</option>
+                        <option value="network" <?php echo (($bd_1st == 'network') ? 'selected="selected"' : '') ?>>Network boot (PXE)</option>
+                    </select>
+                </div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">Second boot device: {$bd_2nd}</div>
+                <div class="value">
+                    <select name="bd_2nd">
+                        <option value="-" <?php echo (($bd_2nd == '-') ? 'selected="selected"' : '') ?>>none</option>
+                        <option value="hd" <?php echo (($bd_2nd == 'hd') ? 'selected="selected"' : '') ?>>Hard-drive</option>
+                        <option value="cdrom" <?php echo (($bd_2nd == 'cdrom') ? 'selected="selected"' : '') ?>>CD-ROM</option>
+                        <option value="fd" <?php echo (($bd_2nd == 'fd') ? 'selected="selected"' : '') ?>>Floppy</option>
+                        <option value="network" <?php echo (($bd_2nd == 'network') ? 'selected="selected"' : '') ?>>Network boot (PXE)</option>
+                    </select>
+                </div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">Changes:</div>
+                <div class="value">
+                    <input hidden="hidden" name="type" value="boot">
+                    <input type="submit" class="btn btn-primary submit-btn " target-form="form-horizontal" />
+                    <input type="submit" name="ch-discard" value=" Discard changes " onclick="setElement('change', this)" />
+                </div>
+                <div class="nl" />
+            </div>
+        </form>
+    </div>
+
+    <!--增加网络-->
+    <!--增加网络接口-->
+    <div class="div-content"  id="network" >
+        <div class="section">Machine network devices</div>
+        <div class="item">
+            <div class="label">Number of NICs:</div>
+            <div class="value">{$numDisk}</div>
+            <div class="nl" />
+        </div>
+        <form method="post" class="form-horizontal">
+            <!-- NIC SECTION -->
+            <?php if (!$tmp)
+	                 $tmp = array();
+                     for ($i = 0; $i < sizeof($tmp); $i++):
+                     $nic = $tmp[$i];
+             ?>
+            <!-- NIC SECTION -->
+            <div class="item">
+                <div class="label"><?php echo vm_network_mac ?>:</div>
+                <div class="value"><?php echo $nic['mac'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_network_net:</div>
+                <div class="value"><?php echo $nic['network'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_network_type:</div>
+                <div class="value"><?php echo $nic['nic_type'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">'actions':</div>
+                <div class="value">
+                    <input hidden="hidden" name="type" value="network">
+                    <input hidden="hidden" name="action" value="del-nic">
+                    <input hidden="hidden" name="dev" value="<?php echo base64_encode($nic['mac']) ?> ">
+                    <button type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal">{:lang('delete')}</button>
+                </div>
+                <div class="nl" />
+            </div>
+            <?php  endfor; ?>
+        </form>
+        <div id="add-new-network" >
+            <div class="section" >Add a new network interface</div>
+            <form method="post" class="form-horizontal">
+                <table id="form-table">
+                    <tr>
+                        <td align="right" class="label"><b>MAC Address: </b></td>
+                        <td><input type="text" name="mac" value="{$mac}"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="label"><b>Network: </b></td>
+                        <td>
+                            <select name="network"><option value="default">default</option>    </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="label"><b>NIC Type: </b></td>
+                        <td>
+                            <select name="nic_type">
+                                <option value="default">default</option>
+                                <option value="rtl8139">rtl8139</option>
+                                <option value="e1000">e1000</option>
+                                <option value="pcnet">pcnet</option>
+                                <option value="ne2k_pci">ne2k_pci</option>
+                                <option value="virtio">virtio</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="2">
+                            <input hidden="hidden" name="type" value="network">
+                            <input hidden="hidden" name="action" value="add-nic">
+                            <button type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal">{:lang('add')}</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+
+    <!--磁盘列表-->
+    <div id="disk" class="div-content" >
+        <form class="form-horizontal"  method="POST">
+            <div class="section">Machine disk device details</div>
+            <div class="item">
+                <div class="label">Number of disks:</div>
+                <div class="value">{$numDisks.$addmsg}</div>
+                <div class="nl" />
+            </div>
+
+            <?php for ($i = 0; $i < count($disk_tmp); $i++):
+                     $disk = $disk_tmp[$i];
+                     $bus = ($disk['bus'] == 'ide') ? 'IDE' : 'SCSI';
+              ?>
+            <!--[device] => hda [file] => /var/lib/libvirt/images/gemfsmgmt.img [type] => raw [capacity] => 10739318784 [allocation] => 0 [physical] => 10739318784 [bus] => ide )-->
+            <!-- DISK SECTION -->
+            <div class="section"><?php echo $bus ?> Disk <?php echo $i + 1 ;?></div>
+            <div class="item">
+                <div class="label">vm_disk_storage</div>
+                <div class="value">{$disk['file']}</div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_type</div>
+                <div class="value"><?php echo $disk['type'] ;?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_dev</div>
+                <div class="value"><?php echo $disk['device'] ;?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_capacity</div>
+                <div class="value"><?php echo $lv->format_size($disk['capacity'], 2); ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_allocation</div>
+                <div class="value"><?php echo $lv->format_size($disk['allocation'],2); ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label"><?php echo vm_disk_physical ;?>:</div>
+                <div class="value"><?php echo $lv->format_size($disk['physical'],2); ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label"><?php echo actions ;?>:</div>
+                <div class="value">
+                    <input hidden="hidden" value="device" name="type">
+                    <input hidden="hidden" name="action" value="del-disk">
+                    <input hidden="hidden" name="disk" value="{$disk['device']}">
+                    <input type="submit" class="btn btn-primary submit-btn " target-form="form-horizontal" value="删除"/>
+                </div>
+                <div class="nl" />
+            </div>
+            <?php endfor; ?>
+
+            <!-- DISK SECTION -->
+
+            <?php for ($i = 0; $i < sizeof($disk_tmp2); $i++):
+                 $disk = $disk_tmp2[$i];
+                 $bus = ($disk['bus'] == 'ide') ? 'IDE' : 'SCSI';
+            ?>
+            <!-- DISK SECTION -->
+            <div class="section"><?php echo $bus ?> CD-ROM <?php echo $i + 1 ?></div>
+            <div class="item">
+                <div class="label">vm_disk_storage</div>
+                <div class="value"><?php echo $disk['file'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_type</div>
+                <div class="value"><?php echo $disk['type'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_dev</div>
+                <div class="value"><?php echo $disk['device'] ?></div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_capacity</div>
+                <div class="value">$disk['capacity']</div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_allocation</div>
+                <div class="value">$disk['allocation</div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="label">vm_disk_physical</div>
+                <div class="value">$disk['physical']</div>
+                <div class="nl" />
+            </div>
+            <div class="item">
+                <div class="value">
+                    <input hidden="hidden" type="device">
+                    <input hidden="hidden" name="action" value="del-disk">
+                    <input hidden="hidden" name="disk" value="{$disk['device']}">
+                    <button type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal">{:lang('delete')}</button>
+                </div>
+                <div class="nl" />
+            </div>
+            <?php endfor; ?>
+
+            <!-- ACTIONS SECTION -->
+            <!--<div class="item">-->
+            <!--<div class="label">Changes:</div>-->
+            <!--<div class="value">-->
+            <!--<input hidden="hidden" type="device">-->
+            <!--<input hidden="hidden" name="action" value="add-disk">-->
+            <!--<input type="button" class="btn btn-primary submit-btn" target-form="form-horizontal" value=""/>-->
+            <!--</div>-->
+            <!--<div class="nl" />-->
+            <!--</div>-->
+        </form>
+    </div>
+    <!--增加磁盘-->
+    <div class="section" style="display: none">Add a new disk</div>
+    <div  class="div-content" style="display: none">
+        <form method="post" class="form-horizontal">
+            <table>
+                <tr>
+                    <td align="right" class="label"><b>vm_disk_image:</b></td>
+                    <td><input type="text" name="img" /></td>
+                </tr>
+                <tr>
+                    <td align="right" class="label"><b>vm_disk_location: </b></td>
+                    <td>
+                        <select name="bus">
+                            <option value="ide">IDE Bus</option>
+                            <option value="scsi">SCSI Bus</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" class="label"><b>vm_disk_type: </b></td>
+                    <td>
+                        <select name="driver">
+                            <option value="raw">raw</option>
+                            <option value="qcow">qcow</option>
+                            <option value="qcow2">qcow2</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" class="label"><b>vm_disk_dev: </b></td>
+                    <td><input type="text" name="dev" value="hdb" /></td>
+                </tr>
+                <tr align="center">
+                    <td colspan="2">
+                        <input hidden="hidden" value="device" name="type">
+                        <input hidden="hidden" value="add-disk" name="action">
+                        <button type="submit" class="btn btn-primary submit-btn" target-form="form-horizontal">{:lang('add')}</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+</section>
+
+{/block}
+{block name="script"}
+<script>
+   $(document).ready(function(){
+
+   });
+</script>
+{/block}

@@ -1,0 +1,101 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__PUBLIC__/adminlte/plugins/validform/5.3.2/Validform.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<div class="box-body clearfix">
+    
+    
+		<form method="post" id="form" class="form form-horizontal">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('keyword')}</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" name="keyword" value="{$data.keyword}">
+                </div>
+            </div>
+            
+            {if $type eq 'text'}
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('text_content')}</label>
+                <div class="col-lg-8">
+                <textarea class="form-control" name="content" style="height:100px">{$data.content}</textarea>
+                </div>
+            </div>
+            {elseif $type eq 'image'/}
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('reply_picture')}</label>
+                <div class="col-lg-8">
+                {:widget('common/Form/show',array(array('name'=>'image','type'=>'wechatimage'),$data))}
+                </div>
+            </div>
+            {else/}
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('title')}</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" name="title" value="{$data.title}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('cover')}</label>
+                <div class="col-lg-8">
+                {:widget('common/Form/show',array(array('name'=>'picurl','type'=>'wechatimage'),$data))}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('description')}</label>
+                <div class="col-lg-8">
+                <textarea class="form-control" name="description" style="height:100px">{$data.description}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{:lang('link')}</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" name="url" value="{$data.url}">
+                </div>
+            </div>
+            {/if}
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$id|default=''}">    
+                    <input type="hidden" name="reply_type" value="{$type}">
+                    <input type="hidden" name="reply_id" value="{$data.reply_id}">
+                    <input type="hidden" name="material_id" value="{$data.material_id}">
+                    <input type="hidden" name="rule_id" value="{$data.rule_id}">
+					<button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">{:lang('submit')}</button>        
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">{:lang('back')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</section>
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script>
+
+	//全选的实现
+	$('input[type="checkbox"].gl_checkbox, input[type="radio"].gl_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	  radioClass: 'iradio_minimal-blue'
+	});
+	
+	
+
+		
+</script>
+{/block}

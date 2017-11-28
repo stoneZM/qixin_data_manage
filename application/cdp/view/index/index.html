@@ -1,0 +1,546 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+<link rel="stylesheet" href="__CSS__/style.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+        <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+    </ol>
+</section>
+<section class="content">
+<div class="box box-solid clearfix">
+	<header class="box-header clearfix">
+		<div class="pull-left">
+			<a class="btn btn-primary" href="" data-toggle="modal" data-target="#add_device" data_role="add_device" >
+                <i class="fa fa-plus-circle fa-lg"></i>
+                {:lang('add_device')}
+            </a>
+		</div>
+        <div class="pull-right">
+            <a class="btn btn-default" href="javascript:" data_role="view_log" style="margin-right: 20px" ><i class="fa fa-eye"></i>{:lang('view_log')}</a>
+        </div>
+	</header>
+
+
+    <!--日志信息 begin-->
+    <div class="box box-default box-solid log_body info temp_info" style="display: none;">
+        <div class="box-header with-border"><h3 class="box-title">{:lang('log')}{:lang('info')}</h3></div>
+        <div class="box-body" style="max-height: 400px;overflow-x: auto">
+            <div class="clearfix log-content">
+                <div class="text-center">
+                    <i  class="fa fa-spinner fa-spin" style="font-size: 30px"></i>
+                    <span style="font-size: 15px;font-weight: bold;line-height: 40px">正在获取...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 日志信息end -->
+
+	<div class="box-body clearfix">
+        <div class="table-responsive clearfix" >
+            <table class="table table-hover  " style="margin-bottom: 48px">
+				<thead>
+					<tr>
+						<th><input class="checkbox check-all" type="checkbox"></th>
+						<th>{:lang('id')}</th>
+						<th >{:lang('ip')}</th>
+                        <th>{:lang('system_type')}</th>
+                        <th>{:lang('task')}</th>
+                        <th>{:lang('snap')}</th>
+                        <th>{:lang('virtual')}</th>
+                        <th>{:lang('creation_time')}</th>
+						<th>{:lang('operation')}</th>
+					</tr>
+				</thead>
+				<tbody >
+					{volist name="list" id="item"}
+					<tr>
+						<td><input class="ids row-selected" type="checkbox" name="id[]" value="{$item['device_id']}"></td>
+						<td class="device-id" data-id="{$item['device_id']}">{$item['device_id']}</td>
+                        <td>
+                            <!--<span style="cursor: pointer;padding: 8px;" class="more_info"  data-toggle="tooltip"  data-html="true"  data-placement="top"  data-original-title='<div class="load-div load-box"><i class="fa fa-spinner fa-spin"></i></div>' data_role="instead_hostX" device-id="{$item['device_id']}">-->
+                                    <a class="btn-link status-{$item['data']['status']}" href="{:url('detail?id='.$item['device_id'])}"  >
+                                    {$item['data']['ip']}
+                                    {if !empty($item['data']['alias'])}
+                                        ({$item['data']['alias']})
+                                    {/if}
+                                </a>
+                            </span>
+                            <!--{if $item['data']['status'] == 1}-->
+                            <!--<i class="fa fa-circle status-{$item['data']['status'] }"  title="设备在线"></i>-->
+                            <!--{else/}-->
+                            <!--<i class=" fa fa-circle text-gray status-{$item['data']['status'] }"  title="设备离线"></i>-->
+                            <!--{/if}-->
+                        </td>
+                        <td>
+                            {if $item['data']['system_type']=="Linux" }
+                                     <i  class="fa fa-fw fa-linux system-font status-{$item['data']['status'] }"  title="Linux"></i>
+                            {else/}
+                                     <i class="fa fa-fw fa-windows system-font status-{$item['data']['status'] } "  title="Windows"></i>
+                            {/if}
+
+                        </td>
+                        <td>
+                           <div class="task-detail detail-info" id="task-{$item['device_id']}">
+                               <i class="fa fa-spinner fa-spin"></i>
+                           </div>
+                        </td>
+                        <td>
+                            <div class="snap-detail detail-info" id="snap-{$item['device_id']}">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="vir-detail detail-info" id="virtual-{$item['device_id']}">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </td>
+                        <td style="">{$item['create_time']}</td>
+						<td>
+                            <div class="btn-group" role="group">
+                                <a href="{:url('detail?id='.$item['device_id'])}"  class="btn btn-default btn-sm">{:lang('manage')}</a>
+                                <a href=""  data-toggle="modal" data-target="#del_device" class="del-device-btn btn-sm btn btn-default" device-id="{$item['device_id']}">{:lang('delete')}</a>
+
+                                <div class="more-btn btn-group " role="group">
+                                    <a  href="javascript:void(0)" class="btn-sm btn btn-default dropdown-toggle"  device-id="{$item['device_id']}">
+                                        {:lang('more_operate')}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="" class="virtual-manage shutdown-virtual-{$item['device_id']}" data-id="{$item['device_id']}" data-type="shutdown" data-ip="{$item['data']['ip']}" data-toggle="modal" data-target="#del_virtual_confirm" data_role="del_virtual_confirm">关闭虚机</a></li>
+                                        <li><a href="" class="virtual-manage delete-virtual-{$item['device_id']}" data-id="{$item['device_id']}" data-type="delete" data-ip="{$item['data']['ip']}" data-toggle="modal" data-target="#del_virtual_confirm" data_role="del_virtual_confirm">删除虚机</a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+						</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+			{$page}
+		</div>
+	</div>
+</div>
+</section>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add_device" id="add_device">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> {:lang('add_device')}<strong></strong></h4>
+      </div>
+      <div class="modal-body">
+      	{empty	name="exclusivedevice"}
+        <h4 align="center">{:lang('no_device_available')}</h4>
+        {else/}
+        <form class="form form-horizontal device_edit_form" role="form" method="post" action="{:url('add_device')}">
+            <div class="form-group" style="margin-top:20px; display:block">
+                <label class="col-lg-1 control-label"></label>
+                <div class="col-lg-9">
+                {volist name="exclusivedevice" id="vo"}
+                <label class="checkbox-inline" style="padding-left:0"><input type="checkbox" class="device_config" name="deviceinfo[]" value="{$vo.id}"> {$vo.ip}</label>
+                {/volist}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-1 col-lg-11">
+                    <button type="submit" class="btn btn-success ajax-post" target-form="device_edit_form">{:lang('submit')}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                </div>
+            </div>
+        </form>
+
+        {/empty}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="del_device" tabindex="-1" role="dialog" aria-labelledby="del_device" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> <span id="edit_task_title">{:lang('del_device')}</span></h4>
+            </div>
+            <form class="form form-horizontal cdp-del-device" role="form" method="post" action="{:url('cdp/index/del_device')}">
+                <div class="modal-body">
+                        <div class="box-body">
+
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="del_device_id" name="id" value="">
+                                    <label class="checkbox-inline" style="padding-left:0">
+                                        <input type="checkbox" class="device_config" name="del_backup_data" value="1">
+                                    </label>
+                                    <span class="checkbox-inline" style="padding-left: 10px;margin: 0px" >删除已备份的数据</span>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style=" padding:10px 0 0 0">
+                                <button type="submit" class="btn btn-success ajax-post click-del-device-btn" target-form="cdp-del-device">{:lang('confirm')}</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{:lang('cancel')}</button>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="del_virtual_confirm" tabindex="-1" role="dialog" aria-labelledby="del_device" >
+    <div class="modal-dialog" style="margin-top: 150px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-fw fa-warning" style="font-size: 20px;color: red"></i> <span class="operate_title">删除虚拟机</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <form class="form form-horizontal" role="" id="" method="" action="">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input type="hidden" id="del_task_id" name="id" value="">
+                                <input type="hidden" id="task_status" name="status" value="">
+                                <div>
+                                        <span class="tip-info" style="font-weight: bold;font-size: 15px;">
+                                            确定删除选中的虚拟机？
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer" style=" padding:10px 0 0 0">
+                        <button type="button" class="btn btn-success click-confirm-btn">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{/block}
+{block name="script"}
+<script>
+    function getMoreInfo() {
+        var tds = $(".device-id");
+        var curTd = '';
+        var deviceId = '';
+        for(var i=0;i<tds.length;i++){
+            curTd = tds[i];
+            deviceId = $(curTd).attr('data-id');
+            getData(deviceId);
+        }
+    }
+    function getData(deviceId) {
+        $.ajax({
+            url : '/api/index/get_more_info?device_id='+deviceId,
+            type : 'get',
+            async : true,
+            dataType : 'json',
+            success : function(res){
+                replaceHtml(deviceId,res);
+            }
+        })
+    }
+    function replaceHtml(deviceId,res) {
+
+        var taskIdName = '#task-'+deviceId;
+        var snapIdName = "#snap-"+deviceId;
+        var virtualName = "#virtual-"+deviceId;
+
+//        虚拟机
+        var virHtml = "<p>";
+            virHtml += '<span class=" status-'+res.device_status+' xm-font" >总数: '+res.virtual_count;
+            if(res.virtual_count != 0){
+                var urlStr = "device/manage/virtual/device_id/"+deviceId;
+                var url = "{:url('/"+urlStr+"')}";
+                virHtml += '</span></p><p> <a href="'+url+'" class="btn-link  xm-font"> 管 理';
+                virHtml += ' </a></p>';
+            }else{
+                virHtml += '</span></p>';
+            }
+
+        $(virtualName).html(virHtml);
+
+//        快照
+        var snapHtml = "<p>";
+        snapHtml += '<span class=" status-'+res.device_status+' xm-font" >总数: '+res.snap_count;
+        snapHtml += '</span></p>';
+        if(res.newest_task_id != 0 && res.newest_snap_time != 0){
+            var url = "cdp/index/snap_detail/task_id/"+res.newest_task_id + '/time/'+res.newest_snap_time;
+            url = "{:url('/"+url+"')}";
+            if(res.snap_count != 0){
+                snapHtml += '<a href="'+url+'" class="btn-link xm-font">最近快照</a>';
+            }
+        }
+        $(snapIdName).html(snapHtml);
+//任务
+        var taskHtml = "<p>";
+        taskHtml += '<span class=" status-'+res.device_status+' xm-font" >总数: '+res.task_count+"</span></p>";
+        if(res.have_current_task == 0){   //无当前任务
+            taskHtml += '<span class=" status-'+res.device_status+' xm-font" >无最新任务</span>';
+        }else{
+            if (res.part_status==1){   //任务已完成
+                taskHtml += '<span class="xm-font status-'+res.device_status+'">任务状态:<span class="xm-font text-success status-'+res.device_status+'"><span class="completed">(已完成)</span></span></span>'
+            }else{  // 未完成继续请求任务
+                if(res.device_status == 0 || res.task_status != 1 || res.clone_is_running != 1){   //设备不在线 则不请求进度
+                     var tipStr = '';
+                     if(res.task_status == 0) tipStr = "未开始";
+                     if(res.task_status == 2)
+                         tipStr = "已暂停";
+                     else
+                         tipStr = "未完成";
+                    taskHtml += '<span class="sm-font status-'+res.device_status+'">任务状态:<span class="xm-font text-success status-'+res.device_status+' task-status-'+res.task_status+'">('+tipStr+')</span></span>'
+                }else{  // 设备在线 并且任务已开启 备份未完成 请求进度
+                    taskHtml += '<span class=" status-'+res.device_status+' replace-html-'+deviceId+' xm-font">';
+                    taskHtml += '<div class="progress" style="margin: 5px 0 0;height: 10px;width: 80px;display: inline-block">';
+                    taskHtml += '<div class="progress-bar progress-bar-striped active progress-'+deviceId+'" style="width:0% ;background-color: #24A360"></div></div><b class="progress-value-'+deviceId+'"></b></span>';
+                 getProgress(res.task_id,deviceId)
+                }
+            }
+        }
+        $(taskIdName).html(taskHtml);
+    }
+    setTimeout("getMoreInfo()",100);
+    function getProgress(taskId,deviceId) {
+
+        var progressIdName = ".progress-"+deviceId;
+        var replaceHtmlIdName = ".replace-html-"+deviceId;
+        var progressHtmlIdName = ".progress-value-"+deviceId;
+        var count = 0;
+        var refresh_state = function(){
+
+            $.ajax({
+                url: '/cdp/index/get_clone_state/id/'+taskId,
+                type: 'get',
+                async: true,
+                dataType:'json',
+                success: function (json) {
+
+                    if(json == ""){
+                        clearInterval(intervalProcess);
+                    }else{
+                        if(json.code == 1){
+                            var processVal = json.progress;
+                            $(progressIdName).width( processVal+ '%');
+                            $(progressHtmlIdName).html(processVal+'%')
+                        }else if(json.code == 3){  //表明所有clone全部完成
+                            $(progressIdName).width(100+'%');
+                            $(replaceHtmlIdName).html('当前任务:(已完成)');
+                            clearInterval(intervalProcess);
+                        }else{
+                            $(replaceHtmlIdName).html('当前任务:(未完成)');
+                            clearInterval(intervalProcess);
+                        }
+                    }
+                },
+                error:function () {
+                    count++;
+                    if (count>5){
+                        $(replaceHtmlIdName).html('当前任务:(未完成)');
+                        clearInterval(intervalProcess);
+                    }
+                }
+            });
+        };
+          var  intervalProcess=setInterval(refresh_state,3000);
+    }
+</script>
+
+
+<script type="text/javascript">
+$(function() {
+
+    $('.device_config').iCheck({
+        labelHover: false,
+        cursor: true,
+        checkboxClass: 'icheckbox_minimal-orange'
+    });
+
+	/*增加设备*/
+	$(document).on('click', '[data_role="add_device"]', function (e) {
+
+		e.preventDefault();
+		var $this = $(this);
+		var id = $this.attr('data_id');
+		$("#add_device").modal('show');
+	});
+
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+    /*醒看设备信息*/
+    $(document).on('click', '[data_role="view_log"]', function (e) {
+
+        e.preventDefault();
+        var $this = $(this);
+        if($(".log_body").is(":hidden")){
+            $(".temp_info").hide();
+            $this.find('i').removeClass();
+            $this.find('i').addClass("fa fa-eye-slash");
+            $('.log_body').slideToggle();
+        }else{
+            $this.find('i').removeClass();
+            $this.find('i').addClass("fa fa-eye");
+            $('.log_body').slideToggle();
+        }
+    })
+
+    $(".click-del-device-btn").click(function(e){
+
+        e.preventDefault();
+        $("#del_device").modal("hide");
+        friendlyTip("正在删除,请稍后..","删除失败",5000,3000);
+
+    });
+
+    $('.del-device-btn').click(function(e){
+       e.preventDefault();
+       var device_id = $(this).attr('device-id');
+       $('#del_device_id').val(device_id);
+//       $("#del_device").modal("show");
+   })
+
+    var url = '';
+    var tipStr = '';
+    var operateDeviceId = '';
+    $('.virtual-manage').click(function(e){
+        e.preventDefault();
+        url = '';
+        var _this = $(this);
+        var type = _this.attr('data-type');
+        var ip = _this.attr('data-ip');
+         operateDeviceId = _this.attr('data-id');
+        if(type=='shutdown'){
+             tipStr = '关闭';
+             url = "{:url('/device/manage/virtual_status')}";
+        }
+        if(type == 'delete'){
+             tipStr = '删除';
+              url = "{:url('/device/manage/virtual_del/device_id')}";
+        }
+
+        var tipCnt = "确定"+tipStr+" <b> ["+ip+"] </b>"+"设备下的所有虚拟机？";
+        $(".operate_title").html(tipStr+'虚拟机');
+        $('.tip-info').html(tipCnt);
+    });
+
+    $(".click-confirm-btn").click(function(){
+        $("#del_virtual_confirm").modal("hide");
+        massOperation(url,tipStr,operateDeviceId,0);
+    });
+
+
+    function massOperation(url,tipStr,id,status){
+
+        friendlyTip('正在'+tipStr,tipStr+'失败',10000);
+        $.ajax({
+            url:url,
+            data:{"device_id":id,"status":status,'from':0},
+            async:true,
+            type:'post',
+            success:function(res){
+
+                if(res.code == 1){
+                    tipStr+= "成功!";
+                    var icon=1;
+                }else{
+                    tipStr =  res.error_msg;
+                    icon = 5
+                }
+                layer.msg(tipStr,{icon:icon,time:2000});
+                if(res.code == 1){
+                    setTimeout("window.location.reload();",2000);
+                }
+            }
+        })
+    }
+
+
+
+
+});
+</script>
+<!--请求日志信息-->
+<script>
+
+
+    $(function () {
+
+
+        $(document).on('click', '[data_role="view_log"]', function (e) {
+            e.preventDefault();
+            var _this=$(this);
+            if (_this.hasClass('have-get-log')){
+                return ;
+            }
+            $.ajax({
+                url:"{:url('cdp/index/get_log')}",
+                data:{"type":"cdp_index"},
+                type:"get",
+                async:true,
+                success:function(resJson){
+
+                    if(resJson.code==0){
+                        var html = '<div class="text-center" style="font-size:1.5em"><i class="fa fa-warning"></i> {:lang("no_content")}</div>';
+
+                    }else{
+
+                        _this.addClass('have-get-log');
+                        var time = resJson.time;
+                        var data = resJson.data;
+                        var logs = '';
+                        var html = ' <ul class="timeline">';
+                        for(var i=0;i<time.length;i++){
+                            html += ' <li class="time-label">';
+                            html += ' <span class="bg-green" style="font-weight:normal; font-size:12px">';
+                            html += time[i];
+                            html += ' </span></li>';
+                            logs = data[i];
+                            for(var j=0;j<logs.length;j++){
+                                var log = logs[j];
+                                html += '<li> <i class="fa fa-arrow-right "></i><div class="timeline-item"><span class="time" style="padding-top:5px"><i class="fa fa-clock-o"></i>';
+                                html += formatDateTime(log.create_time);
+                                html += '</span><h3 class="timeline-header" style="padding-top:3px; border-bottom:0"> <a class=" text-red" href="javascript:">';
+                                html += log.action_title;
+                                html += '</a> </h3>';
+                                html += '<div class="timeline-body" style="padding: 2px 10px">';
+                                html += log.remark;
+                                html += '</div></div></li>';
+                            }
+                        }
+                        html += '</ul>';
+                    }
+                    $(".log-content").html(html);
+                }
+            });
+        })
+
+    });
+
+    function formatDateTime(timeStamp) {
+        var date = new Date();
+        date.setTime(timeStamp * 1000);
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        second = second < 10 ? ('0' + second) : second;
+        return h+':'+minute+':'+second;
+    };
+
+</script>
+{/block}

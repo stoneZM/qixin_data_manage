@@ -1,0 +1,45 @@
+.task_list > ul>li{ padding-left:0}
+.task_list > ul{ line-height:30px;}
+.task_list .qinfoicon{ font-size:30px}
+.panel-title{ padding-bottom:15px;}
+.panel-collapse{ padding:10px;}
+.clone_disk{ padding-left:15px;}
+.div-relative-forward{ float:left; width:20px; height:100%;  text-align:center;}
+.div-relative-forward > i{font-size:14px; color:#060; margin-top:50px;}
+.clone_disk .clone_icon{font-size:20px; color:#F60}
+.clone_disk .clone_text{font-size:14px;}
+.relative{ float:left; width:95px; display:inline;overflow: auto}
+.div-keli{ float:left; margin: 0px -20px 0px -10px}
+.div-keli span{ float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+.div-keli > span.not-vailable{ border: solid darkgray 2px;
+}
+.div-keli > span.vailable{
+    float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+.div-keli  span.have-virtual{
+    background-color: lightgrey;padding-left: 1px;  text-align: center;color: black; font-weight: 500; float: left; display: inline-block;  margin-top:50px;width: 20px;height: 20px;border-radius: 10px;cursor: pointer}
+.div-keli > span.line{
+    float: left; display: inline-block; color:#060; margin-top:60px;width: 25px;height: 3px;border-radius: 10px; background-color: green;}
+.div-relative{float:left;width:75px; height:110px; }
+.div-relative-title{ height:40px; text-align:center}
+.div-relative-title .badge{ font-weight:normal; margin-top:14px;}
+.div-relative-title .label{ display:block; padding:5px 4px; font-weight:normal; font-size:12px}
+.div-relative-body{height:70px; text-align:center}
+.div-relative-img{ height:40px; padding-top:10px; position:relative; width:45px; margin:0 auto}
+.div-relative-img > .qinfoicon{ font-size:30px; line-height:24px; color:#5cb85c}
+.div-relative-img > .glyphicon{ position:absolute; right:5px; top:22px; color:#5cb85c; font-weight:normal; font-size:9px}
+.div-relative-time{height:20px; line-height:20px; font-size:12px}
+.div-relative-cursor{ cursor:pointer}
+.create_keli{margin: 0px 0px 0px 15px;display: inline-block;border-radius: 10px;background-color: lightgrey;font-size: 10px;padding: 2px 8px;cursor: pointer}
+.net-ip,.net_mac,.net_mac_model{
+    background-color: transparent;
+    color: #fff;
+}
+.net_mac_model option{
+    color: black;
+}
+.qinfo-kuaizhao1,.qinfo-dangqianchengshi,.qinfo-kuaizhao,.glyphicon-plus,.glyphicon-forward,.qinfo-kuaizhao2,.qinfo-kelong{
+    color: #15ff08 !important;
+}
+.div-keli > span.line{
+    background-color: #15ff08 !important;
+}

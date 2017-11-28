@@ -1,0 +1,65 @@
+{extend name="common@public/base"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/bootstrap-editable.css">
+{/block}
+{block name="body"}
+<section class="content-header">
+  <h1>{$meta_title}<small></small></h1>
+  <ol class="breadcrumb">
+    <li><a href="{:url('admin/index/index')}"><i class="fa fa-dashboard"></i> {:lang('console')}</a></li>
+        {volist name="__menu__['parent']" id="pitem"}
+            <li class="{$pitem.action}">{if condition="$pitem.action eq ''"}<a href="{$pitem.url|url}" > {$pitem.title}</a>{else/} {$pitem.title}{/if}</li>
+        {/volist}
+  </ol>
+</section>
+<section class="content">
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+    {volist name="mpnav" id="nav"}
+    <li class="{$nav.class}"><a href="{$nav.url}" >{$nav.title}</a></li>
+    {/volist}
+    </ul>        
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="">
+                <div class="box-body">
+                    {if condition="$tip"}
+                    <div class="alert alert-info tip" role="alert">{$tip}</div>
+                    {/if}     
+                  	<form method="post" id="form" class="form form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-xs-3 control-label">触发关键词:</label>
+                            <div class="col-sm-5 col-xs-8">
+                                <input class="form-control" type="text" name="keyword" value="{$rule.keyword}">
+                                <span class="help-block">多个关键词用<font color="red">英文逗号</font>隔开，支持正则表达式，如：^点歌、点歌$</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <input type="hidden" name="id" value="{$rule.id}" />
+                                <input type="submit" value="确认提交" class="btn btn-primary ajax-post"  target-form="form-horizontal"  />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+</section>
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script>
+
+	//全选的实现
+	$('input[type="checkbox"].gl_checkbox, input[type="radio"].gl_checkbox').iCheck({
+	  checkboxClass: 'icheckbox_minimal-blue',
+	  radioClass: 'iradio_minimal-blue'
+	});
+</script>
+{/block}
